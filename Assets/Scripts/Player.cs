@@ -148,7 +148,7 @@ public class Player : MonoBehaviour
     //Button used to go back to the main menu
     public void ReturnToMenu()
     {
-        Destroy(GameObject.Find("GameManager"));
+        //Destroy(GameObject.Find("GameManager"));
         SceneManager.LoadScene(0);
         Destroy(gameObject);
     }
