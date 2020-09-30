@@ -4,10 +4,12 @@ using UnityEngine;
 
 public abstract class LevelObject : MonoBehaviour
 {
+    private FMOD.Studio.EventInstance instance;
+
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        
+        instance = FMODUnity.RuntimeManager.CreateInstance("event:/Test/Shwing");
     }
 
     // Update is called once per frame
@@ -22,11 +24,15 @@ public abstract class LevelObject : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             GetComponent<SpriteRenderer>().color = Color.blue;
+            instance.start();
+            instance.release();
         }
 
         if (Input.GetMouseButton(1))
         {
             GetComponent<SpriteRenderer>().color = Color.white;
+            instance.start();
+            instance.release();
         }
     }
 }
