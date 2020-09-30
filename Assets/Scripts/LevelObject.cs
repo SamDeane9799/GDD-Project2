@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameObject : MonoBehaviour
+public abstract class LevelObject : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
-        
+        ChangeColor();
     }
 
     // Changes color of the prefab when mouse buttons are pressed
-    protected void ChangeColor() 
+    protected void ChangeColor()
     {
-        if (Input.GetMouseButton(0)) 
+        if (Input.GetMouseButton(0))
         {
             GetComponent<SpriteRenderer>().color = Color.blue;
         }
