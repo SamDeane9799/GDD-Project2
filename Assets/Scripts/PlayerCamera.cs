@@ -55,7 +55,7 @@ public class PlayerCamera : MonoBehaviour
         //Right now it only pauses the game and unpauses
         if (SceneManager.GetActiveScene().name == "SamTestScene")
         {
-            if (Input.GetKeyDown(KeyCode.Escape) && GameManager.currentGameState == GameState.PLAY)
+            if (Input.GetKeyDown(KeyCode.Escape) && (GameManager.currentGameState == GameState.PLAYERTURN || GameManager.currentGameState == GameState.ENEMYTURN))
             {
                 GameManager.currentGameState = GameState.PAUSED;
                 pauseCanvas.gameObject.SetActive(true);
@@ -129,7 +129,7 @@ public class PlayerCamera : MonoBehaviour
     //Button used to unpause the game
     public void ResumeButton()
     {
-        GameManager.currentGameState = GameState.PLAY;
+        GameManager.currentGameState = GameState.NONE;
         pauseCanvas.gameObject.SetActive(false);
     }
 

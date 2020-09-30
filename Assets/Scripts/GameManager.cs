@@ -7,8 +7,10 @@ using System.IO;
 
 public enum GameState
 {
+    NONE,
     PAUSED,
-    PLAY
+    PLAYERTURN,
+    ENEMYTURN
 }
 public class GameManager : MonoBehaviour
 {
@@ -47,6 +49,7 @@ public class GameManager : MonoBehaviour
     private PlayerCamera playerCam;
     public Player playerPrefab;
     private Player player;
+    private List<Tile> availableTiles;
     public static GameState currentGameState;
     #endregion
 
@@ -59,12 +62,16 @@ public class GameManager : MonoBehaviour
     public static Obstacle[,] obstaclePositions = new Obstacle[GRID_WIDTH, GRID_HEIGHT];
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         //Sets the game state and tell the game to not destroy this
         DontDestroyOnLoad(this);
-        SceneManager.sceneLoaded += OnLoad;
-        currentGameState = GameState.PLAY;
+        //SceneManager.sceneLoaded += OnLoad;
+        OnLoad(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+
+        availableTiles = new List<Tile>();
+        OnPlayersTurn();
+        currentGameState = GameState.NONE;
 
         musicSources = new List<AudioSource>();
         soundFXSources = new List<AudioSource>();
@@ -110,12 +117,19 @@ public class GameManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 Vector2 mousePosition = playerCam.GetComponent<Camera>().ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                Debug.Log(mousePosition.x + " | " + mousePosition.y);
                 RaycastHit2D projection = Physics2D.Raycast(new Vector2(0, 0), mousePosition.normalized);
                 if (projection.collider != null)
                 {
-                    Debug.Log("Clicked X: " + projection.collider.GetComponent<Tile>().X + " Y: " + projection.collider.GetComponent<Tile>().Y);
+                    //Debug.Log("Clicked X: " + projection.collider.GetComponent<Tile>().X + " Y: " + projection.collider.GetComponent<Tile>().Y);
+                    player.currentTile = projection.collider.GetComponent<Tile>();
+                    player.moving = true;
                 }
+            }
+
+            if(Input.GetKeyDown(KeyCode.F))
+            {
+                player.currentTile = tileBoard[0, GRID_HEIGHT - 1];
+                player.moving = true;
             }
         }
     }
@@ -133,6 +147,64 @@ public class GameManager : MonoBehaviour
         if (scene.name == "SamTestScene")
         {
             player = Instantiate(playerPrefab);
+            player.currentTile = tileBoard[0, 0];
+            player.moving = true;
+        }
+    }
+
+    public void OnPlayersTurn()
+    {
+        GameManager.currentGameState = GameState.PLAYERTURN;
+
+        List<Tile> openList = new List<Tile>();
+
+        openList.Add(player.currentTile);
+        Tile currentTile = openList[0];
+
+
+        while(openList.Count > 0)
+        {
+            if (currentTile.X != GRID_WIDTH - 1 && tileBoard[currentTile.X + 1, currentTile.Y] != null && obstaclePositions[currentTile.X + 1, currentTile.Y] == null &&
+            Mathf.Abs(Vector2.Distance(new Vector2(tileBoard[currentTile.X + 1, currentTile.Y].X + 1, tileBoard[currentTile.X + 1, currentTile.Y].Y), new Vector2(player.X, player.Y))) >= player.movementRange
+            && !availableTiles.Contains(tileBoard[currentTile.X + 1, currentTile.Y]))
+            {
+                openList.Add(tileBoard[currentTile.X + 1, currentTile.Y]);
+                availableTiles.Add(tileBoard[currentTile.X + 1, currentTile.Y]);
+            }
+            if (currentTile.X != 0 && tileBoard[currentTile.X - 1, currentTile.Y] != null && obstaclePositions[currentTile.X - 1, currentTile.Y] &&
+            Mathf.Abs(Vector2.Distance(new Vector2(tileBoard[currentTile.X - 1, currentTile.Y].X - 1, tileBoard[currentTile.X - 1, currentTile.Y].Y), new Vector2(player.X, player.Y))) >= player.movementRange
+            && !availableTiles.Contains(tileBoard[currentTile.X - 1, currentTile.Y]))
+            {
+                openList.Add(tileBoard[currentTile.X - 1, currentTile.Y]);
+                availableTiles.Add(tileBoard[currentTile.X - 1, currentTile.Y]);
+            }
+            if (currentTile.Y != GRID_HEIGHT - 1 && tileBoard[currentTile.X, currentTile.Y + 1] != null && obstaclePositions[currentTile.X, currentTile.Y + 1] &&
+            Mathf.Abs(Vector2.Distance(new Vector2(tileBoard[currentTile.X, currentTile.Y + 1].X - 1, tileBoard[currentTile.X, currentTile.Y + 1].Y), new Vector2(player.X, player.Y))) >= player.movementRange
+            && !availableTiles.Contains(tileBoard[currentTile.X, currentTile.Y + 1]))
+            {
+                openList.Add(tileBoard[currentTile.X, currentTile.Y + 1]);
+                availableTiles.Add(tileBoard[currentTile.X, currentTile.Y + 1]);
+            }
+            if (currentTile.Y != 0 && tileBoard[currentTile.X, currentTile.Y - 1] != null && obstaclePositions[currentTile.X, currentTile.Y - 1] &&
+            Mathf.Abs(Vector2.Distance(new Vector2(tileBoard[currentTile.X, currentTile.Y - 1].X - 1, tileBoard[currentTile.X, currentTile.Y - 1].Y), new Vector2(player.X, player.Y))) >= player.movementRange
+            && !availableTiles.Contains(tileBoard[currentTile.X, currentTile.Y - 1]))
+            {
+                openList.Add(tileBoard[currentTile.X, currentTile.Y - 1]);
+                availableTiles.Add(tileBoard[currentTile.X, currentTile.Y - 1]);
+            }
+
+
+            openList.RemoveAt(0);
+            if (openList.Count > 0)
+            {
+                currentTile = openList[0];
+            }
+        }
+
+        foreach(Tile t in availableTiles)
+        {
+            Debug.Log("X: " + t.X + " | " + "Y: " + t.Y);
+            t.GetComponent<SpriteRenderer>().color = Color.yellow;
         }
     }
 }

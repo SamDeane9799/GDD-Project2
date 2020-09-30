@@ -6,10 +6,19 @@ public abstract class LevelObject : MonoBehaviour
 {
     private FMOD.Studio.EventInstance instance;
 
+    public int X
+    {
+        get { return (int)(9.5f + transform.position.x); }
+    }
+    public int Y
+    {
+        get { return (int)(5.5f + transform.position.y); }
+    }
+
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        instance = FMODUnity.RuntimeManager.CreateInstance("event:/Test/Shwing");
+        //instance = FMODUnity.RuntimeManager.CreateInstance("event:/Test/Shwing");
     }
 
     // Update is called once per frame
