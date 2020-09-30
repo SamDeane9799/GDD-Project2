@@ -52,13 +52,15 @@ public class GameManager : MonoBehaviour
     private const string settingsPath = "Assets/txt/settings.txt";
     #endregion
 
+    public static Tile[,] tileBoard = new Tile[24, 24];
+
     // Start is called before the first frame update
     void Awake()
     {
         //Sets the game state and tell the game to not destroy this
         DontDestroyOnLoad(this);
         currentGameState = GameState.PLAY;
-
+/*
         musicSources = new List<AudioSource>();
         soundFXSources = new List<AudioSource>();
 
@@ -73,12 +75,20 @@ public class GameManager : MonoBehaviour
 
         reader.Close();
         //Initializing player
-        InitializePlayer();
+        InitializePlayer();*/
     }
 
     // Update is called once per frame
     void Update()
     {
+        for(int i = 0; i < tileBoard.GetLength(0); i++)
+        {
+            for (int j = 0; j < tileBoard.GetLength(1); j++)
+            {
+                if(tileBoard[i, j] != null)
+                    Debug.Log(tileBoard[i, j].name + " X: " + i + " Y: " + j);
+            }
+        }
     }
 
 

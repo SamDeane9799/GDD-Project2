@@ -8,6 +8,7 @@ public class Tile : LevelObject
     protected override void Start()
     {
         base.Start();
+        GameManager.tileBoard[(int)(10.5f + transform.position.x),(int)(6.5f + transform.position.y)] = this;
     }
 
     // Update is called once per frame
