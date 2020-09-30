@@ -5,35 +5,35 @@ using UnityEngine;
 public class Obstacle : LevelObject
 {
     // Fields
+    #region Fields
     public Grid gridRef; //All Obstacles should have a reference to the grid they are on; can just click and drag the grid to this
     public float speed = 1f;
+    #endregion
 
     //These fields are just for Obstacles to update their own movement, we wouldn't need them if we were calling MoveToCell() from another class's Update()
+    #region Other Fields
     private Vector3 destination;
     private Vector3 direction;
     private bool moving = false;
+    #endregion
 
     // Properties
+    #region Properties
     public Vector3Int CellPosistion { get { return gridRef.LocalToCell(transform.position); } }
     public Vector3Int LeftCell { get { return CellPosistion + Vector3Int.left; } }
     public Vector3Int RightCell { get { return CellPosistion + Vector3Int.right; } }
     public Vector3Int UpCell { get { return CellPosistion + Vector3Int.up; } }
     public Vector3Int DownCell { get { return CellPosistion + Vector3Int.down; } }
-
-    //Methods
+    #endregion
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
         SnapToCell();
-
-        //Testing
-        Debug.Log(CellPosistion);
-        Debug.Log(new Vector3Int(1,3,0));
-        //MoveToCell(new Vector3Int(1, 3, 0));
-        MoveToCell(LeftCell);
-        MoveToCell(DownCell);
+        MoveToCell(new Vector3Int(1, 3, 0));
+        //MoveToCell(LeftCell);
+        //MoveToCell(DownCell);
     }
 
     // Update is called once per frame
@@ -42,6 +42,8 @@ public class Obstacle : LevelObject
         base.Update();
         AnimateMovement();
     }
+
+    // Methods
 
     //This method exist because I'm too lazy to make sure that the obstacle is exactly on the grid when I click and drag it somewhere
     private void SnapToCell()
@@ -75,7 +77,7 @@ public class Obstacle : LevelObject
         MoveToCell(cellPosDestination, speed);
     }
 
-    //This method is just for Obstacles to update their own movement, we wouldn't need it if we were calling MoveToCell() from another class's Update()
+    //This helper method is just for Obstacles to update their own movement, we wouldn't need it if we were calling MoveToCell() from another class's Update()
     private void AnimateMovement()
     {
         if (moving)
