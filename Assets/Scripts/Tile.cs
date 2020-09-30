@@ -4,11 +4,21 @@ using UnityEngine;
 
 public class Tile : LevelObject
 {
+    public int X
+    {
+        get { return (int)(9.5f + transform.position.x); }
+    }
+    public int Y
+    {
+        get { return (int)(5.5f + transform.position.y); }
+    }
+
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
-        GameManager.tileBoard[(int)(10.5f + transform.position.x),(int)(6.5f + transform.position.y)] = this;
+        //Adding the tiles to the tile board
+        GameManager.tileBoard[(int)(9.5f + transform.position.x),(int)(5.5f + transform.position.y)] = this;
     }
 
     // Update is called once per frame
