@@ -5,33 +5,45 @@ using UnityEngine;
 public class Obstacle : LevelObject
 {
     // Fields
+    #region Fields
     public Grid gridRef; //All Obstacles should have a reference to the grid they are on; can just click and drag the grid to this
     public float speed = 1f;
+    #endregion
+
+    //These fields are just for Obstacles to update their own movement, we wouldn't need them if we were calling MoveToCell() from another class's Update()
+    #region Other Fields
+    private Vector3 destination;
+    private Vector3 direction;
+    private bool moving = false;
+    #endregion
 
     // Properties
+    #region Properties
     public Vector3Int CellPosistion { get { return gridRef.LocalToCell(transform.position); } }
     public Vector3Int LeftCell { get { return CellPosistion + Vector3Int.left; } }
     public Vector3Int RightCell { get { return CellPosistion + Vector3Int.right; } }
     public Vector3Int UpCell { get { return CellPosistion + Vector3Int.up; } }
     public Vector3Int DownCell { get { return CellPosistion + Vector3Int.down; } }
-
-    //Methods
+    #endregion
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
         SnapToCell();
-
-        //Testing
-        MoveToCell(LeftCell);
+        MoveToCell(new Vector3Int(1, 3, 0));
+        //MoveToCell(LeftCell);
+        //MoveToCell(DownCell);
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
+        AnimateMovement();
     }
+
+    // Methods
 
     //This method exist because I'm too lazy to make sure that the obstacle is exactly on the grid when I click and drag it somewhere
     private void SnapToCell()
@@ -48,13 +60,36 @@ public class Obstacle : LevelObject
         Vector3 posDifference = cellPosDesCenter - transform.position;
         Vector3 direction = posDifference.normalized;
 
-        //Loop until the distance is acheived
-        while (Mathf.Pow(cellPosDestination.x - transform.position.x,2) + Mathf.Pow(cellPosDestination.y - transform.position.y, 2) > 0)
-            transform.Translate(direction * movSpeed * Time.deltaTime);
+        //Movement would be performed here if we were calling MoveToCell from another class's update
+        //Vector3 movement = direction * speed * Time.deltaTime;
+        //if (Vector3.Distance(destination, transform.position) >= movement.magnitude)
+        //    transform.Translate(direction * speed * Time.deltaTime);
+
+        //Otherwise we just update variables for use by AnimateMovement()
+        destination = cellPosDesCenter;
+        this.direction = direction;
+        speed = movSpeed;
+        moving = true;
     }
     //You can also call it using a speed value attached to the object idk which we prefer
     public void MoveToCell(Vector3Int cellPosDestination)
     {
         MoveToCell(cellPosDestination, speed);
+    }
+
+    //This helper method is just for Obstacles to update their own movement, we wouldn't need it if we were calling MoveToCell() from another class's Update()
+    private void AnimateMovement()
+    {
+        if (moving)
+        {
+            Vector3 movement = direction * speed * Time.deltaTime;
+            if (Vector3.Distance(destination, transform.position) >= movement.magnitude)
+                transform.Translate(direction * speed * Time.deltaTime);
+            else
+            {
+                moving = false;
+                SnapToCell();
+            }
+        }
     }
 }
