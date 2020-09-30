@@ -48,11 +48,9 @@ public class Obstacle : LevelObject
         Vector3 posDifference = cellPosDesCenter - transform.position;
         Vector3 direction = posDifference.normalized;
 
-        //There's a better way of doing this that doesn't require the snap at the end but it requires thinking about when things are positive or negative so I'll do it later :)
-        while (transform.position != cellPosDestination)
+        //Loop until the distance is acheived
+        while (Mathf.Pow(cellPosDestination.x - transform.position.x,2) + Mathf.Pow(cellPosDestination.y - transform.position.y, 2) > 0)
             transform.Translate(direction * movSpeed * Time.deltaTime);
-
-        SnapToCell();
     }
     //You can also call it using a speed value attached to the object idk which we prefer
     public void MoveToCell(Vector3Int cellPosDestination)
