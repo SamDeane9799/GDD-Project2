@@ -22,11 +22,13 @@ public abstract class LevelObject : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             GetComponent<SpriteRenderer>().color = Color.blue;
+            FMODUnity.RuntimeManager.PlayOneShot("event:/Test/Shwing");
         }
 
         if (Input.GetMouseButton(1))
         {
             GetComponent<SpriteRenderer>().color = Color.white;
+            FMODUnity.RuntimeManager.PlayOneShot("event:/Test/Shwing");
         }
     }
 }
