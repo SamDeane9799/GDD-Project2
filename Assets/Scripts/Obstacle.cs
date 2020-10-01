@@ -30,8 +30,10 @@ public class Obstacle : LevelObject
     protected override void Start()
     {
         base.Start();
-        SnapToCell();
-        MoveToCell(new Vector3Int(1, 3, 0));
+        //Adding the obstacle to the obstacle position
+        GameManager.obstaclePositions[(int)(9.5f + transform.position.x), (int)(5.5f + transform.position.y)] = this;
+        //SnapToCell();
+        //MoveToCell(new Vector3Int(1, 3, 0));
         //MoveToCell(LeftCell);
         //MoveToCell(DownCell);
     }
