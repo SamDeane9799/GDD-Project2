@@ -17,30 +17,64 @@ public class GameManager : MonoBehaviour
     public const int GRID_WIDTH = 20;
     public const int GRID_HEIGHT = 12;
 
-    #region Properties
-    //Get and set properties for the volume levels to make it easier to read and code
-    public static float soundFXVolume
-    {
-        get { return soundSettings[1]; }
-        set { soundSettings[1] = value; }
-    }
-    public static float musicVolume
-    {
-        get { return soundSettings[2]; }
-        set { soundSettings[2] = value; }
-    }
-    public static float masterVolume
-    {
-        get { return soundSettings[0]; }
-        set { soundSettings[0] = value; }
-    }
+    #region Properties OLD
+    ////Get and set properties for the volume levels to make it easier to read and code
+    //public static float soundFXVolume
+    //{
+    //    get { return FMODUnity.RuntimeManager.GetBus("bus:/SFX").getVolume(out SFXVolume); }
+    //    set { soundSettings[1] = value; }
+    //}
+    //public static float musicVolume
+    //{
+    //    get { return soundSettings[2]; }
+    //    set { soundSettings[2] = value; }
+    //}
+    //public static float masterVolume
+    //{
+    //    get { return soundSettings[0]; }
+    //    set { soundSettings[0] = value; }
+    //}
     #endregion
 
     #region Sound Variables
-    public static List<AudioSource> musicSources;
-    public static List<AudioSource> soundFXSources;
+    [SerializeField]
+    [Range(0.0f, 100.0f)]
+    private float sfxVolume;
+    [SerializeField]
+    [Range(0.0f, 100.0f)]
+    private float musicVolume;
+    [SerializeField]
+    [Range(0.0f, 100.0f)]
+    private float masterVolume;
 
-    private static List<float> soundSettings;
+    private const string sfxPath = "bus:/SFX";
+    private const string musicPath = "bus:/Music";
+    private const string masterPath = "bus:/";
+
+    //public static List<AudioSource> musicSources;
+    //public static List<AudioSource> soundFXSources;
+
+    //private static List<float> soundSettings;
+    #endregion
+
+    #region Sound Properties
+    public float SFXVolume
+    {
+        get { return GetBusVolume(sfxPath, sfxVolume); }
+        set { SetBusVolume(sfxPath, value); }
+    }
+
+    public float MusicVolume
+    {
+        get { return GetBusVolume(musicPath, musicVolume); }
+        set { SetBusVolume(musicPath, value); }
+    }
+
+    public float MasterVolume
+    {
+        get { return GetBusVolume(masterPath, masterVolume); }
+        set { SetBusVolume(masterPath, value); }
+    }
     #endregion
 
     #region Player
@@ -75,17 +109,17 @@ public class GameManager : MonoBehaviour
         OnPlayersTurn();
         currentGameState = GameState.NONE;
 
-        musicSources = new List<AudioSource>();
-        soundFXSources = new List<AudioSource>();
+        //musicSources = new List<AudioSource>();
+        //soundFXSources = new List<AudioSource>();
 
-        //Reading in our settings from a text file
-        //Here is one example using volume
-        soundSettings = new List<float>(3);
-        reader = new StreamReader(settingsPath);
+        ////Reading in our settings from a text file
+        ////Here is one example using volume
+        //soundSettings = new List<float>(3);
+        //reader = new StreamReader(settingsPath);
 
-        soundSettings.Add(float.Parse(reader.ReadLine()));
-        soundSettings.Add(float.Parse(reader.ReadLine()));
-        soundSettings.Add(float.Parse(reader.ReadLine()));
+        //soundSettings.Add(float.Parse(reader.ReadLine()));
+        //soundSettings.Add(float.Parse(reader.ReadLine()));
+        //soundSettings.Add(float.Parse(reader.ReadLine()));
 
         reader.Close();
         //Initializing player
@@ -236,4 +270,22 @@ public class GameManager : MonoBehaviour
     {
         return new Vector2((int)(point.x + 9.5), (int)(point.y + 5.5));
     }
+
+    #region Sound Methods
+
+    // Sets the volume of a specific bus to the given volume
+    private void SetBusVolume(string busPath, float volume)
+    {
+        FMODUnity.RuntimeManager.GetBus(busPath).setVolume(volume);
+    }
+
+    // Gets the volume of a specific bus and assigns it to a given variable
+    private float GetBusVolume(string busPath, float busVariable)
+    {
+        FMODUnity.RuntimeManager.GetBus(busPath).getVolume(out busVariable);
+
+        return busVariable;
+    }
+
+    #endregion
 }

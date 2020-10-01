@@ -32,10 +32,10 @@ public class PlayerCamera : MonoBehaviour
         DontDestroyOnLoad(this);
         //canvasTracker.Push(titleCanvas);
 
-        soundfxVolumeSlider.value = GameManager.soundFXVolume;
-        musicSoundVolumeSlider.value = GameManager.musicVolume;
-        masterSoundVolumeSlider.value = GameManager.masterVolume;
-        GameManager.musicSources.Add(GetComponent<AudioSource>());
+        //soundfxVolumeSlider.value = GameManager.soundFXVolume;
+        //musicSoundVolumeSlider.value = GameManager.musicVolume;
+        //masterSoundVolumeSlider.value = GameManager.masterVolume;
+        //GameManager.musicSources.Add(GetComponent<AudioSource>());
         applyButton.interactable = false;
 
         ApplySoundChanges();
@@ -106,17 +106,17 @@ public class PlayerCamera : MonoBehaviour
         if (!applyButton.interactable)
             applyButton.interactable = true;
 
-        //Used for all volume sliders to calculate what we should change the sound settings to
-        if (index == 0)
-        {
-            GameManager.masterVolume = masterSoundVolumeSlider.value;
-            GameManager.musicVolume = musicSoundVolumeSlider.value * GameManager.masterVolume;
-            GameManager.soundFXVolume = soundfxVolumeSlider.value * GameManager.masterVolume;
-        }
-        else if (index == 1)
-            GameManager.soundFXVolume = soundfxVolumeSlider.value * GameManager.masterVolume;
-        else if (index == 2)
-            GameManager.musicVolume = musicSoundVolumeSlider.value * GameManager.masterVolume;
+        ////Used for all volume sliders to calculate what we should change the sound settings to
+        //if (index == 0)
+        //{
+        //    GameManager.masterVolume = masterSoundVolumeSlider.value;
+        //    GameManager.musicVolume = musicSoundVolumeSlider.value * GameManager.masterVolume;
+        //    GameManager.soundFXVolume = soundfxVolumeSlider.value * GameManager.masterVolume;
+        //}
+        //else if (index == 1)
+        //    GameManager.soundFXVolume = soundfxVolumeSlider.value * GameManager.masterVolume;
+        //else if (index == 2)
+        //    GameManager.musicVolume = musicSoundVolumeSlider.value * GameManager.masterVolume;
 
     }
 
@@ -159,13 +159,13 @@ public class PlayerCamera : MonoBehaviour
     //Loops through our lists of audiosources and adjusts their volumes
     private void ApplySoundChanges()
     {
-        foreach (AudioSource a in GameManager.musicSources)
-        {
-            a.volume = GameManager.musicVolume;
-        }
-        foreach (AudioSource a in GameManager.soundFXSources)
-        {
-            a.volume = GameManager.soundFXVolume;
-        }
+        //foreach (AudioSource a in GameManager.musicSources)
+        //{
+        //    a.volume = GameManager.musicVolume;
+        //}
+        //foreach (AudioSource a in GameManager.soundFXSources)
+        //{
+        //    a.volume = GameManager.soundFXVolume;
+        //}
     }
 }
