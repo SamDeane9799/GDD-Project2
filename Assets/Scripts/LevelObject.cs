@@ -30,14 +30,14 @@ public abstract class LevelObject : MonoBehaviour
     // Changes color of the prefab when mouse buttons are pressed
     protected void ChangeColor()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
             //GetComponent<SpriteRenderer>().color = Color.blue;
             instance.start();
             instance.release();
         }
 
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButtonDown(1))
         {
             //GetComponent<SpriteRenderer>().color = Color.white;
             instance.start();
