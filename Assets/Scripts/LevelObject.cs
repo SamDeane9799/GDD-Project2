@@ -32,14 +32,14 @@ public abstract class LevelObject : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            GetComponent<SpriteRenderer>().color = Color.blue;
+            //GetComponent<SpriteRenderer>().color = Color.blue;
             instance.start();
             instance.release();
         }
 
         if (Input.GetMouseButton(1))
         {
-            GetComponent<SpriteRenderer>().color = Color.white;
+            //GetComponent<SpriteRenderer>().color = Color.white;
             instance.start();
             instance.release();
         }

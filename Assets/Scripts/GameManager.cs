@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     private PlayerCamera playerCam;
     public Player playerPrefab;
     private Player player;
+    //Keeping track of which tiles our player can currently go to
     private List<Tile> availableTiles;
     public static GameState currentGameState;
     #endregion
@@ -70,6 +71,7 @@ public class GameManager : MonoBehaviour
         OnLoad(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 
         availableTiles = new List<Tile>();
+        player.movementRange = 2;
         OnPlayersTurn();
         currentGameState = GameState.NONE;
 
@@ -116,20 +118,23 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
+                //Projecting a ray at the mouse and checking if it hit a collider
                 Vector2 mousePosition = playerCam.GetComponent<Camera>().ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
                 RaycastHit2D projection = Physics2D.Raycast(new Vector2(0, 0), mousePosition.normalized);
                 if (projection.collider != null)
-                {
-                    //Debug.Log("Clicked X: " + projection.collider.GetComponent<Tile>().X + " Y: " + projection.collider.GetComponent<Tile>().Y);
+                {                  
+                    //Reseting the color of tiles before moving
+                    foreach(Tile t in availableTiles)
+                    {
+                        t.GetComponent<SpriteRenderer>().color = Color.white;
+                    }
+                    //Clearing the available tile list and setting the new tile
+                    availableTiles.Clear();
                     player.currentTile = projection.collider.GetComponent<Tile>();
-                    player.moving = true;
-                }
-            }
 
-            if(Input.GetKeyDown(KeyCode.F))
-            {
-                player.currentTile = tileBoard[0, GRID_HEIGHT - 1];
-                player.moving = true;
+                    //Temporary line that turns all the tiles yellow that are in range
+                    OnPlayersTurn();
+                }
             }
         }
     }
@@ -144,66 +149,84 @@ public class GameManager : MonoBehaviour
 
     public void OnLoad(Scene scene, LoadSceneMode mode)
     {
+        //Using this to load in the player when we load into the specific scene
         if (scene.name == "SamTestScene")
         {
             player = Instantiate(playerPrefab);
             player.currentTile = tileBoard[0, 0];
-            player.moving = true;
         }
     }
 
     public void OnPlayersTurn()
     {
+        //Setting the GameState to playerturn state
         GameManager.currentGameState = GameState.PLAYERTURN;
 
+        //This is our openList
         List<Tile> openList = new List<Tile>();
 
+        //We want to start our search for available tiles with the player's tile since all of them will be near the player
         openList.Add(player.currentTile);
-        Tile currentTile = openList[0];
+        Tile currentTile;
 
-
+        //We iterate through till we have nothing viable anymore
         while(openList.Count > 0)
         {
+            currentTile = openList[0];
+
+            //Debug.Log(currentTile.X + " | " + currentTile.Y);
+
+            //Handling our X positive neighbor
+            //Checking to make sure the X doesn't go under 0, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
+            //that the player is contained in the availabletiles and that the tile is not the one we started on
             if (currentTile.X != GRID_WIDTH - 1 && tileBoard[currentTile.X + 1, currentTile.Y] != null && obstaclePositions[currentTile.X + 1, currentTile.Y] == null &&
-            Mathf.Abs(Vector2.Distance(new Vector2(tileBoard[currentTile.X + 1, currentTile.Y].X + 1, tileBoard[currentTile.X + 1, currentTile.Y].Y), new Vector2(player.X, player.Y))) >= player.movementRange
-            && !availableTiles.Contains(tileBoard[currentTile.X + 1, currentTile.Y]))
+            Mathf.Abs(Vector2.Distance(new Vector2(currentTile.X + 1, currentTile.Y), new Vector2(player.currentTile.X, player.currentTile.Y))) <= player.movementRange
+            && !availableTiles.Contains(tileBoard[currentTile.X + 1, currentTile.Y]) && tileBoard[currentTile.X + 1, currentTile.Y] != player.currentTile)
             {
                 openList.Add(tileBoard[currentTile.X + 1, currentTile.Y]);
                 availableTiles.Add(tileBoard[currentTile.X + 1, currentTile.Y]);
             }
-            if (currentTile.X != 0 && tileBoard[currentTile.X - 1, currentTile.Y] != null && obstaclePositions[currentTile.X - 1, currentTile.Y] &&
-            Mathf.Abs(Vector2.Distance(new Vector2(tileBoard[currentTile.X - 1, currentTile.Y].X - 1, tileBoard[currentTile.X - 1, currentTile.Y].Y), new Vector2(player.X, player.Y))) >= player.movementRange
-            && !availableTiles.Contains(tileBoard[currentTile.X - 1, currentTile.Y]))
+
+            //Handling our X negative neighbor
+            //Checking to make sure the X doesn't go over our limit, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
+            //that the player is contained in the availabletiles and that the tile is not the one we started on
+            if (currentTile.X != 0 && tileBoard[currentTile.X - 1, currentTile.Y] != null && obstaclePositions[currentTile.X - 1, currentTile.Y] == null &&
+            Mathf.Abs(Vector2.Distance(new Vector2(currentTile.X - 1, currentTile.Y), new Vector2(player.currentTile.X, player.currentTile.Y))) <= player.movementRange
+            && !availableTiles.Contains(tileBoard[currentTile.X - 1, currentTile.Y]) && tileBoard[currentTile.X - 1, currentTile.Y] != player.currentTile)
             {
                 openList.Add(tileBoard[currentTile.X - 1, currentTile.Y]);
                 availableTiles.Add(tileBoard[currentTile.X - 1, currentTile.Y]);
             }
-            if (currentTile.Y != GRID_HEIGHT - 1 && tileBoard[currentTile.X, currentTile.Y + 1] != null && obstaclePositions[currentTile.X, currentTile.Y + 1] &&
-            Mathf.Abs(Vector2.Distance(new Vector2(tileBoard[currentTile.X, currentTile.Y + 1].X - 1, tileBoard[currentTile.X, currentTile.Y + 1].Y), new Vector2(player.X, player.Y))) >= player.movementRange
-            && !availableTiles.Contains(tileBoard[currentTile.X, currentTile.Y + 1]))
+
+            //Handling our Y Positve neighbor
+            //Checking to make sure the Y doesn't go over our limit, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
+            //that the player is contained in the availabletiles and that the tile is not the one we started on
+            if (currentTile.Y != GRID_HEIGHT - 1 && tileBoard[currentTile.X, currentTile.Y + 1] != null && obstaclePositions[currentTile.X, currentTile.Y + 1] == null &&
+            Mathf.Abs(Vector2.Distance(new Vector2(currentTile.X, currentTile.Y + 1), new Vector2(player.currentTile.X, player.currentTile.Y))) <= player.movementRange
+            && !availableTiles.Contains(tileBoard[currentTile.X, currentTile.Y + 1]) && tileBoard[currentTile.X, currentTile.Y + 1] != player.currentTile)
             {
                 openList.Add(tileBoard[currentTile.X, currentTile.Y + 1]);
                 availableTiles.Add(tileBoard[currentTile.X, currentTile.Y + 1]);
             }
-            if (currentTile.Y != 0 && tileBoard[currentTile.X, currentTile.Y - 1] != null && obstaclePositions[currentTile.X, currentTile.Y - 1] &&
-            Mathf.Abs(Vector2.Distance(new Vector2(tileBoard[currentTile.X, currentTile.Y - 1].X - 1, tileBoard[currentTile.X, currentTile.Y - 1].Y), new Vector2(player.X, player.Y))) >= player.movementRange
-            && !availableTiles.Contains(tileBoard[currentTile.X, currentTile.Y - 1]))
+
+            //Handling our y negative neighbor
+            //Checking to make sure the Y doesn't go under 0, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
+            //that the player is contained in the availabletiles and that the tile is not the one we started on
+            if (currentTile.Y != 0 && tileBoard[currentTile.X, currentTile.Y - 1] != null && obstaclePositions[currentTile.X, currentTile.Y - 1] == null &&
+            Mathf.Abs(Vector2.Distance(new Vector2(currentTile.X, currentTile.Y - 1), new Vector2(player.currentTile.X, player.currentTile.Y))) <= player.movementRange
+            && !availableTiles.Contains(tileBoard[currentTile.X, currentTile.Y - 1])&& tileBoard[currentTile.X, currentTile.Y - 1] != player.currentTile)
             {
                 openList.Add(tileBoard[currentTile.X, currentTile.Y - 1]);
                 availableTiles.Add(tileBoard[currentTile.X, currentTile.Y - 1]);
             }
 
-
+            //After checking all neighbors we remove the tile we just checked and then go to the next one to check it's neighbors(If there is another tile on the openlist)
             openList.RemoveAt(0);
-            if (openList.Count > 0)
-            {
-                currentTile = openList[0];
-            }
         }
 
+        //Changing all the tiles to a yellow color
         foreach(Tile t in availableTiles)
         {
-            Debug.Log("X: " + t.X + " | " + "Y: " + t.Y);
             t.GetComponent<SpriteRenderer>().color = Color.yellow;
         }
     }
