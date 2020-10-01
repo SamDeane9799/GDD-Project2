@@ -119,9 +119,10 @@ public class GameManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 //Projecting a ray at the mouse and checking if it hit a collider
-                Vector2 mousePosition = playerCam.GetComponent<Camera>().ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                RaycastHit2D projection = Physics2D.Raycast(new Vector2(0, 0), mousePosition.normalized);
-                if (projection.collider != null)
+                Vector2 mousePosition = playerCam.GetComponent<Camera>().ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 9));
+                mousePosition = GameManager.WorldToGamePoint(mousePosition);
+                //RaycastHit2D projection = Physics2D.Raycast(new Vector2(0, 0), mousePosition.normalized);
+                if (availableTiles.Contains(tileBoard[(int)mousePosition.x, (int)mousePosition.y]))
                 {                  
                     //Reseting the color of tiles before moving
                     foreach(Tile t in availableTiles)
@@ -130,7 +131,7 @@ public class GameManager : MonoBehaviour
                     }
                     //Clearing the available tile list and setting the new tile
                     availableTiles.Clear();
-                    player.currentTile = projection.collider.GetComponent<Tile>();
+                    player.currentTile = tileBoard[(int)mousePosition.x, (int)mousePosition.y];
 
                     //Temporary line that turns all the tiles yellow that are in range
                     OnPlayersTurn();
@@ -229,5 +230,10 @@ public class GameManager : MonoBehaviour
         {
             t.GetComponent<SpriteRenderer>().color = Color.yellow;
         }
+    }
+
+    public static Vector2 WorldToGamePoint(Vector2 point)
+    {
+        return new Vector2((int)(point.x + 9.5), (int)(point.y + 5.5));
     }
 }

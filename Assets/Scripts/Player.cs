@@ -41,7 +41,7 @@ public class Player : LevelObject
         }
         //Lerping our position
         transform.position = Vector2.Lerp(transform.position, currentTile.gameObject.transform.position, .05f);
-
+        //transform.position = new Vector3(transform.position.x, transform.position.y, -1f);
         //Setting our rotation
         Vector3 dir = currentTile.gameObject.transform.position - transform.position;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
