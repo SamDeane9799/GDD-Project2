@@ -93,7 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: FMODAssets/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637370674798862330
+  lastModified: 637370966533675980
   LoadResult: 0
   FileSizes:
   - Name: 
@@ -116,7 +116,7 @@ MonoBehaviour:
   lastModified: 637370674798782521
   LoadResult: 0
   FileSizes: []
-  Exists: 1
+  Exists: 0
 --- !u!114 &-1405154977015872515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,7 +132,7 @@ MonoBehaviour:
   Path: event:/Test/Shwing
   guid: 3bebe7ec5bcc90489fee68ca6560f322
   Banks:
-  - {fileID: -1609666020612308409}
+  - {fileID: 2888939349022612374}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -154,13 +154,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: -1928407233967231943}
-  - {fileID: -1609666020612308409}
+  - {fileID: 2888939349022612374}
   EditorEvents:
   - {fileID: -1405154977015872515}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -1609666020612308409}
+  - {fileID: 2888939349022612374}
   StringsBanks:
   - {fileID: -1928407233967231943}
-  stringsBankWriteTime: 637370674798862330
+  stringsBankWriteTime: 637370966533675980
   cacheVersion: 3
+--- !u!114 &2888939349022612374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: FMODAssets/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637370966533596569
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
+--- !u!114 &7475642709648307495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: FMODAssets/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637370965509895942
+  LoadResult: 0
+  FileSizes: []
+  Exists: 0
