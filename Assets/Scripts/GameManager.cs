@@ -177,7 +177,7 @@ public class GameManager : MonoBehaviour
             //Taking care of our enemy's turn
             else if(currentGameState == GameState.ENEMYTURN)
             {
-                if(testEnemy.actionPoints > 1)
+                if(testEnemy.actionPoints >= 1 && !testEnemy.moving)
                     testEnemy.EnemyTurn();
                 else if(!testEnemy.moving)
                 {
@@ -304,7 +304,7 @@ public class GameManager : MonoBehaviour
         //Changing all the tiles to a yellow color
         foreach (Tile t in availableTiles)
         {
-            t.GetComponent<SpriteRenderer>().color = Color.yellow;
+            t.GetComponent<SpriteRenderer>().color = new Color(Color.white.r, Color.white.g, Color.white.b, .85f);
         }
     }
 
