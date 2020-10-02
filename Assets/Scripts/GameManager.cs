@@ -100,6 +100,7 @@ public class GameManager : MonoBehaviour
 
     public static Tile[,] tileBoard = new Tile[GRID_WIDTH, GRID_HEIGHT];
     public static Obstacle[,] obstaclePositions = new Obstacle[GRID_WIDTH, GRID_HEIGHT];
+    public static WinTile winTilePostion;
 
     // Start is called before the first frame update
     void Start()
@@ -133,7 +134,6 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if(SceneManager.GetActiveScene().name == "SamTestScene" || SceneManager.GetActiveScene().name == "WillTestScene")
         {
             if (currentGameState == GameState.PLAYERTURN)
@@ -237,6 +237,15 @@ public class GameManager : MonoBehaviour
 
         //We want to start our search for available tiles with the player's tile since all of them will be near the player
         openList.Add(player.currentTile);
+
+        // Checks if player is on win tile and "ends the game"
+        // Currently "ends the game" means stopping the search for available tiles
+        if (OnWinTile(player.currentTile))
+        {
+            Debug.Log("You Win!");
+            return;
+        }
+
         Tile currentTile;
 
         float distance;
@@ -310,10 +319,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Returns true if the currentTile is the win tile, false otherwise
+    private bool OnWinTile(Tile currentTile)
+    {
+        return (currentTile.Y == winTilePostion.Y && currentTile.X == winTilePostion.X);
+    }
+
     #region Sound Methods
 
-    // Sets the volume of a specific bus to the given volume
-    private void SetBusVolume(string busPath, float volume)
+        // Sets the volume of a specific bus to the given volume
+        private void SetBusVolume(string busPath, float volume)
     {
         FMODUnity.RuntimeManager.GetBus(busPath).setVolume(volume);
     }
