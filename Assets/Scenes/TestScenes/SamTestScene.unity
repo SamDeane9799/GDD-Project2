@@ -18279,6 +18279,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 221fc90725bfb59449abc1c2de0d6791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sfxVolume: 0
+  musicVolume: 0
+  masterVolume: 0
   playerCameraPrefab: {fileID: 1433613913130409216, guid: 39b493d61e8ef7e438be2a4bf3a6ebfc,
     type: 3}
   playerPrefab: {fileID: 7787288898227893954, guid: 7025f502c32cde748be851b63b595904,

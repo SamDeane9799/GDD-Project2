@@ -114,14 +114,14 @@ public class GameManager : MonoBehaviour
 
         ////Reading in our settings from a text file
         ////Here is one example using volume
-        //soundSettings = new List<float>(3);
-        //reader = new StreamReader(settingsPath);
+        /*soundSettings = new List<float>(3);
+        reader = new StreamReader(settingsPath);
 
-        //soundSettings.Add(float.Parse(reader.ReadLine()));
-        //soundSettings.Add(float.Parse(reader.ReadLine()));
-        //soundSettings.Add(float.Parse(reader.ReadLine()));
+        soundSettings.Add(float.Parse(reader.ReadLine()));
+        soundSettings.Add(float.Parse(reader.ReadLine()));
+        soundSettings.Add(float.Parse(reader.ReadLine()));
 
-        reader.Close();
+        reader.Close();*/
         //Initializing player
         InitializePlayerCam();
     }
@@ -150,16 +150,17 @@ public class GameManager : MonoBehaviour
 
         if(SceneManager.GetActiveScene().name == "SamTestScene")
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(1))
             {
                 //Projecting a ray at the mouse and checking if it hit a collider
-                Vector2 mousePosition = playerCam.GetComponent<Camera>().ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 9));
+                Vector2 mousePosition = playerCam.GetComponent<Camera>().ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+
+                Debug.Log(mousePosition.x + " | " + mousePosition.y);
                 mousePosition = GameManager.WorldToGamePoint(mousePosition);
-                //RaycastHit2D projection = Physics2D.Raycast(new Vector2(0, 0), mousePosition.normalized);
                 if (availableTiles.Contains(tileBoard[(int)mousePosition.x, (int)mousePosition.y]))
                 {                  
                     //Reseting the color of tiles before moving
-                    foreach(Tile t in availableTiles)
+                    foreach (Tile t in availableTiles)
                     {
                         t.GetComponent<SpriteRenderer>().color = Color.white;
                     }
@@ -268,7 +269,12 @@ public class GameManager : MonoBehaviour
 
     public static Vector2 WorldToGamePoint(Vector2 point)
     {
-        return new Vector2((int)(point.x + 9.5), (int)(point.y + 5.5));
+        return new Vector2((int)(point.x + 9.5f), (int)(point.y + 5.5f));
+    }
+
+    public static Vector2 WorldToGamePoint(float pointX, float pointY)
+    {
+        return new Vector2((int)(pointX + 9.5), (int)(pointY + 5.5));
     }
 
     #region Sound Methods
