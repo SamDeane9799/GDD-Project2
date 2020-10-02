@@ -53,7 +53,7 @@ public class PlayerCamera : MonoBehaviour
 
         //Code that runs in the gamescene
         //Right now it only pauses the game and unpauses
-        if (SceneManager.GetActiveScene().name == "SamTestScene")
+        if (SceneManager.GetActiveScene().name == "SamTestScene" || SceneManager.GetActiveScene().name == "WillTestScene")
         {
             if (Input.GetKeyDown(KeyCode.Escape) && (GameManager.currentGameState == GameState.PLAYERTURN || GameManager.currentGameState == GameState.ENEMYTURN))
             {

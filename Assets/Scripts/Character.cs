@@ -25,7 +25,6 @@ public class Character : LevelObject
         //If we are moving we call the method to lerp to the current tile
         if (moving)
             MoveToTile();
-
     }
 
     private void MoveToTile()

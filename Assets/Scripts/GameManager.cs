@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
 
-        if(SceneManager.GetActiveScene().name == "SamTestScene")
+        if(SceneManager.GetActiveScene().name == "SamTestScene" || SceneManager.GetActiveScene().name == "WillTestScene")
         {
             if (currentGameState == GameState.PLAYERTURN)
             {
@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviour
                         //Reseting the color of tiles before moving
                         foreach (Tile t in availableTiles)
                         {
-                            t.GetComponent<SpriteRenderer>().color = Color.white;
+                            t.GetComponent<SpriteRenderer>().color = new Color(0.6f, 1.0f, 0.6f);
                         }
                         //Clearing the available tile list and setting the new tile
                         availableTiles.Clear();
@@ -199,14 +199,16 @@ public class GameManager : MonoBehaviour
     public void OnLoad(Scene scene, LoadSceneMode mode)
     {
         //Using this to load in the player when we load into the specific scene
-        if (scene.name == "SamTestScene")
+        if (scene.name == "SamTestScene" || scene.name == "WillTestScene")
         {
             currentGameState = GameState.PLAYERTURN;
             player = Instantiate(playerPrefab);
             player.currentTile = tileBoard[0, 0];
+            player.transform.position = player.currentTile.transform.position;
 
             testEnemy = Instantiate<Enemy>(enemyPrefab);
             testEnemy.currentTile = tileBoard[5, 7];
+            testEnemy.transform.position = testEnemy.currentTile.transform.position;
         }
     }
 
