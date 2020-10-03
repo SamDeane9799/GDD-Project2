@@ -15,7 +15,7 @@ public class Enemy : Character
         base.Update();        
     }
 
-    //Here we move our enemy forward depending on which way it's rotated and we rotate it if it's in front of a projectile
+    //Here we move our enemy forward depending on which way it's rotated and we rotate it if it's in front of an obstacle
     //We should also be checking for the player being in front of the enemy here
     public void EnemyTurn()
     {
