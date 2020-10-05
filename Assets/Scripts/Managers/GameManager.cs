@@ -11,7 +11,8 @@ public enum GameState
     PAUSED,
     PLAYERTURN,
     ENEMYTURN,
-    WIN
+    WIN,
+    LOSE
 }
 public class GameManager : MonoBehaviour
 {
@@ -93,6 +94,7 @@ public class GameManager : MonoBehaviour
     public Enemy enemyPrefab;
     private Enemy testEnemy;
     private EnemyManager enemyManager;
+    public EnemyManager enemyManagerPrefab;
     #endregion
 
     #region File IO
@@ -104,8 +106,6 @@ public class GameManager : MonoBehaviour
     public static Tile[,] tileBoard = new Tile[GRID_WIDTH, GRID_HEIGHT];
     public static Obstacle[,] obstaclePositions = new Obstacle[GRID_WIDTH, GRID_HEIGHT];
     #endregion
-
-    public static WinTile winTilePostion;
 
 
     // Start is called before the first frame update
@@ -184,7 +184,7 @@ public class GameManager : MonoBehaviour
                 if (!player.moving && player.actionPoints < 1)
                 {
                     currentGameState = GameState.ENEMYTURN;
-                    testEnemy.actionPoints = 2;
+                    testEnemy.actionPoints = 2;                    
                 }
             }
             //Taking care of our enemy's turn
@@ -197,6 +197,10 @@ public class GameManager : MonoBehaviour
                     currentGameState = GameState.PLAYERTURN;
                     OnPlayersTurn();
                 }
+            }
+            else if(currentGameState == GameState.LOSE)
+            {
+                Debug.Log("LOSER LOL!!!!");
             }
         }
     }
@@ -222,7 +226,7 @@ public class GameManager : MonoBehaviour
             testEnemy = Instantiate<Enemy>(enemyPrefab);
             testEnemy.currentTile = tileBoard[5, 7];
             testEnemy.transform.position = testEnemy.currentTile.transform.position;
-            enemyManager = new EnemyManager();
+            enemyManager = Instantiate<EnemyManager>(enemyManagerPrefab);
             enemyManager.Enemies.Add(testEnemy);
         }
     }
