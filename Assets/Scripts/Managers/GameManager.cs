@@ -165,6 +165,8 @@ public class GameManager : MonoBehaviour
         {
             if (currentGameState == GameState.PLAYERTURN)
             {
+                playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, player.transform.position, .05f);
+                playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
                 switch (currentPlayerState)
                 {
                     case PlayerState.MOVEMENT:
@@ -173,8 +175,6 @@ public class GameManager : MonoBehaviour
                         {
                             RaycastHit2D hit = MouseCollisionCheck();
 
-                            playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, player.transform.position, .05f);
-                            playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
 
                             Tile tileClicked = hit.collider.GetComponent<Tile>();
                             if (availableTiles.Contains(tileClicked))
@@ -203,6 +203,12 @@ public class GameManager : MonoBehaviour
                         //When player isn't moving and their actionpoints is below 1 we go to the enemies turn
                         if (!player.moving && player.actionPoints < 1)
                         {
+                            if(player.currentTile.destination)
+                            {
+                                currentGameState = GameState.WIN;
+                                Debug.Log("PLAYER WINS");
+                                return;
+                            }
                             currentGameState = GameState.ENEMYTURN;
                             testEnemy.actionPoints = 2;
                         }
