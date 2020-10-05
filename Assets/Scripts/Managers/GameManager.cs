@@ -172,6 +172,7 @@ public class GameManager : MonoBehaviour
                         if (Input.GetMouseButtonDown(1))
                         {
                             RaycastHit2D hit = MouseCollisionCheck();
+
                             playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, player.transform.position, .05f);
                             playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
 
@@ -237,12 +238,12 @@ public class GameManager : MonoBehaviour
                                     RaycastHit2D hit = MouseCollisionCheck();
 
                                     obstacleClicked = hit.collider.GetComponent<Obstacle>();
-                                    obstacleClicked.GetComponent<SpriteRenderer>().color = Color.blue;
 
                                     if (obstacleClicked != null)
                                     {
                                         Debug.Log("ObstacleClicked Position: " + obstacleClicked.X + ", " + obstacleClicked.Y);
                                         Debug.Log("Select a tile to move the obstacle");
+                                        obstacleClicked.GetComponent<SpriteRenderer>().color = Color.blue;
                                         objectSelected = true;
                                     }
                                     else
