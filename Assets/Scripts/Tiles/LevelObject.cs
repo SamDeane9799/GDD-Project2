@@ -25,22 +25,20 @@ public abstract class LevelObject : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        //ChangeColor();
+        //TestFMOD();
     }
 
     // Changes color of the prefab when mouse buttons are pressed and plays a test sfx
-    protected void ChangeColor()
+    protected void TestFMOD()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            GetComponent<SpriteRenderer>().color = Color.blue;
             testInstance.start();
             testInstance.release();
         }
 
         if (Input.GetMouseButtonDown(1))
         {
-            GetComponent<SpriteRenderer>().color = Color.white;
             testInstance.start();
             testInstance.release();
         }
