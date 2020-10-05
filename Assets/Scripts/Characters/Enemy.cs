@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Enemy : Character
 {
+    private const float visionLength = 3.0f;
+
+    private Vector3 rayDir;
     void Start()
     {
         
@@ -15,7 +18,7 @@ public class Enemy : Character
         base.Update();        
     }
 
-    //Here we move our enemy forward depending on which way it's rotated and we rotate it if it's in front of a projectile
+    //Here we move our enemy forward depending on which way it's rotated and we rotate it if it's in front of an obstacle
     //We should also be checking for the player being in front of the enemy here
     public void EnemyTurn()
     {
@@ -39,4 +42,37 @@ public class Enemy : Character
             }
         }
     }
+
+    public void DetectPlayer(int numOfRays)
+    {
+        int characterMask = 1 << 8;
+        int terrainMask = 1 << 9;
+        int layerMask = terrainMask | characterMask;
+
+        Player potentialPlayer = null;
+
+        for (int i = 0; i < numOfRays; i++)
+        {
+            Quaternion rayRot = Quaternion.Euler(0, 0, (((float)i / numOfRays) * 70 - 35) + transform.rotation.eulerAngles.z);
+            rayDir = rayRot * Vector3.right;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, rayDir.normalized, visionLength, layerMask);
+            if (hit)
+            {
+                if (hit.collider.TryGetComponent<Player>(out potentialPlayer))
+                {
+                    GameManager.currentGameState = GameState.LOSE;
+                    FoundPlayer(hit.transform.position);
+                }
+            }
+        }
+    }
+
+    private void FoundPlayer(Vector3 playerPos)
+    {
+        Vector3 dir = playerPos - transform.position;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        transform.position = Vector2.Lerp(transform.position, playerPos, .01f);
+    }
+
 }

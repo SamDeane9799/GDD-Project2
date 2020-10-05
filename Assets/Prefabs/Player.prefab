@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5410419726916306275}
   - component: {fileID: 1930053462846947721}
   - component: {fileID: 7787288898227893954}
+  - component: {fileID: -3237562158381879404}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -93,6 +94,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8216a1d357e0304db0858fcc24ef17a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTile: {fileID: 0}
-  movementRange: 0
   moving: 0
+  currentTile: {fileID: 0}
+  actionPoints: 0
+--- !u!61 &-3237562158381879404
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2044155437802845760}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.32, y: 0.32}
+    newSize: {x: 0.32, y: 0.32}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.32, y: 0.32}
+  m_EdgeRadius: 0

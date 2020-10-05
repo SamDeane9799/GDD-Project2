@@ -7,11 +7,11 @@ public abstract class LevelObject : MonoBehaviour
     // instance of the test sound effect
     private FMOD.Studio.EventInstance testInstance;
 
-    public int X
+    public virtual int X
     {
         get { return (int)(9.5f + transform.position.x); }
     }
-    public int Y
+    public virtual int Y
     {
         get { return (int)(5.5f + transform.position.y); }
     }

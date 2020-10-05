@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Character : LevelObject
 {
+    public override int X => currentTile.X;
+
+    public override int Y => currentTile.Y;
+
     // Start is called before the first frame update
     public bool moving;
     public Tile currentTile;
@@ -30,12 +34,12 @@ public class Character : LevelObject
     private void MoveToTile()
     {
         //Checking if we reached our destination
-        if (Mathf.Abs(Vector2.Distance(transform.position, currentTile.gameObject.transform.position)) <= .1f)
+        if (Mathf.Abs(Vector2.Distance(transform.position, currentTile.gameObject.transform.position)) <= .01f)
         {
             moving = false;
         }
         //Lerping our position
-        transform.position = Vector2.Lerp(transform.position, currentTile.gameObject.transform.position, .05f);
+        transform.position = Vector2.Lerp(transform.position, currentTile.gameObject.transform.position, .075f);
         //transform.position = new Vector3(transform.position.x, transform.position.y, -1f);
         //Setting our rotation
         if (this is Player)

@@ -147,7 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: FMODAssets/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637371575806229767
+  lastModified: 637371768412567176
   LoadResult: 0
   FileSizes:
   - Name: 
@@ -186,7 +186,7 @@ MonoBehaviour:
   Path: event:/Test/Shwing
   guid: 3bebe7ec5bcc90489fee68ca6560f322
   Banks:
-  - {fileID: 1475700475540629968}
+  - {fileID: 5626048652690856438}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -226,15 +226,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: -1928407233967231943}
-  - {fileID: 1475700475540629968}
+  - {fileID: 5626048652690856438}
   EditorEvents:
   - {fileID: -1405154977015872515}
   EditorParameters: []
   MasterBanks:
-  - {fileID: 1475700475540629968}
+  - {fileID: 5626048652690856438}
   StringsBanks:
   - {fileID: -1928407233967231943}
-  stringsBankWriteTime: 637371575806229767
+  stringsBankWriteTime: 637371768412567176
   cacheVersion: 3
 --- !u!114 &993071415533274433
 MonoBehaviour:
@@ -305,6 +305,24 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/Master.bank
   SubDir: 
   lastModified: 637370966533596569
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
+--- !u!114 &5626048652690856438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: FMODAssets/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637371768412557205
   LoadResult: 0
   FileSizes: []
   Exists: 1
