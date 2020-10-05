@@ -58,3 +58,10 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+#FMOD ignores
+[Aa]ssets/Plugins/FMOD/Cache/Editor/FMODStudioCache.asset
+[Aa]ssets/Plugins/FMOD/Cache/Editor/FMODStudioCache.asset.meta
+[Aa]ssets/StreamingAssets/**/*.bank
+[Aa]ssets/StreamingAssets/**/*.bank.meta
+fmod_editor.log
+
