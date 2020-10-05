@@ -69,23 +69,23 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Sound Properties
-    public float SFXVolume
-    {
-        get { return GetBusVolume(sfxPath, sfxVolume); }
-        set { SetBusVolume(sfxPath, value); }
-    }
+    //public float SFXVolume
+    //{
+    //    get { return GetBusVolume(sfxPath, sfxVolume); }
+    //    set { SetBusVolume(sfxPath, value); }
+    //}
 
-    public float MusicVolume
-    {
-        get { return GetBusVolume(musicPath, musicVolume); }
-        set { SetBusVolume(musicPath, value); }
-    }
+    //public float MusicVolume
+    //{
+    //    get { return GetBusVolume(musicPath, musicVolume); }
+    //    set { SetBusVolume(musicPath, value); }
+    //}
 
-    public float MasterVolume
-    {
-        get { return GetBusVolume(masterPath, masterVolume); }
-        set { SetBusVolume(masterPath, value); }
-    }
+    //public float MasterVolume
+    //{
+    //    get { return GetBusVolume(masterPath, masterVolume); }
+    //    set { SetBusVolume(masterPath, value); }
+    //}
     #endregion
 
     #region Player
@@ -161,7 +161,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(SceneManager.GetActiveScene().name == "SamTestScene" || SceneManager.GetActiveScene().name == "WillTestScene")
+        if (SceneManager.GetActiveScene().name == "SamTestScene" || SceneManager.GetActiveScene().name == "WillTestScene")
         {
             if (currentGameState == GameState.PLAYERTURN)
             {
@@ -172,14 +172,8 @@ public class GameManager : MonoBehaviour
                         if (Input.GetMouseButtonDown(1))
                         {
                             RaycastHit2D hit = MouseCollisionCheck();
-                playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, player.transform.position, .05f);
-                playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
-                //Checking for player right click
-                if (Input.GetMouseButtonDown(1))
-                {
-                    //Projecting a ray at the mouse and checking if it hit a collider
-                    Vector2 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                    RaycastHit2D hit = Physics2D.Raycast(mousePosition, new Vector2(0, 0));
+                            playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, player.transform.position, .05f);
+                            playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
 
                             Tile tileClicked = hit.collider.GetComponent<Tile>();
                             if (availableTiles.Contains(tileClicked))
@@ -192,10 +186,10 @@ public class GameManager : MonoBehaviour
                                 //Clearing the available tile list and setting the new tile
                                 availableTiles.Clear();
 
-                        player.currentTile = tileClicked;
-                        
-                        player.moving = true;
-                        player.actionPoints -= Mathf.Round(tileClicked.dist);
+                                player.currentTile = tileClicked;
+
+                                player.moving = true;
+                                player.actionPoints -= Mathf.Round(tileClicked.dist);
 
                                 //Checking if the player can still move
                                 if (player.actionPoints > 1)
@@ -204,6 +198,7 @@ public class GameManager : MonoBehaviour
                                 }
                             }
                         }
+
                         //When player isn't moving and their actionpoints is below 1 we go to the enemies turn
                         if (!player.moving && player.actionPoints < 1)
                         {
@@ -261,8 +256,6 @@ public class GameManager : MonoBehaviour
                         {
                             currentPlayerState = PlayerState.MOVEMENT;
                         }
-
-
                         break;
 
                     case PlayerState.ABILITYBURN:
@@ -271,30 +264,22 @@ public class GameManager : MonoBehaviour
                     case PlayerState.ABILITYFREEZE:
                         break;
                 }
-                        if (player.currentTile.destination)
-                        {
-                            currentGameState = GameState.WIN;
-                            Debug.Log("WIN");
-                            return;
-                        }
-                        //Checking if the player can still move
-                    }
-                }
+
                 if (player.actionPoints >= 1 && !player.moving && availableTiles.Count == 0)
                 {
                     FindAvailableTiles();
                 }
+
                 //When player isn't moving and their actionpoints is below 1 we go to the enemies turn
                 if (!player.moving && player.actionPoints < 1)
                 {
                     currentGameState = GameState.ENEMYTURN;
-                    testEnemy.actionPoints = 1;                    
+                    testEnemy.actionPoints = 1;
                 }
             }
             //Taking care of our enemy's turn
-            else if(currentGameState == GameState.ENEMYTURN)
+            else if (currentGameState == GameState.ENEMYTURN)
             {
-
                 playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, testEnemy.transform.position, .04f);
                 playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
                 float distance = Vector2.Distance(playerCam.transform.position, testEnemy.transform.position);
@@ -309,7 +294,7 @@ public class GameManager : MonoBehaviour
                     }
                 }
             }
-            else if(currentGameState == GameState.LOSE)
+            else if (currentGameState == GameState.LOSE)
             {
                 Debug.Log("LOSER LOL!!!!");
             }
@@ -359,11 +344,11 @@ public class GameManager : MonoBehaviour
 
         // Checks if player is on win tile and "ends the game"
         // Currently "ends the game" means stopping the search for available tiles
- /*       if (OnWinTile(player.currentTile))
-        {
-            Debug.Log("You Win!");
-            return;
-        }*/
+        /*       if (OnWinTile(player.currentTile))
+               {
+                   Debug.Log("You Win!");
+                   return;
+               }*/
 
         Tile currentTile;
 
@@ -371,7 +356,7 @@ public class GameManager : MonoBehaviour
         float distance;
 
         List<Vector2> positions = new List<Vector2>();
-        foreach(Enemy e in enemyManager.Enemies)
+        foreach (Enemy e in enemyManager.Enemies)
         {
             positions.Add(new Vector2(e.X, e.Y));
         }
@@ -453,7 +438,7 @@ public class GameManager : MonoBehaviour
     }
 
     #region ABILITY METHODS
-    public void MoveAbility() 
+    public void MoveAbility()
     {
         Debug.Log("Moving Object");
         usingAbility = true;
@@ -471,39 +456,45 @@ public class GameManager : MonoBehaviour
         return hit;
     }
 
-    // Returns true if the currentTile is the win tile, false otherwise
-   /* private bool OnWinTile(Tile currentTile)
-    {
-        return (currentTile.Y == winTilePostion.Y && currentTile.X == winTilePostion.X);
-    }
-
-    public static Vector2 WorldToGamePoint(Vector2 point)
-    {
-        return new Vector2((int)(point.x + 9.5f), (int)(point.y + 5.5f));
-    }
-
-    public static Vector2 WorldToGamePoint(float pointX, float pointY)
-    {
-        return new Vector2((int)(pointX + 9.5), (int)(pointY + 5.5));
-    }
-
     #endregion
 
-    #region Sound Methods
+// Returns true if the currentTile is the win tile, false otherwise
+/* private bool OnWinTile(Tile currentTile)
+ {
+     return (currentTile.Y == winTilePostion.Y && currentTile.X == winTilePostion.X);
+ }
 
-    // Sets the volume of a specific bus to the given volume
-    private void SetBusVolume(string busPath, float volume)
-    {
-        FMODUnity.RuntimeManager.GetBus(busPath).setVolume(volume);
-    }
+ public static Vector2 WorldToGamePoint(Vector2 point)
+ {
+     return new Vector2((int)(point.x + 9.5f), (int)(point.y + 5.5f));
+ }
 
-    // Gets the volume of a specific bus and assigns it to a given variable
-    private float GetBusVolume(string busPath, float busVariable)
-    {
-        FMODUnity.RuntimeManager.GetBus(busPath).getVolume(out busVariable);
+ public static Vector2 WorldToGamePoint(float pointX, float pointY)
+ {
+     return new Vector2((int)(pointX + 9.5), (int)(pointY + 5.5));
+ }
 
-        return busVariable;
-    }
+ #endregion
 
-    #endregion
+ #region Sound Methods
+
+ // Sets the volume of a specific bus to the given volume
+ private void SetBusVolume(string busPath, float volume)
+ {
+     FMODUnity.RuntimeManager.GetBus(busPath).setVolume(volume);
+ }
+
+ // Gets the volume of a specific bus and assigns it to a given variable
+ private float GetBusVolume(string busPath, float busVariable)
+ {
+     FMODUnity.RuntimeManager.GetBus(busPath).getVolume(out busVariable);
+
+     return busVariable;
+ }
+
+ #endregion
 }
+*/
+
+}
+ 
