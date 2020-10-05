@@ -144,6 +144,8 @@ public class GameManager : MonoBehaviour
         {
             if (currentGameState == GameState.PLAYERTURN)
             {
+                playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, player.transform.position, .05f);
+                playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
                 //Checking for player right click
                 if (Input.GetMouseButtonDown(1))
                 {
@@ -184,18 +186,25 @@ public class GameManager : MonoBehaviour
                 if (!player.moving && player.actionPoints < 1)
                 {
                     currentGameState = GameState.ENEMYTURN;
-                    testEnemy.actionPoints = 2;                    
+                    testEnemy.actionPoints = 1;                    
                 }
             }
             //Taking care of our enemy's turn
             else if(currentGameState == GameState.ENEMYTURN)
             {
-                if(testEnemy.actionPoints >= 1 && !testEnemy.moving)
-                    testEnemy.EnemyTurn();
-                else if(!testEnemy.moving)
+
+                playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, testEnemy.transform.position, .04f);
+                playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
+                float distance = Vector2.Distance(playerCam.transform.position, testEnemy.transform.position);
+                if (distance < .2f)
                 {
-                    currentGameState = GameState.PLAYERTURN;
-                    OnPlayersTurn();
+                    if (testEnemy.actionPoints >= 1 && !testEnemy.moving)
+                        testEnemy.EnemyTurn();
+                    else if (!testEnemy.moving)
+                    {
+                        currentGameState = GameState.PLAYERTURN;
+                        OnPlayersTurn();
+                    }
                 }
             }
             else if(currentGameState == GameState.LOSE)
@@ -235,7 +244,7 @@ public class GameManager : MonoBehaviour
     {
         //Setting the GameState to playerturn state
         currentGameState = GameState.PLAYERTURN;
-        player.actionPoints = 2f;
+        player.actionPoints = 1f;
     }
 
     public static Vector2 WorldToGamePoint(Vector2 point)
@@ -288,7 +297,7 @@ public class GameManager : MonoBehaviour
             //Checking to make sure the X doesn't go under 0, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
             //that the player is contained in the availabletiles and that the tile is not the one we started on
             posToBeChecked = new Vector2(currentTile.X + 1, currentTile.Y);
-            distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
+            distance = (int)Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
             if (currentTile.X != GRID_WIDTH - 1 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
             distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
@@ -302,7 +311,7 @@ public class GameManager : MonoBehaviour
             //Checking to make sure the X doesn't go over our limit, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
             //that the player is contained in the availabletiles and that the tile is not the one we started on
             posToBeChecked = new Vector2(currentTile.X - 1, currentTile.Y);
-            distance = Mathf.Abs(Vector2.Distance(new Vector2(currentTile.X - 1, currentTile.Y), new Vector2(player.currentTile.X, player.currentTile.Y)));
+            distance = (int)Mathf.Abs(Vector2.Distance(new Vector2(currentTile.X - 1, currentTile.Y), new Vector2(player.currentTile.X, player.currentTile.Y)));
             if (currentTile.X != 0 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
             distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
@@ -316,7 +325,7 @@ public class GameManager : MonoBehaviour
             //Checking to make sure the Y doesn't go over our limit, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
             //that the player is contained in the availabletiles and that the tile is not the one we started on
             posToBeChecked = new Vector2(currentTile.X, currentTile.Y + 1);
-            distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
+            distance = (int)Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
             if (currentTile.Y != GRID_HEIGHT - 1 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
             distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
@@ -330,7 +339,7 @@ public class GameManager : MonoBehaviour
             //Checking to make sure the Y doesn't go under 0, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
             //that the player is contained in the availabletiles and that the tile is not the one we started on
             posToBeChecked = new Vector2(currentTile.X, currentTile.Y - 1);
-            distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
+            distance = (int)Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
             if (currentTile.Y != 0 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
             distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
