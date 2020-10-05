@@ -12,6 +12,15 @@ public enum GameState
     PLAYERTURN,
     ENEMYTURN
 }
+
+public enum PlayerState
+{ 
+    MOVEMENT,
+    ABILITYMOVE,
+    ABILITYBURN,
+    ABILITYFREEZE
+}
+
 public class GameManager : MonoBehaviour
 {
     public const int GRID_WIDTH = 20;
@@ -83,15 +92,25 @@ public class GameManager : MonoBehaviour
     private PlayerCamera playerCam;
     public Player playerPrefab;
     private Player player;
+    private bool usingAbility;
     //Keeping track of which tiles our player can currently go to
     private List<Tile> availableTiles;
+
+    // Keeps track of the current game state
     public static GameState currentGameState;
+
+    // Keeps track of the current player state
+    public static PlayerState currentPlayerState;
+
     #endregion
 
     #region Enemy
     public Enemy enemyPrefab;
     private Enemy testEnemy;
     #endregion
+
+    private static bool objectSelected = false;
+    private static Obstacle obstacleClicked = null;
 
     #region File IO
     private StreamReader reader;
@@ -113,6 +132,8 @@ public class GameManager : MonoBehaviour
         availableTiles = new List<Tile>();
         player.actionPoints = 2;
         OnPlayersTurn();
+
+        usingAbility = false;
 
         //musicSources = new List<AudioSource>();
         //soundFXSources = new List<AudioSource>();
@@ -138,40 +159,102 @@ public class GameManager : MonoBehaviour
         {
             if (currentGameState == GameState.PLAYERTURN)
             {
-                //Checking for player right click
-                if (Input.GetMouseButtonDown(1))
+                switch (currentPlayerState)
                 {
-                    //Projecting a ray at the mouse and checking if it hit a collider
-                    Vector2 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                    RaycastHit2D hit = Physics2D.Raycast(mousePosition, new Vector2(0, 0));
-
-                    Tile tileClicked = hit.collider.GetComponent<Tile>();
-                    if (availableTiles.Contains(tileClicked))
-                    {
-                        //Reseting the color of tiles before moving
-                        foreach (Tile t in availableTiles)
+                    case PlayerState.MOVEMENT:
+                        //Checking for player right click
+                        if (Input.GetMouseButtonDown(1))
                         {
-                            t.GetComponent<SpriteRenderer>().color = new Color(0.6f, 1.0f, 0.6f);
+                            RaycastHit2D hit = MouseCollisionCheck();
+
+                            Tile tileClicked = hit.collider.GetComponent<Tile>();
+                            if (availableTiles.Contains(tileClicked))
+                            {
+                                //Reseting the color of tiles before moving
+                                foreach (Tile t in availableTiles)
+                                {
+                                    t.GetComponent<SpriteRenderer>().color = new Color(0.6f, 1.0f, 0.6f);
+                                }
+                                //Clearing the available tile list and setting the new tile
+                                availableTiles.Clear();
+
+                                player.currentTile = tileClicked;
+                                player.moving = true;
+                                player.actionPoints -= tileClicked.dist;
+
+                                //Checking if the player can still move
+                                if (player.actionPoints > 1)
+                                {
+                                    FindAvailableTiles();
+                                }
+                            }
                         }
-                        //Clearing the available tile list and setting the new tile
-                        availableTiles.Clear();
-
-                        player.currentTile = tileClicked;
-                        player.moving = true;
-                        player.actionPoints -= tileClicked.dist;
-
-                        //Checking if the player can still move
-                        if (player.actionPoints > 1)
+                        //When player isn't moving and their actionpoints is below 1 we go to the enemies turn
+                        if (!player.moving && player.actionPoints < 1)
                         {
-                            FindAvailableTiles();
+                            currentGameState = GameState.ENEMYTURN;
+                            testEnemy.actionPoints = 2;
                         }
-                    }
-                }
-                //When player isn't moving and their actionpoints is below 1 we go to the enemies turn
-                if(!player.moving && player.actionPoints < 1)
-                {
-                    currentGameState = GameState.ENEMYTURN;
-                    testEnemy.actionPoints = 2;
+                        break;
+
+                    case PlayerState.ABILITYMOVE:
+
+                        if (usingAbility)
+                        {
+                            if (objectSelected)
+                            {
+                                if (Input.GetMouseButtonDown(0))
+                                {
+                                    RaycastHit2D hit = MouseCollisionCheck();
+
+                                    Tile tileClicked = hit.collider.GetComponent<Tile>();
+
+                                    obstacleClicked.transform.position = tileClicked.transform.position;
+                                    obstacleClicked.GetComponent<SpriteRenderer>().color = Color.white;
+
+                                    Debug.Log("Obstacle Changed Position");
+                                    objectSelected = false;
+                                    usingAbility = false;
+                                }
+                            }
+                            else
+                            {
+                                obstacleClicked = null;
+
+                                //Checking for player LEFT click
+                                if (Input.GetMouseButtonDown(0))
+                                {
+                                    RaycastHit2D hit = MouseCollisionCheck();
+
+                                    obstacleClicked = hit.collider.GetComponent<Obstacle>();
+                                    obstacleClicked.GetComponent<SpriteRenderer>().color = Color.blue;
+
+                                    if (obstacleClicked != null)
+                                    {
+                                        Debug.Log("ObstacleClicked Position: " + obstacleClicked.X + ", " + obstacleClicked.Y);
+                                        Debug.Log("Select a tile to move the obstacle");
+                                        objectSelected = true;
+                                    }
+                                    else
+                                    {
+                                        Debug.Log("Object Was Not An Obstacle");
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            currentPlayerState = PlayerState.MOVEMENT;
+                        }
+
+
+                        break;
+
+                    case PlayerState.ABILITYBURN:
+                        break;
+
+                    case PlayerState.ABILITYFREEZE:
+                        break;
                 }
             }
             //Taking care of our enemy's turn
@@ -188,7 +271,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     //Sets up our player in the game
     //For testing purposes I am setting it up in the title screen so I can test audio
     public void InitializePlayerCam()
@@ -202,6 +284,7 @@ public class GameManager : MonoBehaviour
         if (scene.name == "SamTestScene" || scene.name == "WillTestScene")
         {
             currentGameState = GameState.PLAYERTURN;
+            currentPlayerState = PlayerState.MOVEMENT;
             player = Instantiate(playerPrefab);
             player.currentTile = tileBoard[0, 0];
             player.transform.position = player.currentTile.transform.position;
@@ -218,16 +301,6 @@ public class GameManager : MonoBehaviour
         currentGameState = GameState.PLAYERTURN;
         player.actionPoints = 2f;
         FindAvailableTiles();
-    }
-
-    public static Vector2 WorldToGamePoint(Vector2 point)
-    {
-        return new Vector2((int)(point.x + 9.5f), (int)(point.y + 5.5f));
-    }
-
-    public static Vector2 WorldToGamePoint(float pointX, float pointY)
-    {
-        return new Vector2((int)(pointX + 9.5), (int)(pointY + 5.5));
     }
 
     private void FindAvailableTiles()
@@ -319,16 +392,47 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    #region ABILITY METHODS
+    public void MoveAbility() 
+    {
+        Debug.Log("Moving Object");
+        usingAbility = true;
+        currentPlayerState = PlayerState.ABILITYMOVE;
+    }
+    #endregion
+
+    #region HELPER METHODS
+    private RaycastHit2D MouseCollisionCheck()
+    {
+        //Projecting a ray at the mouse and checking if it hit a collider
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+        RaycastHit2D hit = Physics2D.Raycast(mousePosition, new Vector2(0, 0));
+
+        return hit;
+    }
+
     // Returns true if the currentTile is the win tile, false otherwise
     private bool OnWinTile(Tile currentTile)
     {
         return (currentTile.Y == winTilePostion.Y && currentTile.X == winTilePostion.X);
     }
 
+    public static Vector2 WorldToGamePoint(Vector2 point)
+    {
+        return new Vector2((int)(point.x + 9.5f), (int)(point.y + 5.5f));
+    }
+
+    public static Vector2 WorldToGamePoint(float pointX, float pointY)
+    {
+        return new Vector2((int)(pointX + 9.5), (int)(pointY + 5.5));
+    }
+
+    #endregion
+
     #region Sound Methods
 
-        // Sets the volume of a specific bus to the given volume
-        private void SetBusVolume(string busPath, float volume)
+    // Sets the volume of a specific bus to the given volume
+    private void SetBusVolume(string busPath, float volume)
     {
         FMODUnity.RuntimeManager.GetBus(busPath).setVolume(volume);
     }
