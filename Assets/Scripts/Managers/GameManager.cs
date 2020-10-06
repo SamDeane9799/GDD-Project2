@@ -344,11 +344,16 @@ public class GameManager : MonoBehaviour
             winTile = tileBoard[(int)currentLevelData.winTileSpawnLocation.x, (int)currentLevelData.winTileSpawnLocation.y];
             winTile.GetComponent<SpriteRenderer>().color = Color.yellow;
 
-            testEnemy = Instantiate<Enemy>(enemyPrefab);
-            testEnemy.currentTile = tileBoard[5, 7];
-            testEnemy.transform.position = testEnemy.currentTile.transform.position;
-            enemyManager = Instantiate<EnemyManager>(enemyManagerPrefab);
-            enemyManager.Enemies.Add(testEnemy);
+            SpawnEnemies();
+
+            // For now, testEnemy is the first enemy in Enemies
+            testEnemy = enemyManager.Enemies[0];
+
+            //testEnemy = Instantiate<Enemy>(enemyPrefab);
+            //testEnemy.currentTile = tileBoard[5, 7];
+            //testEnemy.transform.position = testEnemy.currentTile.transform.position;
+            //enemyManager = Instantiate<EnemyManager>(enemyManagerPrefab);
+            //enemyManager.Enemies.Add(testEnemy);
         }
     }
 
@@ -459,6 +464,33 @@ public class GameManager : MonoBehaviour
         foreach (Tile t in availableTiles)
         {
             t.GetComponent<SpriteRenderer>().color = new Color(Color.white.r, Color.white.g, Color.white.b, .85f);
+        }
+    }
+
+    private void SpawnEnemies()
+    {
+        // Instantiate the enemyManager Prefab
+        enemyManager = Instantiate<EnemyManager>(enemyManagerPrefab);
+
+        // Current index for spawning at positions
+        int currentIndex = 0;
+
+        // loop to create new enemy prefabs
+        for (int i = 0; i < currentLevelData.enemiesToSpawn; i++) 
+        {
+            // Instantiate at correct positions
+            Enemy enemyToSpawn = Instantiate(enemyPrefab);
+            enemyToSpawn.currentTile = tileBoard[(int)currentLevelData.enemySpawnLocations[currentIndex].x, (int)currentLevelData.enemySpawnLocations[currentIndex].y];
+            enemyToSpawn.transform.position = enemyToSpawn.currentTile.transform.position;
+
+            // Create unique name for enemy
+            enemyToSpawn.name = enemyPrefab.name + i;
+
+            // Add enemy to enemyManager
+            enemyManager.Enemies.Add(enemyToSpawn);
+
+            // If spawn point index goes out of range, loop back to the beginning
+            currentIndex = (currentIndex + 1) % currentLevelData.enemySpawnLocations.Length;
         }
     }
 
