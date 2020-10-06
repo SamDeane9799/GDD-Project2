@@ -122,6 +122,11 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region TileBoard
+    [SerializeField]
+    private LevelData currentLevelData;
+    [SerializeField]
+    private Tile winTile;
+
     public static Tile[,] tileBoard = new Tile[GRID_WIDTH, GRID_HEIGHT];
     public static Obstacle[,] obstaclePositions = new Obstacle[GRID_WIDTH, GRID_HEIGHT];
     #endregion
@@ -167,6 +172,7 @@ public class GameManager : MonoBehaviour
             {
                 playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, player.transform.position, .05f);
                 playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
+
                 switch (currentPlayerState)
                 {
                     case PlayerState.MOVEMENT:
@@ -203,12 +209,20 @@ public class GameManager : MonoBehaviour
                         //When player isn't moving and their actionpoints is below 1 we go to the enemies turn
                         if (!player.moving && player.actionPoints < 1)
                         {
-                            if(player.currentTile.destination)
+                            //if(player.currentTile.destination)
+                            //{
+                            //    currentGameState = GameState.WIN;
+                            //    Debug.Log("PLAYER WINS");
+                            //    return;
+                            //}
+
+                            if (OnWinTile(player.currentTile))
                             {
+                                player.GetComponent<SpriteRenderer>().color = Color.magenta;
+                                Debug.Log("YOU WIN");
                                 currentGameState = GameState.WIN;
-                                Debug.Log("PLAYER WINS");
-                                return;
                             }
+
                             currentGameState = GameState.ENEMYTURN;
                             testEnemy.actionPoints = 2;
                         }
@@ -322,9 +336,13 @@ public class GameManager : MonoBehaviour
         {
             currentGameState = GameState.PLAYERTURN;
             currentPlayerState = PlayerState.MOVEMENT;
+
             player = Instantiate(playerPrefab);
-            player.currentTile = tileBoard[0, 0];
+            player.currentTile = tileBoard[(int)currentLevelData.playerSpawnLocation.x, (int)currentLevelData.playerSpawnLocation.y];
             player.transform.position = player.currentTile.transform.position;
+
+            winTile = tileBoard[(int)currentLevelData.winTileSpawnLocation.x, (int)currentLevelData.winTileSpawnLocation.y];
+            winTile.GetComponent<SpriteRenderer>().color = Color.yellow;
 
             testEnemy = Instantiate<Enemy>(enemyPrefab);
             testEnemy.currentTile = tileBoard[5, 7];
@@ -351,11 +369,11 @@ public class GameManager : MonoBehaviour
 
         // Checks if player is on win tile and "ends the game"
         // Currently "ends the game" means stopping the search for available tiles
-        /*       if (OnWinTile(player.currentTile))
-               {
-                   Debug.Log("You Win!");
-                   return;
-               }*/
+        //if (OnWinTile(player.currentTile))
+        //{
+        //    player.GetComponent<SpriteRenderer>().color = Color.magenta;
+        //    Debug.Log("You Win!");
+        //}
 
         Tile currentTile;
 
@@ -466,42 +484,42 @@ public class GameManager : MonoBehaviour
     #endregion
 
 // Returns true if the currentTile is the win tile, false otherwise
-/* private bool OnWinTile(Tile currentTile)
+private bool OnWinTile(Tile currentTile)
  {
-     return (currentTile.Y == winTilePostion.Y && currentTile.X == winTilePostion.X);
+     return (currentTile.Y == winTile.Y && currentTile.X == winTile.X);
  }
 
- public static Vector2 WorldToGamePoint(Vector2 point)
- {
-     return new Vector2((int)(point.x + 9.5f), (int)(point.y + 5.5f));
- }
+    /* 
+     public static Vector2 WorldToGamePoint(Vector2 point)
+     {
+         return new Vector2((int)(point.x + 9.5f), (int)(point.y + 5.5f));
+     }
 
- public static Vector2 WorldToGamePoint(float pointX, float pointY)
- {
-     return new Vector2((int)(pointX + 9.5), (int)(pointY + 5.5));
- }
+     public static Vector2 WorldToGamePoint(float pointX, float pointY)
+     {
+         return new Vector2((int)(pointX + 9.5), (int)(pointY + 5.5));
+     }
 
- #endregion
+     #endregion
 
- #region Sound Methods
+     #region Sound Methods
 
- // Sets the volume of a specific bus to the given volume
- private void SetBusVolume(string busPath, float volume)
- {
-     FMODUnity.RuntimeManager.GetBus(busPath).setVolume(volume);
- }
+     // Sets the volume of a specific bus to the given volume
+     private void SetBusVolume(string busPath, float volume)
+     {
+         FMODUnity.RuntimeManager.GetBus(busPath).setVolume(volume);
+     }
 
- // Gets the volume of a specific bus and assigns it to a given variable
- private float GetBusVolume(string busPath, float busVariable)
- {
-     FMODUnity.RuntimeManager.GetBus(busPath).getVolume(out busVariable);
+     // Gets the volume of a specific bus and assigns it to a given variable
+     private float GetBusVolume(string busPath, float busVariable)
+     {
+         FMODUnity.RuntimeManager.GetBus(busPath).getVolume(out busVariable);
 
-     return busVariable;
- }
+         return busVariable;
+     }
 
- #endregion
+     #endregion
+    }
+    */
+
 }
-*/
-
-}
- 
