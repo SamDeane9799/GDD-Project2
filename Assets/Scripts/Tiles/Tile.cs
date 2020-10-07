@@ -8,6 +8,8 @@ public class Tile : LevelObject
     // Start is called before the first frame update
     public float dist;
     public bool destination;
+    public bool walkable;
+
     protected override void Start()
     {
         base.Start();

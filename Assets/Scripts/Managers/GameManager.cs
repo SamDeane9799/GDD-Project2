@@ -188,7 +188,7 @@ public class GameManager : MonoBehaviour
                                 //Reseting the color of tiles before moving
                                 foreach (Tile t in availableTiles)
                                 {
-                                    t.GetComponent<SpriteRenderer>().color = new Color(0.6f, 1.0f, 0.6f);
+                                    t.GetComponent<SpriteRenderer>().color = Color.gray;
                                 }
                                 //Clearing the available tile list and setting the new tile
                                 availableTiles.Clear();
@@ -405,13 +405,17 @@ public class GameManager : MonoBehaviour
             //that the player is contained in the availabletiles and that the tile is not the one we started on
             posToBeChecked = new Vector2(currentTile.X + 1, currentTile.Y);
             distance = (int)Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
+
             if (currentTile.X != GRID_WIDTH - 1 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
             distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
             {
-                tileBoard[currentTile.X + 1, currentTile.Y].dist = distance;
-                openList.Add(tileBoard[currentTile.X + 1, currentTile.Y]);
-                availableTiles.Add(tileBoard[currentTile.X + 1, currentTile.Y]);
+                if (tileBoard[currentTile.X + 1, currentTile.Y].walkable == true)
+                {
+                    tileBoard[currentTile.X + 1, currentTile.Y].dist = distance;
+                    openList.Add(tileBoard[currentTile.X + 1, currentTile.Y]);
+                    availableTiles.Add(tileBoard[currentTile.X + 1, currentTile.Y]);
+                }
             }
 
             //Handling our X negative neighbor
@@ -423,9 +427,12 @@ public class GameManager : MonoBehaviour
             distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
             {
-                tileBoard[currentTile.X - 1, currentTile.Y].dist = distance;
-                openList.Add(tileBoard[currentTile.X - 1, currentTile.Y]);
-                availableTiles.Add(tileBoard[currentTile.X - 1, currentTile.Y]);
+                if (tileBoard[currentTile.X - 1, currentTile.Y].walkable == true)
+                {
+                    tileBoard[currentTile.X - 1, currentTile.Y].dist = distance;
+                    openList.Add(tileBoard[currentTile.X - 1, currentTile.Y]);
+                    availableTiles.Add(tileBoard[currentTile.X - 1, currentTile.Y]);
+                }
             }
 
             //Handling our Y Positve neighbor
@@ -437,9 +444,12 @@ public class GameManager : MonoBehaviour
             distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
             {
-                tileBoard[currentTile.X, currentTile.Y + 1].dist = distance;
-                openList.Add(tileBoard[currentTile.X, currentTile.Y + 1]);
-                availableTiles.Add(tileBoard[currentTile.X, currentTile.Y + 1]);
+                if (tileBoard[currentTile.X, currentTile.Y + 1].walkable == true)
+                {
+                    tileBoard[currentTile.X, currentTile.Y + 1].dist = distance;
+                    openList.Add(tileBoard[currentTile.X, currentTile.Y + 1]);
+                    availableTiles.Add(tileBoard[currentTile.X, currentTile.Y + 1]);
+                }
             }
 
             //Handling our y negative neighbor
@@ -451,9 +461,12 @@ public class GameManager : MonoBehaviour
             distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
             {
-                tileBoard[currentTile.X, currentTile.Y - 1].dist = distance;
-                openList.Add(tileBoard[currentTile.X, currentTile.Y - 1]);
-                availableTiles.Add(tileBoard[currentTile.X, currentTile.Y - 1]);
+                if (tileBoard[currentTile.X, currentTile.Y - 1].walkable == true)
+                {
+                    tileBoard[currentTile.X, currentTile.Y - 1].dist = distance;
+                    openList.Add(tileBoard[currentTile.X, currentTile.Y - 1]);
+                    availableTiles.Add(tileBoard[currentTile.X, currentTile.Y - 1]);
+                }
             }
 
             //After checking all neighbors we remove the tile we just checked and then go to the next one to check it's neighbors(If there is another tile on the openlist)
