@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bcd6ac7c0279bc4ab988355b788dfec, type: 3}
   m_Name: TestLevelData
   m_EditorClassIdentifier: 
-  enemyList:
-  - {fileID: 0}
+  enemiesToSpawn: 1
   enemySpawnLocations:
-  - {x: 0, y: 0}
+  - {x: 4, y: 5}
   playerSpawnLocation: {x: 0, y: 0}
   winTileSpawnLocation: {x: 2, y: 0}
