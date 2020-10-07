@@ -92,7 +92,6 @@ public class GameManager : MonoBehaviour
     //Player prefab
     public PlayerCamera playerCameraPrefab;
     private PlayerCamera playerCam;
-    public Player playerPrefab;
     private Player player;
     private bool usingAbility;
     //Keeping track of which tiles our player can currently go to
@@ -107,7 +106,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Enemy
-    public Enemy enemyPrefab;
     private Enemy testEnemy;
     private EnemyManager enemyManager;
     public EnemyManager enemyManagerPrefab;
@@ -122,13 +120,13 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region TileBoard
-    [SerializeField]
-    private LevelData currentLevelData;
-    [SerializeField]
     private Tile winTile;
 
     public static Tile[,] tileBoard = new Tile[GRID_WIDTH, GRID_HEIGHT];
     public static Obstacle[,] obstaclePositions = new Obstacle[GRID_WIDTH, GRID_HEIGHT];
+    public ObstacleManager obstManagerPrefab;
+    private ObstacleManager obstManager;
+
     #endregion
 
 
@@ -221,6 +219,7 @@ public class GameManager : MonoBehaviour
                                 player.GetComponent<SpriteRenderer>().color = Color.magenta;
                                 Debug.Log("YOU WIN");
                                 currentGameState = GameState.WIN;
+                                return;
                             }
 
                             currentGameState = GameState.ENEMYTURN;
@@ -319,6 +318,10 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("LOSER LOL!!!!");
             }
+            else if (currentGameState == GameState.WIN)
+            {
+                Debug.Log("WINNER");
+            }
         }
     }
 
@@ -337,23 +340,20 @@ public class GameManager : MonoBehaviour
             currentGameState = GameState.PLAYERTURN;
             currentPlayerState = PlayerState.MOVEMENT;
 
-            player = Instantiate(playerPrefab);
-            player.currentTile = tileBoard[(int)currentLevelData.playerSpawnLocation.x, (int)currentLevelData.playerSpawnLocation.y];
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+            player.currentTile = tileBoard[(int)(player.transform.position.x + 9.5f), (int)(player.transform.position.y + 5.5f)];
             player.transform.position = player.currentTile.transform.position;
 
-            winTile = tileBoard[(int)currentLevelData.winTileSpawnLocation.x, (int)currentLevelData.winTileSpawnLocation.y];
+            winTile = GameObject.FindGameObjectWithTag("WinTile").GetComponent<Tile>();
+            winTile.destination = true;
             winTile.GetComponent<SpriteRenderer>().color = Color.yellow;
 
-            SpawnEnemies();
+
+            LoadInEnemies();
+            LoadInObstacles();
 
             // For now, testEnemy is the first enemy in Enemies
             testEnemy = enemyManager.Enemies[0];
-
-            //testEnemy = Instantiate<Enemy>(enemyPrefab);
-            //testEnemy.currentTile = tileBoard[5, 7];
-            //testEnemy.transform.position = testEnemy.currentTile.transform.position;
-            //enemyManager = Instantiate<EnemyManager>(enemyManagerPrefab);
-            //enemyManager.Enemies.Add(testEnemy);
         }
     }
 
@@ -371,14 +371,6 @@ public class GameManager : MonoBehaviour
 
         //We want to start our search for available tiles with the player's tile since all of them will be near the player
         openList.Add(player.currentTile);
-
-        // Checks if player is on win tile and "ends the game"
-        // Currently "ends the game" means stopping the search for available tiles
-        //if (OnWinTile(player.currentTile))
-        //{
-        //    player.GetComponent<SpriteRenderer>().color = Color.magenta;
-        //    Debug.Log("You Win!");
-        //}
 
         Tile currentTile;
 
@@ -422,7 +414,7 @@ public class GameManager : MonoBehaviour
             //Checking to make sure the X doesn't go over our limit, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
             //that the player is contained in the availabletiles and that the tile is not the one we started on
             posToBeChecked = new Vector2(currentTile.X - 1, currentTile.Y);
-            distance = (int)Mathf.Abs(Vector2.Distance(new Vector2(currentTile.X - 1, currentTile.Y), new Vector2(player.currentTile.X, player.currentTile.Y)));
+            distance = Mathf.Abs(Vector2.Distance(new Vector2(currentTile.X - 1, currentTile.Y), new Vector2(player.currentTile.X, player.currentTile.Y)));
             if (currentTile.X != 0 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
             distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
@@ -439,7 +431,7 @@ public class GameManager : MonoBehaviour
             //Checking to make sure the Y doesn't go over our limit, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
             //that the player is contained in the availabletiles and that the tile is not the one we started on
             posToBeChecked = new Vector2(currentTile.X, currentTile.Y + 1);
-            distance = (int)Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
+            distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
             if (currentTile.Y != GRID_HEIGHT - 1 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
             distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
@@ -456,7 +448,7 @@ public class GameManager : MonoBehaviour
             //Checking to make sure the Y doesn't go under 0, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
             //that the player is contained in the availabletiles and that the tile is not the one we started on
             posToBeChecked = new Vector2(currentTile.X, currentTile.Y - 1);
-            distance = (int)Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
+            distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
             if (currentTile.Y != 0 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
             distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
@@ -480,30 +472,43 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SpawnEnemies()
+    private void LoadInEnemies()
     {
         // Instantiate the enemyManager Prefab
         enemyManager = Instantiate<EnemyManager>(enemyManagerPrefab);
 
-        // Current index for spawning at positions
-        int currentIndex = 0;
+
+        GameObject[] enemyArray = GameObject.FindGameObjectsWithTag("Enemy");
 
         // loop to create new enemy prefabs
-        for (int i = 0; i < currentLevelData.enemiesToSpawn; i++) 
+        for (int i = 0; i < enemyArray.Length; i++) 
         {
             // Instantiate at correct positions
-            Enemy enemyToSpawn = Instantiate(enemyPrefab);
-            enemyToSpawn.currentTile = tileBoard[(int)currentLevelData.enemySpawnLocations[currentIndex].x, (int)currentLevelData.enemySpawnLocations[currentIndex].y];
-            enemyToSpawn.transform.position = enemyToSpawn.currentTile.transform.position;
+            Enemy newEnemy = enemyArray[i].GetComponent<Enemy>();
+            newEnemy.currentTile = tileBoard[(int)(newEnemy.transform.position.x + 9.5f), (int)(newEnemy.transform.position.y + 5.5f)];
 
             // Create unique name for enemy
-            enemyToSpawn.name = enemyPrefab.name + i;
+            newEnemy.name = newEnemy.name + i;
 
             // Add enemy to enemyManager
-            enemyManager.Enemies.Add(enemyToSpawn);
+            enemyManager.Enemies.Add(newEnemy);
+        }
+    }
 
-            // If spawn point index goes out of range, loop back to the beginning
-            currentIndex = (currentIndex + 1) % currentLevelData.enemySpawnLocations.Length;
+    private void LoadInObstacles()
+    {
+        //Setting up our obstacle manager
+        obstManager = Instantiate<ObstacleManager>(obstManagerPrefab);
+
+        //Finding our obstacles
+        GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
+
+        //Looping through our obstacles
+        for(int i = 0; i < obstacles.Length; i++)
+        {
+            //Adding the obstacles to the list
+            Obstacle newObstacle = obstacles[i].GetComponent<Obstacle>();
+            obstManager.obstacles.Add(newObstacle);
         }
     }
 
@@ -534,18 +539,7 @@ private bool OnWinTile(Tile currentTile)
      return (currentTile.Y == winTile.Y && currentTile.X == winTile.X);
  }
 
-    /* 
-     public static Vector2 WorldToGamePoint(Vector2 point)
-     {
-         return new Vector2((int)(point.x + 9.5f), (int)(point.y + 5.5f));
-     }
-
-     public static Vector2 WorldToGamePoint(float pointX, float pointY)
-     {
-         return new Vector2((int)(pointX + 9.5), (int)(pointY + 5.5));
-     }
-
-     #endregion
+    /*      
 
      #region Sound Methods
 
