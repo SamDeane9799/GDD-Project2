@@ -128,6 +128,7 @@ public class GameManager : MonoBehaviour
     public ObstacleManager obstManagerPrefab;
     private ObstacleManager obstManager;
 
+
     #endregion
 
 
