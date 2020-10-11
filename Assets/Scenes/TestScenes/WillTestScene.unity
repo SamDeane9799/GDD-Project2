@@ -19013,6 +19013,7 @@ MonoBehaviour:
   playerCameraPrefab: {fileID: 1433613913130409216, guid: 39b493d61e8ef7e438be2a4bf3a6ebfc,
     type: 3}
   enemyManagerPrefab: {fileID: 1640588505}
+  tileColor: {r: 0.7960785, g: 0.8313726, b: 0.7960785, a: 1}
   obstManagerPrefab: {fileID: 7795460}
 --- !u!4 &1304632658
 Transform:

@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
 
     private static bool objectSelected = false;
     private static Obstacle obstacleClicked = null;
-    public Color tileColor;
+    public Color tileColor = new Color(.79f, .83f, .79f);
 
     #region File IO
     private StreamReader reader;
@@ -470,7 +470,7 @@ public class GameManager : MonoBehaviour
         //Changing all the tiles to a yellow color
         foreach (Tile t in availableTiles)
         {
-            t.GetComponent<SpriteRenderer>().color = new Color(Color.white.r, Color.white.g, Color.white.b, .85f);
+            t.GetComponent<SpriteRenderer>().color = Color.white;
         }
     }
 
