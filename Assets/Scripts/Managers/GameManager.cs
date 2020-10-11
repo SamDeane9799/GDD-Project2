@@ -189,7 +189,8 @@ public class GameManager : MonoBehaviour
                                 //Reseting the color of tiles before moving
                                 foreach (Tile t in availableTiles)
                                 {
-                                    t.GetComponent<SpriteRenderer>().color = tileColor;
+                                    t.highlight = false;
+                                    t.GetComponent<SpriteRenderer>().color = t.tileColor;
                                 }
                                 //Clearing the available tile list and setting the new tile
                                 availableTiles.Clear();
@@ -470,7 +471,8 @@ public class GameManager : MonoBehaviour
         //Changing all the tiles to a yellow color
         foreach (Tile t in availableTiles)
         {
-            t.GetComponent<SpriteRenderer>().color = Color.white;
+            t.ResetColorValues();
+            t.highlight = true;
         }
     }
 
