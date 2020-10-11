@@ -20,6 +20,29 @@ MonoBehaviour:
   - Name: 
     Value: 736
   Exists: 1
+--- !u!114 &-8056602952483463975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Abilities/Freeze
+  m_EditorClassIdentifier: 
+  Path: event:/Abilities/Freeze
+  guid: 8d926743b68bc84c9b482e16dbaad678
+  Banks:
+  - {fileID: 3222997857285802025}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 1750
 --- !u!114 &-6517495335095331275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,11 +188,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: FMODAssets/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637371575806229767
+  lastModified: 637380153453805532
   LoadResult: 0
   FileSizes:
   - Name: 
-    Value: 1006
+    Value: 1302
   Exists: 1
 --- !u!114 &-1609666020612308409
 MonoBehaviour:
@@ -206,7 +229,7 @@ MonoBehaviour:
   lastModified: 637371575806159996
   LoadResult: 0
   FileSizes: []
-  Exists: 1
+  Exists: 0
 --- !u!114 &-1405154977015872515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,7 +245,7 @@ MonoBehaviour:
   Path: event:/Test/Shwing
   guid: 3bebe7ec5bcc90489fee68ca6560f322
   Banks:
-  - {fileID: -1474137034575625122}
+  - {fileID: 3222997857285802025}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -280,15 +303,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: -1928407233967231943}
-  - {fileID: -1474137034575625122}
+  - {fileID: 3222997857285802025}
   EditorEvents:
   - {fileID: -1405154977015872515}
+  - {fileID: 2747814264321788626}
+  - {fileID: 1864525476783379088}
+  - {fileID: -8056602952483463975}
+  - {fileID: 3524942530780559460}
+  - {fileID: 1688194875704160554}
+  - {fileID: 3706376244485493535}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -1474137034575625122}
+  - {fileID: 3222997857285802025}
   StringsBanks:
   - {fileID: -1928407233967231943}
-  stringsBankWriteTime: 637371575806229767
+  stringsBankWriteTime: 637380153453805532
   cacheVersion: 3
 --- !u!114 &993071415533274433
 MonoBehaviour:
@@ -362,6 +391,75 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 1
+--- !u!114 &1688194875704160554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/MainMenu
+  m_EditorClassIdentifier: 
+  Path: event:/Music/MainMenu
+  guid: c0a6fb83eea2244fa4e3ca7ca1c33c00
+  Banks:
+  - {fileID: 3222997857285802025}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 144497
+--- !u!114 &1864525476783379088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Abilities/Burn
+  m_EditorClassIdentifier: 
+  Path: event:/Abilities/Burn
+  guid: 5ee402967fe80a468e2eaeae268019af
+  Banks:
+  - {fileID: 3222997857285802025}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 1750
+--- !u!114 &2747814264321788626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Abilities/Telekenesis/Place
+  m_EditorClassIdentifier: 
+  Path: event:/Abilities/Telekenesis/Place
+  guid: 36a56845c8a1284fa1b87f3ab8dcd956
+  Banks:
+  - {fileID: 3222997857285802025}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 1343
 --- !u!114 &2888939349022612374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,6 +478,70 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 1
+--- !u!114 &3222997857285802025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: FMODAssets/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637380153452638933
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
+--- !u!114 &3524942530780559460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Abilities/Telekenesis/Lift
+  m_EditorClassIdentifier: 
+  Path: event:/Abilities/Telekenesis/Lift
+  guid: 9ec0dd9b93aed343a1bb744ddd43beb4
+  Banks:
+  - {fileID: 3222997857285802025}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 1687
+--- !u!114 &3706376244485493535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Gameplay
+  m_EditorClassIdentifier: 
+  Path: event:/Music/Gameplay
+  guid: c939797175bffe44959e44315cda7f2e
+  Banks:
+  - {fileID: 3222997857285802025}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 135793
 --- !u!114 &5626048652690856438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -449,6 +611,24 @@ MonoBehaviour:
   Path: FMODAssets/Desktop/Master.bank
   SubDir: 
   lastModified: 637370965509895942
+  LoadResult: 0
+  FileSizes: []
+  Exists: 0
+--- !u!114 &7683882242811658811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: FMODAssets/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637380153354406220
   LoadResult: 0
   FileSizes: []
   Exists: 0

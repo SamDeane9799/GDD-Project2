@@ -127,7 +127,10 @@ public class GameManager : MonoBehaviour
     public ObstacleManager obstManagerPrefab;
     private ObstacleManager obstManager;
 
+
     #endregion
+
+    private FMOD.Studio.EventInstance instance;
 
 
     // Start is called before the first frame update
@@ -239,10 +242,17 @@ public class GameManager : MonoBehaviour
 
                                     Tile tileClicked = hit.collider.GetComponent<Tile>();
 
+                                    // Remove the obstacle's original position from the obstaclesPosition array
+                                    obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
+
                                     obstacleClicked.transform.position = tileClicked.transform.position;
                                     obstacleClicked.GetComponent<SpriteRenderer>().color = Color.white;
 
+                                    // Put the obstacleClicked into the obstclePositions array with its new coordinates
+                                    obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = obstacleClicked;
+
                                     Debug.Log("Obstacle Changed Position");
+                                    FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Place");
                                     objectSelected = false;
                                     usingAbility = false;
                                 }
@@ -264,6 +274,7 @@ public class GameManager : MonoBehaviour
                                         Debug.Log("Select a tile to move the obstacle");
                                         obstacleClicked.GetComponent<SpriteRenderer>().color = Color.blue;
                                         objectSelected = true;
+                                        FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Lift");
                                     }
                                     else
                                     {
@@ -354,6 +365,10 @@ public class GameManager : MonoBehaviour
 
             // For now, testEnemy is the first enemy in Enemies
             testEnemy = enemyManager.Enemies[0];
+
+            // FMOD music playing
+            instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");
+            instance.start();
         }
     }
 
