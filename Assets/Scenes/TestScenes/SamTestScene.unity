@@ -4444,6 +4444,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 649957667}
     m_Modifications:
+    - target: {fileID: -7131109560396035130, guid: 1fa61fd0e10b33c4096517e10df834e3,
+        type: 3}
+      propertyPath: walkable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 351810767468425475, guid: 1fa61fd0e10b33c4096517e10df834e3,
         type: 3}
       propertyPath: m_Name
@@ -19132,7 +19137,7 @@ MonoBehaviour:
     type: 3}
   enemyManagerPrefab: {fileID: -9171452147015701651, guid: 231d84f0bd2790a49ab77d61eff35a8f,
     type: 3}
-  winTile: {fileID: 0}
+  tileColor: {r: 0.7970808, g: 0.8301887, b: 0.7949448, a: 1}
   obstManagerPrefab: {fileID: 4833668360979105037, guid: 41a99958d703b834e8a72558365cd11e,
     type: 3}
 --- !u!4 &2100735239

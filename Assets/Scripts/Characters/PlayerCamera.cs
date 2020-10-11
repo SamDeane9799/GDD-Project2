@@ -26,6 +26,7 @@ public class PlayerCamera : MonoBehaviour
     #endregion
 
     Vector2 position = new Vector2(0, 0);
+    public GameState previousGameState;
 
     void Start()
     {
@@ -57,6 +58,7 @@ public class PlayerCamera : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape) && (GameManager.currentGameState == GameState.PLAYERTURN || GameManager.currentGameState == GameState.ENEMYTURN))
             {
+                previousGameState = GameManager.currentGameState;
                 GameManager.currentGameState = GameState.PAUSED;
                 pauseCanvas.gameObject.SetActive(true);
                 canvasTracker.Push(pauseCanvas);
@@ -129,7 +131,7 @@ public class PlayerCamera : MonoBehaviour
     //Button used to unpause the game
     public void ResumeButton()
     {
-        GameManager.currentGameState = GameState.NONE;
+        GameManager.currentGameState = previousGameState;
         pauseCanvas.gameObject.SetActive(false);
     }
 

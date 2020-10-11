@@ -113,6 +113,7 @@ public class GameManager : MonoBehaviour
 
     private static bool objectSelected = false;
     private static Obstacle obstacleClicked = null;
+    public Color tileColor;
 
     #region File IO
     private StreamReader reader;
@@ -182,14 +183,13 @@ public class GameManager : MonoBehaviour
                         {
                             RaycastHit2D hit = MouseCollisionCheck();
 
-
                             Tile tileClicked = hit.collider.GetComponent<Tile>();
                             if (availableTiles.Contains(tileClicked))
                             {
                                 //Reseting the color of tiles before moving
                                 foreach (Tile t in availableTiles)
                                 {
-                                    t.GetComponent<SpriteRenderer>().color = Color.gray;
+                                    t.GetComponent<SpriteRenderer>().color = tileColor;
                                 }
                                 //Clearing the available tile list and setting the new tile
                                 availableTiles.Clear();
@@ -198,25 +198,12 @@ public class GameManager : MonoBehaviour
 
                                 player.moving = true;
                                 player.actionPoints -= Mathf.Round(tileClicked.dist);
-
-                                //Checking if the player can still move
-                                if (player.actionPoints > 1)
-                                {
-                                    FindAvailableTiles();
-                                }
                             }
                         }
 
                         //When player isn't moving and their actionpoints is below 1 we go to the enemies turn
                         if (!player.moving && player.actionPoints < 1)
                         {
-                            //if(player.currentTile.destination)
-                            //{
-                            //    currentGameState = GameState.WIN;
-                            //    Debug.Log("PLAYER WINS");
-                            //    return;
-                            //}
-
                             if (OnWinTile(player.currentTile))
                             {
                                 player.GetComponent<SpriteRenderer>().color = Color.magenta;
@@ -411,7 +398,7 @@ public class GameManager : MonoBehaviour
             //Checking to make sure the X doesn't go under 0, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
             //that the player is contained in the availabletiles and that the tile is not the one we started on
             posToBeChecked = new Vector2(currentTile.X + 1, currentTile.Y);
-            distance = (int)Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
+            distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
 
             if (currentTile.X != GRID_WIDTH - 1 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
             distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
