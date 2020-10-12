@@ -31,7 +31,7 @@ public class PlayerCamera : MonoBehaviour
     void Start()
     {
         DontDestroyOnLoad(this);
-        //canvasTracker.Push(titleCanvas);
+        canvasTracker.Push(titleCanvas);
 
         //soundfxVolumeSlider.value = GameManager.soundFXVolume;
         //musicSoundVolumeSlider.value = GameManager.musicVolume;
@@ -56,6 +56,7 @@ public class PlayerCamera : MonoBehaviour
         //Right now it only pauses the game and unpauses
         if (SceneManager.GetActiveScene().name == "SamTestScene" || SceneManager.GetActiveScene().name == "WillTestScene")
         {
+            titleCanvas.gameObject.SetActive(false);
             if (Input.GetKeyDown(KeyCode.Escape) && (GameManager.currentGameState == GameState.PLAYERTURN || GameManager.currentGameState == GameState.ENEMYTURN))
             {
                 previousGameState = GameManager.currentGameState;
@@ -153,7 +154,6 @@ public class PlayerCamera : MonoBehaviour
     //Button used to go back to the main menu
     public void ReturnToMenu()
     {
-        //Destroy(GameObject.Find("GameManager"));
         SceneManager.LoadScene(0);
         Destroy(gameObject);
     }

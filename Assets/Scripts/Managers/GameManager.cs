@@ -150,11 +150,10 @@ public class GameManager : MonoBehaviour
         availableObstacles = new List<Obstacle>();
 
         availableTiles = new List<Tile>();
-        player.actionPoints = 2;
-        OnPlayersTurn();
 
         obstacleAvailableTiles = new List<Tile>();
         usingAbility = false;
+
 
         //musicSources = new List<AudioSource>();
         //soundFXSources = new List<AudioSource>();
@@ -375,6 +374,7 @@ public class GameManager : MonoBehaviour
             player.currentTile = tileBoard[(int)(player.transform.position.x + 9.5f), (int)(player.transform.position.y + 5.5f)];
             player.transform.position = player.currentTile.transform.position;
 
+
             winTile = GameObject.FindGameObjectWithTag("WinTile").GetComponent<Tile>();
             winTile.destination = true;
             winTile.GetComponent<SpriteRenderer>().color = Color.yellow;
@@ -389,6 +389,8 @@ public class GameManager : MonoBehaviour
             // FMOD music playing
             instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");
             instance.start();
+
+            OnPlayersTurn();
         }
     }
 

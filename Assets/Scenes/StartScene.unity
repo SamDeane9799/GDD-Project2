@@ -149,7 +149,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 221fc90725bfb59449abc1c2de0d6791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 4686512223354881328, guid: 39b493d61e8ef7e438be2a4bf3a6ebfc,
+  tileColor: {r: 0.79, g: 0.83, b: 0.79, a: 1}
+  sfxVolume: 0
+  musicVolume: 0
+  masterVolume: 0
+  playerCameraPrefab: {fileID: 1433613913130409216, guid: 39b493d61e8ef7e438be2a4bf3a6ebfc,
+    type: 3}
+  enemyManagerPrefab: {fileID: -9171452147015701651, guid: 231d84f0bd2790a49ab77d61eff35a8f,
+    type: 3}
+  obstManagerPrefab: {fileID: 4833668360979105037, guid: 41a99958d703b834e8a72558365cd11e,
     type: 3}
 --- !u!4 &293763528
 Transform:
