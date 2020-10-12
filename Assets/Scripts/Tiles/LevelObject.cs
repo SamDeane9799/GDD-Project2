@@ -9,8 +9,8 @@ public abstract class LevelObject : MonoBehaviour
 
 
     public bool highlight;
-    public float blueValue;
-    public float targetBlue;
+    public float colorValue;
+    public float targetValue;
     public Color originalColor;
 
     public virtual int X
@@ -27,8 +27,8 @@ public abstract class LevelObject : MonoBehaviour
     {
         testInstance = FMODUnity.RuntimeManager.CreateInstance("event:/Test/Shwing");
         originalColor = GetComponent<SpriteRenderer>().color;
-        blueValue = originalColor.b - .2f;
-        targetBlue = originalColor.b;
+        colorValue = 0;
+        targetValue = .2f;
     }
 
     // Update is called once per frame
@@ -59,20 +59,24 @@ public abstract class LevelObject : MonoBehaviour
 
     private void Highlight()
     {
-        if (Mathf.Abs(targetBlue - blueValue) <= .01f)
+        if (Mathf.Abs(targetValue - colorValue) <= .01f)
         {
-            if (targetBlue == originalColor.b)
-                targetBlue = originalColor.b - .2f;
+            if (targetValue == .2f)
+                targetValue = 0;
             else
-                targetBlue = originalColor.b;
+                targetValue = .2f;
         }
-        blueValue = Mathf.Lerp(blueValue, targetBlue, .035f);
-        GetComponent<SpriteRenderer>().color = new Color(blueValue, blueValue, originalColor.b, 1);
+        colorValue = Mathf.Lerp(colorValue, targetValue, .035f);
+        Debug.Log(colorValue);
+        for (int i = 0; i < 3; i++)
+        {
+            GetComponent<SpriteRenderer>().color = new Color(originalColor.r - colorValue, originalColor.g - colorValue, originalColor.b, 1);
+        }
     }
 
     public void ResetColorValues()
     {
-        blueValue = 1f;
-        targetBlue = originalColor.b;
+        colorValue = 0f;
+        targetValue = .2f;
     }
 }
