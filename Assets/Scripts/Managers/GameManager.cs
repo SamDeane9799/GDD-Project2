@@ -249,6 +249,9 @@ public class GameManager : MonoBehaviour
                                         obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = obstacleClicked;
 
                                         Debug.Log("Obstacle Changed Position");
+
+                                        FindAvailableTiles();
+
                                         foreach (Tile t in obstacleAvailableTiles)
                                         {
                                             t.highlight = false;
@@ -292,6 +295,12 @@ public class GameManager : MonoBehaviour
                                         Debug.Log("Object Was Not An Obstacle");
                                     }
                                 }
+                            }
+
+                            if (Input.GetKeyDown(KeyCode.Escape))
+                            {
+                                usingAbility = false;
+                                Debug.Log("Cancelled Move Object Ability");
                             }
                         }
                         else
