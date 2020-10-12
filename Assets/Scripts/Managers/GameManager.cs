@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
 {
     public const int GRID_WIDTH = 20;
     public const int GRID_HEIGHT = 12;
+    public Color tileColor = new Color(.79f, .83f, .79f);
 
     #region Properties OLD
     ////Get and set properties for the volume levels to make it easier to read and code
@@ -116,7 +117,7 @@ public class GameManager : MonoBehaviour
     private static Obstacle obstacleClicked = null;
     private List<Tile> obstacleAvailableTiles;
     private const int obstacleMovementRange = 1;
-    public Color tileColor = new Color(.79f, .83f, .79f);
+    private List<Obstacle> availableObstacles;
     #endregion
 
     #region File IO
@@ -145,6 +146,8 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this);
         //SceneManager.sceneLoaded += OnLoad;
         OnLoad(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+
+        availableObstacles = new List<Obstacle>();
 
         availableTiles = new List<Tile>();
         player.actionPoints = 2;
@@ -195,7 +198,7 @@ public class GameManager : MonoBehaviour
                                 foreach (Tile t in availableTiles)
                                 {
                                     t.highlight = false;
-                                    t.GetComponent<SpriteRenderer>().color = t.tileColor;
+                                    t.GetComponent<SpriteRenderer>().color = t.originalColor;
                                 }
                                 //Clearing the available tile list and setting the new tile
                                 availableTiles.Clear();
@@ -249,7 +252,7 @@ public class GameManager : MonoBehaviour
                                         foreach (Tile t in obstacleAvailableTiles)
                                         {
                                             t.highlight = false;
-                                            t.GetComponent<SpriteRenderer>().color = t.tileColor;
+                                            t.GetComponent<SpriteRenderer>().color = t.originalColor;
                                         }
                                         obstacleAvailableTiles.Clear();
                                         FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Place");
@@ -269,8 +272,14 @@ public class GameManager : MonoBehaviour
 
                                     obstacleClicked = hit.collider.GetComponent<Obstacle>();
 
-                                    if (obstacleClicked != null)
+                                    if (obstacleClicked != null && availableObstacles.Contains(obstacleClicked))
                                     {
+                                        foreach(Obstacle o in availableObstacles)
+                                        {
+                                            o.highlight = false;
+                                            o.ResetColorValues();
+                                        }
+                                        availableObstacles.Clear();
                                         FindAvailableSpotsObst(obstacleClicked);
                                         Debug.Log("ObstacleClicked Position: " + obstacleClicked.X + ", " + obstacleClicked.Y);
                                         Debug.Log("Select a tile to move the obstacle");
@@ -600,7 +609,21 @@ public class GameManager : MonoBehaviour
             t.ResetColorValues();
             t.highlight = true;
         }
+    }
 
+    private void FindAvailableObstacles()
+    {
+        float distance;
+        Debug.Log(obstManager.obstacles.Count);
+        foreach (Obstacle o in obstManager.obstacles)
+        {
+            distance = Vector2.Distance(o.transform.position, player.currentTile.transform.position);
+            if (distance < player.moveDist)
+            {
+                availableObstacles.Add(o);
+                o.highlight = true;
+            }
+        }
     }
 
     private void LoadInEnemies()
@@ -638,6 +661,7 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < obstacles.Length; i++)
         {
             //Adding the obstacles to the list
+            Debug.Log("Found obstacle");
             Obstacle newObstacle = obstacles[i].GetComponent<Obstacle>();
             obstManager.obstacles.Add(newObstacle);
         }
@@ -648,6 +672,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Moving Object");
         usingAbility = true;
+        FindAvailableObstacles();
         currentPlayerState = PlayerState.ABILITYMOVE;
     }
     #endregion

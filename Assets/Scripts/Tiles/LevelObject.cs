@@ -7,6 +7,12 @@ public abstract class LevelObject : MonoBehaviour
     // instance of the test sound effect
     private FMOD.Studio.EventInstance testInstance;
 
+
+    public bool highlight;
+    public float blueValue;
+    public float targetBlue;
+    public Color originalColor;
+
     public virtual int X
     {
         get { return (int)(9.5f + transform.position.x); }
@@ -20,12 +26,19 @@ public abstract class LevelObject : MonoBehaviour
     protected virtual void Start()
     {
         testInstance = FMODUnity.RuntimeManager.CreateInstance("event:/Test/Shwing");
+        originalColor = GetComponent<SpriteRenderer>().color;
+        blueValue = originalColor.b - .2f;
+        targetBlue = originalColor.b;
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
         //TestFMOD();
+        if (highlight)
+        {
+            Highlight();
+        }
     }
 
     // Changes color of the prefab when mouse buttons are pressed and plays a test sfx
@@ -42,5 +55,24 @@ public abstract class LevelObject : MonoBehaviour
             testInstance.start();
             testInstance.release();
         }
+    }
+
+    private void Highlight()
+    {
+        if (Mathf.Abs(targetBlue - blueValue) <= .01f)
+        {
+            if (targetBlue == originalColor.b)
+                targetBlue = originalColor.b - .2f;
+            else
+                targetBlue = originalColor.b;
+        }
+        blueValue = Mathf.Lerp(blueValue, targetBlue, .035f);
+        GetComponent<SpriteRenderer>().color = new Color(blueValue, blueValue, originalColor.b, 1);
+    }
+
+    public void ResetColorValues()
+    {
+        blueValue = 1f;
+        targetBlue = originalColor.b;
     }
 }
