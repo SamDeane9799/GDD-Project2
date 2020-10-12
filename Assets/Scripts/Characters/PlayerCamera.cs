@@ -46,7 +46,7 @@ public class PlayerCamera : MonoBehaviour
     void Update()
     {
         //Code that runs in the title screen goes here
-        if (SceneManager.GetActiveScene().name == "StartScreen")
+        if (SceneManager.GetActiveScene().name == "StartScene")
         {
             if (Input.GetKeyDown(KeyCode.Escape) && canvasTracker.Count > 1)
                 BackButton();
@@ -54,7 +54,7 @@ public class PlayerCamera : MonoBehaviour
 
         //Code that runs in the gamescene
         //Right now it only pauses the game and unpauses
-        if (SceneManager.GetActiveScene().name == "SamTestScene" || SceneManager.GetActiveScene().name == "WillTestScene")
+        if (SceneManager.GetActiveScene().name != "StartScene")
         {
             //REMOVE LATER THIS IS ONLY TEMPORARY SO WE CAN TEST IN THE REGULAR SCENES WITHOUT ERROR
             titleCanvas.gameObject.SetActive(false);
@@ -100,6 +100,7 @@ public class PlayerCamera : MonoBehaviour
     //After that sets the canvas at the top of the stack to on
     public void BackButton()
     {
+        Debug.Log("Back Button Pressed");
         canvasTracker.Peek().gameObject.SetActive(false);
         canvasTracker.Pop();
         canvasTracker.Peek().gameObject.SetActive(true);
