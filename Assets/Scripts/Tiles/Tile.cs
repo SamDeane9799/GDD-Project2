@@ -10,8 +10,8 @@ public class Tile : LevelObject
     public bool destination;
     public bool walkable;
     public bool highlight;
-    private float blueValue;
-    private float targetBlue;
+    public float blueValue;
+    public float targetBlue;
     public Color tileColor;
 
     protected override void Start()
@@ -31,7 +31,9 @@ public class Tile : LevelObject
     {
         base.Update();
         if (highlight)
+        {
             Highlight();
+        }
     }
 
     private void Highlight()
