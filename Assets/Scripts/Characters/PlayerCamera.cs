@@ -56,6 +56,7 @@ public class PlayerCamera : MonoBehaviour
         //Right now it only pauses the game and unpauses
         if (SceneManager.GetActiveScene().name == "SamTestScene" || SceneManager.GetActiveScene().name == "WillTestScene")
         {
+            //REMOVE LATER THIS IS ONLY TEMPORARY SO WE CAN TEST IN THE REGULAR SCENES WITHOUT ERROR
             titleCanvas.gameObject.SetActive(false);
             if (Input.GetKeyDown(KeyCode.Escape) && (GameManager.currentGameState == GameState.PLAYERTURN || GameManager.currentGameState == GameState.ENEMYTURN))
             {
