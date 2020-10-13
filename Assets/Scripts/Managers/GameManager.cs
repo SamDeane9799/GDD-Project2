@@ -205,7 +205,7 @@ public class GameManager : MonoBehaviour
                                 player.currentTile = tileClicked;
 
                                 player.moving = true;
-                                player.actionPoints -= Mathf.Round(tileClicked.dist);
+                                player.actionPoints -= tileClicked.dist;
                             }
                         }
 
@@ -315,29 +315,36 @@ public class GameManager : MonoBehaviour
                         break;
                 }
 
+
                 if (player.actionPoints >= 1 && !player.moving && availableTiles.Count == 0)
                 {
                     FindAvailableTiles();
                 }
 
                 //When player isn't moving and their actionpoints is below 1 we go to the enemies turn
+                //If the player is no longer moving and does not have an action point then we cycle to the enemies turn
                 if (!player.moving && player.actionPoints < 1)
                 {
+                    //The current gamestate is switched to the enemyturn. We call the OnEnemyTurn to reset their values for their turn
+                    Debug.Log("Switching to enemy turn");
                     currentGameState = GameState.ENEMYTURN;
-                    testEnemy.actionPoints = 1;
+                    enemyManager.OnEnemyTurn();
+                    enemyManager.enemyTurn = true;
                 }
             }
             //Taking care of our enemy's turn
+            //If it is the enemies turn we do this
             else if (currentGameState == GameState.ENEMYTURN)
             {
-                playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, testEnemy.transform.position, .04f);
+                //Moving our camera to the average position of the enemies
+                playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, enemyManager.AverageEnemyPosition, .04f);
                 playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
-                float distance = Vector2.Distance(playerCam.transform.position, testEnemy.transform.position);
+                //Calculating the distance of the camera to the average positions of enemies
+                float distance = Vector2.Distance(playerCam.transform.position, enemyManager.AverageEnemyPosition);
                 if (distance < .2f)
                 {
-                    if (testEnemy.actionPoints >= 1 && !testEnemy.moving)
-                        testEnemy.EnemyTurn();
-                    else if (!testEnemy.moving)
+                    //If it is no longer the enemies turn we switch to the players turn and reset their values
+                    if (!enemyManager.enemyTurn)
                     {
                         currentGameState = GameState.PLAYERTURN;
                         OnPlayersTurn();
@@ -439,7 +446,7 @@ public class GameManager : MonoBehaviour
             {
                 if (tileBoard[currentTile.X + 1, currentTile.Y].walkable == true)
                 {
-                    tileBoard[currentTile.X + 1, currentTile.Y].dist = distance;
+                    tileBoard[currentTile.X + 1, currentTile.Y].dist = Mathf.Round(distance);
                     openList.Add(tileBoard[currentTile.X + 1, currentTile.Y]);
                     availableTiles.Add(tileBoard[currentTile.X + 1, currentTile.Y]);
                 }
@@ -457,7 +464,7 @@ public class GameManager : MonoBehaviour
             {
                 if (tileBoard[currentTile.X - 1, currentTile.Y].walkable == true)
                 {
-                    tileBoard[currentTile.X + 1, currentTile.Y].dist = distance;
+                    tileBoard[currentTile.X - 1, currentTile.Y].dist = Mathf.Round(distance);
                     openList.Add(tileBoard[currentTile.X - 1, currentTile.Y]);
                     availableTiles.Add(tileBoard[currentTile.X - 1, currentTile.Y]);
                 }
@@ -475,7 +482,7 @@ public class GameManager : MonoBehaviour
             {
                 if (tileBoard[currentTile.X, currentTile.Y + 1].walkable == true)
                 {
-                    tileBoard[currentTile.X + 1, currentTile.Y].dist = distance;
+                    tileBoard[currentTile.X, currentTile.Y + 1].dist = Mathf.Round(distance);
                     openList.Add(tileBoard[currentTile.X, currentTile.Y + 1]);
                     availableTiles.Add(tileBoard[currentTile.X, currentTile.Y + 1]);
                 }
@@ -493,7 +500,7 @@ public class GameManager : MonoBehaviour
             {
                 if (tileBoard[currentTile.X, currentTile.Y - 1].walkable == true)
                 {
-                    tileBoard[currentTile.X + 1, currentTile.Y].dist = distance;
+                    tileBoard[currentTile.X, currentTile.Y - 1].dist = Mathf.Round(distance);
                     openList.Add(tileBoard[currentTile.X, currentTile.Y - 1]);
                     availableTiles.Add(tileBoard[currentTile.X, currentTile.Y - 1]);
                 }
