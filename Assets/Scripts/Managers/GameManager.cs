@@ -115,9 +115,12 @@ public class GameManager : MonoBehaviour
     #region Obstacles
     private static bool objectSelected = false;
     private static Obstacle obstacleClicked = null;
+
     private List<Tile> obstacleAvailableTiles;
     private const int obstacleMovementRange = 1;
+
     private List<Obstacle> availableObstacles;
+    private List<Bush> availableBushes;
     #endregion
 
     #region File IO
@@ -130,9 +133,9 @@ public class GameManager : MonoBehaviour
 
     public static Tile[,] tileBoard = new Tile[GRID_WIDTH, GRID_HEIGHT];
     public static Obstacle[,] obstaclePositions = new Obstacle[GRID_WIDTH, GRID_HEIGHT];
+    public static Bush[,] bushPositions = new Bush[GRID_WIDTH, GRID_HEIGHT];
     public ObstacleManager obstManagerPrefab;
     private ObstacleManager obstManager;
-
 
     #endregion
 
@@ -306,6 +309,34 @@ public class GameManager : MonoBehaviour
                         break;
 
                     case PlayerState.ABILITYBURN:
+                        if (usingAbility)
+                        {
+                            Debug.Log("Select a bush");
+
+                            RaycastHit2D hit = MouseCollisionCheck();
+
+                            Bush bushClicked = hit.collider.GetComponent<Bush>();
+
+                            if (bushClicked != null)
+                            {
+                                bushClicked.burned = true;
+                            }
+                            else
+                            {
+                                Debug.Log("Bush not clicked");
+                            }
+
+                            if (Input.GetKeyDown(KeyCode.Escape))
+                            {
+                                usingAbility = false;
+                                Debug.Log("Cancelled Move Object Ability");
+                            }
+                        }
+                        else
+                        {
+                            currentPlayerState = PlayerState.MOVEMENT;
+                        }
+
                         break;
 
                     case PlayerState.ABILITYFREEZE:
@@ -439,7 +470,8 @@ public class GameManager : MonoBehaviour
             posToBeChecked = new Vector2(currentTile.X + 1, currentTile.Y);
             distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(player.currentTile.X, player.currentTile.Y)));
             if (currentTile.X != GRID_WIDTH - 1
-                && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null 
+                && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null
+                && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null
                 && distance <= player.actionPoints && !availableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
                 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile  && !positions.Contains(posToBeChecked))
             {
@@ -516,7 +548,6 @@ public class GameManager : MonoBehaviour
             t.highlight = true;
         }
     }
-
 
     private void FindAvailableSpotsObst(Obstacle obstToMove)
     {
@@ -642,6 +673,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void FindAvailableBushes()
+    {
+        float distance;
+
+        foreach (Bush o in obstManager.bushes)
+        {
+            distance = Vector2.Distance(o.transform.position, player.currentTile.transform.position);
+            if (distance <= player.moveDist)
+            {
+                availableObstacles.Add(o);
+                o.highlight = true;
+            }
+        }
+    }
+
     private void LoadInEnemies()
     {
         // Instantiate the enemyManager Prefab
@@ -672,14 +718,23 @@ public class GameManager : MonoBehaviour
 
         //Finding our obstacles
         GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
+        GameObject[] bushes = GameObject.FindGameObjectsWithTag("Bush");
 
         //Looping through our obstacles
-        for(int i = 0; i < obstacles.Length; i++)
+        for (int i = 0; i < obstacles.Length; i++)
         {
             //Adding the obstacles to the list
             Debug.Log("Found obstacle");
             Obstacle newObstacle = obstacles[i].GetComponent<Obstacle>();
             obstManager.obstacles.Add(newObstacle);
+        }
+
+        for (int i = 0; i < bushes.Length; i++)
+        {
+            //Adding the obstacles to the list
+            Debug.Log("Found bush");
+            Bush newBush = bushes[i].GetComponent<Bush>();
+            obstManager.bushes.Add(newBush);
         }
     }
 
@@ -690,6 +745,22 @@ public class GameManager : MonoBehaviour
         usingAbility = true;
         FindAvailableObstacles();
         currentPlayerState = PlayerState.ABILITYMOVE;
+    }
+
+    public void BurnAbility()
+    {
+        Debug.Log("Burning Object");
+        usingAbility = true;
+        FindAvailableBushes();
+        currentPlayerState = PlayerState.ABILITYBURN;
+    }
+
+    public void FreezeAbility()
+    {
+        Debug.Log("Burning Object");
+        usingAbility = true;
+        //FindAvailableWater();
+        currentPlayerState = PlayerState.ABILITYFREEZE;
     }
     #endregion
 
