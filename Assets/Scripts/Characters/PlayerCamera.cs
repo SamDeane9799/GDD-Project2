@@ -82,7 +82,6 @@ public class PlayerCamera : MonoBehaviour
     {
         SceneManager.LoadScene(0);
         titleCanvas.gameObject.SetActive(false);
-
         canvasTracker.Clear();
     }
 
