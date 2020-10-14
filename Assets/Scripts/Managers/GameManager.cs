@@ -221,7 +221,6 @@ public class GameManager : MonoBehaviour
                             }
 
                             currentGameState = GameState.ENEMYTURN;
-                            testEnemy.actionPoints = 2;
                         }
                         break;
 
@@ -372,7 +371,7 @@ public class GameManager : MonoBehaviour
     public void OnLoad(Scene scene, LoadSceneMode mode)
     {
         //Using this to load in the player when we load into the specific scene
-        if (scene.name == "SamTestScene" || scene.name == "WillTestScene")
+        if (scene.name != "StartScene")
         {
             currentGameState = GameState.PLAYERTURN;
             currentPlayerState = PlayerState.MOVEMENT;
@@ -389,9 +388,6 @@ public class GameManager : MonoBehaviour
 
             LoadInEnemies();
             LoadInObstacles();
-
-            // For now, testEnemy is the first enemy in Enemies
-            testEnemy = enemyManager.Enemies[0];
 
             // FMOD music playing
             instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");

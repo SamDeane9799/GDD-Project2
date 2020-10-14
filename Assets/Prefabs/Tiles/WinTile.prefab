@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1404192165291907647}
   m_Layer: 0
   m_Name: WinTile
-  m_TagString: Untagged
+  m_TagString: WinTile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94,6 +94,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c4e9b02ea45a04ab4add6d9648492d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlight: 0
+  colorValue: 0
+  targetValue: 0
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   dist: 0
   destination: 1
   walkable: 1
