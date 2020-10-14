@@ -118,6 +118,7 @@ public class GameManager : MonoBehaviour
 
     private List<Obstacle> availableObstacles;
     private List<Bush> availableBushes;
+    private List<WaterTile> availableWater;
     #endregion
 
     #region File IO
@@ -132,7 +133,6 @@ public class GameManager : MonoBehaviour
 
     public static Tile[,] tileBoard = new Tile[GRID_WIDTH, GRID_HEIGHT];
     public static Obstacle[,] obstaclePositions = new Obstacle[GRID_WIDTH, GRID_HEIGHT];
-    public static Bush[,] bushPositions = new Bush[GRID_WIDTH, GRID_HEIGHT];
     public ObstacleManager obstManagerPrefab;
     private ObstacleManager obstManager;
 
@@ -151,6 +151,7 @@ public class GameManager : MonoBehaviour
 
         availableObstacles = new List<Obstacle>();
         availableBushes = new List<Bush>();
+        availableWater = new List<WaterTile>();
 
         availableTiles = new List<Tile>();
 
@@ -321,6 +322,8 @@ public class GameManager : MonoBehaviour
 
                                         Destroy(bushClicked.gameObject);
 
+                                        FindAvailableTiles();
+
                                         usingAbility = false;
                                     }
                                     else
@@ -344,6 +347,54 @@ public class GameManager : MonoBehaviour
                         break;
 
                     case PlayerState.ABILITYFREEZE:
+                        if (obstManager.waterTiles.Count > 0)
+                        {
+                            if (usingAbility)
+                            {
+                                if (Input.GetMouseButton(0))
+                                {
+                                    RaycastHit2D hit = MouseCollisionCheck();
+
+                                    WaterTile waterClicked = hit.collider.GetComponent<WaterTile>();
+
+                                    if (obstManager.waterTiles.Contains(waterClicked))
+                                    {
+                                        Debug.Log("Water at: " + waterClicked.X + ", " + waterClicked.Y + " got frozen.");
+
+                                        FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Freeze");
+
+                                        waterClicked.GetComponent<SpriteRenderer>().color = Color.cyan;
+                                        waterClicked.walkable = true;
+
+                                        //bushClicked.burned = true;
+
+                                        FindAvailableTiles();
+
+                                        usingAbility = false;
+                                    }
+                                    else
+                                    {
+                                        Debug.Log("Water not clicked");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                currentPlayerState = PlayerState.MOVEMENT;
+                            }
+                        }
+                        else
+                        {
+                            Debug.Log("This level is dehydrated");
+
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.Q))
+                        {
+                            usingAbility = false;
+                            Debug.Log("Cancelled Freeze Object Ability");
+                        }
+
                         break;
                 }
 
@@ -647,6 +698,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void FindAvailableWater()
+    {
+        float distance;
+
+        if (obstManager.waterTiles.Count > 0)
+        {
+            foreach (WaterTile water in obstManager.waterTiles)
+            {
+                distance = Vector2.Distance(water.transform.position, player.currentTile.transform.position);
+
+                if (distance <= player.moveDist)
+                {
+                    availableWater.Add(water);
+                    water.highlight = true;
+                }
+            }
+        }
+    }
+
     #endregion
 
     private void LoadInEnemies()
@@ -682,6 +752,8 @@ public class GameManager : MonoBehaviour
 
         GameObject[] bushes = GameObject.FindGameObjectsWithTag("Bush");
 
+        GameObject[] waters = GameObject.FindGameObjectsWithTag("Water");
+
         //Looping through our obstacles
         for (int i = 0; i < obstacles.Length; i++)
         {
@@ -696,6 +768,14 @@ public class GameManager : MonoBehaviour
             Debug.Log("Found bush");
             Bush newBush = bushes[i].GetComponent<Bush>();
             obstManager.bushes.Add(newBush);
+        }
+
+        for (int i = 0; i < waters.Length; i++)
+        {
+            //Adding the obstacles to the list
+            Debug.Log("Found water");
+            WaterTile newWater = waters[i].GetComponent<WaterTile>();
+            obstManager.waterTiles.Add(newWater);
         }
     }
     public void InitializePlayerCam()
@@ -754,9 +834,9 @@ public class GameManager : MonoBehaviour
 
     public void FreezeAbility()
     {
-        Debug.Log("Burning Object");
+        Debug.Log("Freezing Object");
         usingAbility = true;
-        //FindAvailableWater();
+        FindAvailableWater();
         currentPlayerState = PlayerState.ABILITYFREEZE;
     }
     #endregion

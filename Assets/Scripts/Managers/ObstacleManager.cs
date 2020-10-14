@@ -9,4 +9,5 @@ public class ObstacleManager : MonoBehaviour
 
     public List<Bush> bushes = new List<Bush>();
 
+    public List<WaterTile> waterTiles = new List<WaterTile>();
 }
