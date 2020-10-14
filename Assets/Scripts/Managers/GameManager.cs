@@ -193,12 +193,14 @@ public class GameManager : MonoBehaviour
                         {
                             FindAvailableTiles();
                         }
+
                         if (Input.GetMouseButtonDown(0))
                         {
                             //Casting a ray where the player clicked
                             RaycastHit2D hit = MouseCollisionCheck();
 
                             Tile tileClicked = hit.collider.GetComponent<Tile>();
+
                             if (availableTiles.Contains(tileClicked))
                             {
                                 //Reseting the color of tiles before moving
@@ -286,7 +288,7 @@ public class GameManager : MonoBehaviour
                                 }
                             }
 
-                            if (Input.GetKeyDown(KeyCode.Escape))
+                            if (Input.GetKeyDown(KeyCode.Q))
                             {
                                 usingAbility = false;
                                 Debug.Log("Cancelled Move Object Ability");
@@ -312,12 +314,15 @@ public class GameManager : MonoBehaviour
 
                                     if (obstManager.bushes.Contains(bushClicked))
                                     {
+                                        Debug.Log("Bush at: " + bushClicked.X + ", " + bushClicked.Y + " got burned.");
+
                                         FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Burn");
 
-                                        bushClicked.burned = true;
-                                        Destroy(bushClicked);
+                                        //bushClicked.burned = true;
 
-                                        bushPositions[bushClicked.X, bushClicked.Y] = null;
+                                        obstaclePositions[bushClicked.X, bushClicked.Y] = null;
+
+                                        Destroy(bushClicked.gameObject);
 
                                         usingAbility = false;
                                     }
@@ -327,7 +332,7 @@ public class GameManager : MonoBehaviour
                                     }
                                 }
 
-                                if (Input.GetKeyDown(KeyCode.Escape))
+                                if (Input.GetKeyDown(KeyCode.Q))
                                 {
                                     usingAbility = false;
                                     Debug.Log("Cancelled Burn Object Ability");

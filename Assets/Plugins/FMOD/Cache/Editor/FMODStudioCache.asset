@@ -35,7 +35,7 @@ MonoBehaviour:
   Path: event:/Abilities/Freeze
   guid: 8d926743b68bc84c9b482e16dbaad678
   Banks:
-  - {fileID: 1049212826419233395}
+  - {fileID: 7445040833397567891}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -296,7 +296,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: FMODAssets/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637381093362708448
+  lastModified: 637382806919753510
   LoadResult: 0
   FileSizes:
   - Name: 
@@ -353,7 +353,7 @@ MonoBehaviour:
   Path: event:/Test/Shwing
   guid: 3bebe7ec5bcc90489fee68ca6560f322
   Banks:
-  - {fileID: 1049212826419233395}
+  - {fileID: 7445040833397567891}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -429,7 +429,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: -1928407233967231943}
-  - {fileID: 1049212826419233395}
+  - {fileID: 7445040833397567891}
   EditorEvents:
   - {fileID: -1405154977015872515}
   - {fileID: 2747814264321788626}
@@ -440,10 +440,10 @@ MonoBehaviour:
   - {fileID: 3706376244485493535}
   EditorParameters: []
   MasterBanks:
-  - {fileID: 1049212826419233395}
+  - {fileID: 7445040833397567891}
   StringsBanks:
   - {fileID: -1928407233967231943}
-  stringsBankWriteTime: 637381093362708448
+  stringsBankWriteTime: 637382806919753510
   cacheVersion: 3
 --- !u!114 &993071415533274433
 MonoBehaviour:
@@ -550,7 +550,7 @@ MonoBehaviour:
   Path: event:/Music/MainMenu
   guid: c0a6fb83eea2244fa4e3ca7ca1c33c00
   Banks:
-  - {fileID: 1049212826419233395}
+  - {fileID: 7445040833397567891}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -573,7 +573,7 @@ MonoBehaviour:
   Path: event:/Abilities/Burn
   guid: 5ee402967fe80a468e2eaeae268019af
   Banks:
-  - {fileID: 1049212826419233395}
+  - {fileID: 7445040833397567891}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -581,6 +581,24 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 1750
+--- !u!114 &2569073715783700834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: FMODAssets/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637380153452638933
+  LoadResult: 0
+  FileSizes: []
+  Exists: 0
 --- !u!114 &2747814264321788626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -596,7 +614,7 @@ MonoBehaviour:
   Path: event:/Abilities/Telekenesis/Place
   guid: 36a56845c8a1284fa1b87f3ab8dcd956
   Banks:
-  - {fileID: 1049212826419233395}
+  - {fileID: 7445040833397567891}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -655,7 +673,7 @@ MonoBehaviour:
   Path: event:/Abilities/Telekenesis/Lift
   guid: 9ec0dd9b93aed343a1bb744ddd43beb4
   Banks:
-  - {fileID: 1049212826419233395}
+  - {fileID: 7445040833397567891}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -678,7 +696,7 @@ MonoBehaviour:
   Path: event:/Music/Gameplay
   guid: c939797175bffe44959e44315cda7f2e
   Banks:
-  - {fileID: 1049212826419233395}
+  - {fileID: 7445040833397567891}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -794,6 +812,24 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &7445040833397567891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: FMODAssets/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637382806918287709
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &7475642709648307495
 MonoBehaviour:
   m_ObjectHideFlags: 0
