@@ -177,9 +177,6 @@ public class GameManager : MonoBehaviour
         {
             if (currentGameState == GameState.PLAYERTURN)
             {
-                playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, player.transform.position, .05f);
-                playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
-
                 switch (currentPlayerState)
                 {
                     case PlayerState.MOVEMENT:
@@ -321,21 +318,11 @@ public class GameManager : MonoBehaviour
             //If it is the enemies turn we do this
             else if (currentGameState == GameState.ENEMYTURN)
             {
-                //Check that there are enemies otherwise we just go back to the players turn
-                
-                //Moving our camera to the average position of the enemies
-                playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, enemyManager.AverageEnemyPosition, .04f);
-                playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
-                //Calculating the distance of the camera to the average positions of enemies
-                float distance = Vector2.Distance(playerCam.transform.position, enemyManager.AverageEnemyPosition);
-                if (distance < .2f)
+                //If it is no longer the enemies turn we switch to the players turn and reset their values
+                if (!enemyManager.enemyTurn)
                 {
-                    //If it is no longer the enemies turn we switch to the players turn and reset their values
-                    if (!enemyManager.enemyTurn)
-                    {
-                        currentGameState = GameState.PLAYERTURN;
-                        OnPlayersTurn();
-                    }
+                    currentGameState = GameState.PLAYERTURN;
+                    OnPlayersTurn();
                 }
             }
             else if (currentGameState == GameState.LOSE)
