@@ -25,8 +25,8 @@ public enum PlayerState
 
 public class GameManager : MonoBehaviour
 {
-    public const int GRID_WIDTH = 20;
-    public const int GRID_HEIGHT = 12;
+    public const int GRID_WIDTH = 21;
+    public const int GRID_HEIGHT = 13;
     public Color tileColor = new Color(.79f, .83f, .79f);
 
     #region Properties OLD
@@ -303,10 +303,14 @@ public class GameManager : MonoBehaviour
                 }
 
                 //If the player has action points and nowhere to move then we should be looking for available tiles
-                
+
 
                 //If the player is no longer moving and does not have an action point then we cycle to the enemies turn
-                if (!player.moving && player.actionPoints < 1)
+                if (enemyManager.Enemies.Count == 0)
+                {
+                    OnPlayersTurn();
+                }
+                else if (!player.moving && player.actionPoints < 1)
                 {
                     //The current gamestate is switched to the enemyturn. We call the OnEnemyTurn to reset their values for their turn
                     currentGameState = GameState.ENEMYTURN;
@@ -320,12 +324,7 @@ public class GameManager : MonoBehaviour
             else if (currentGameState == GameState.ENEMYTURN)
             {
                 //Check that there are enemies otherwise we just go back to the players turn
-                if(enemyManager.Enemies.Count == 0)
-                {
-                    currentGameState = GameState.PLAYERTURN;
-                    OnPlayersTurn();
-                    return;
-                }
+                
                 //Moving our camera to the average position of the enemies
                 playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, enemyManager.AverageEnemyPosition, .04f);
                 playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
