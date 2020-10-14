@@ -80,7 +80,7 @@ public class PlayerCamera : MonoBehaviour
     //Loads to the next scene
     public void StartButton()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
         titleCanvas.gameObject.SetActive(false);
         canvasTracker.Clear();
     }
@@ -127,7 +127,13 @@ public class PlayerCamera : MonoBehaviour
     //Exits application when clicked
     public void ExitButton()
     {
-        Application.Quit();
+        if (SceneManager.GetActiveScene().name != "StartScene")
+        {
+            ResumeButton();
+            SceneManager.LoadScene(1);
+        }
+        else
+            Application.Quit();
     }
 
     //Button used to unpause the game
