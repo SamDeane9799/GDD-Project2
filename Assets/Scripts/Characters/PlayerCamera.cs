@@ -80,9 +80,8 @@ public class PlayerCamera : MonoBehaviour
     //Loads to the next scene
     public void StartButton()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
         titleCanvas.gameObject.SetActive(false);
-
         canvasTracker.Clear();
     }
 
