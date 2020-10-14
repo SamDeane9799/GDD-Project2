@@ -615,7 +615,6 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < obstacles.Length; i++)
         {
             //Adding the obstacles to the list
-            Debug.Log("Found obstacle");
             Obstacle newObstacle = obstacles[i].GetComponent<Obstacle>();
             obstManager.obstacles.Add(newObstacle);
         }
