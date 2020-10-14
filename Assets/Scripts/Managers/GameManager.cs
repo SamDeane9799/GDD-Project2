@@ -144,8 +144,9 @@ public class GameManager : MonoBehaviour
     {
         //Sets the game state and tell the game to not destroy this
         DontDestroyOnLoad(this);
-        //SceneManager.sceneLoaded += OnLoad;
-        OnLoad(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+        SceneManager.sceneLoaded += OnLoad;
+        if(SceneManager.GetActiveScene().name != "StartScene")
+            OnLoad(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 
         availableObstacles = new List<Obstacle>();
 
@@ -186,21 +187,20 @@ public class GameManager : MonoBehaviour
                 {
                     case PlayerState.MOVEMENT:
                         //Checking for player right click
+                        if (!player.moving && availableTiles.Count == 0)
+                        {
+                            FindAvailableTiles();
+                        }
                         if (Input.GetMouseButtonDown(1))
                         {
+                            //Casting a ray where the player clicked
                             RaycastHit2D hit = MouseCollisionCheck();
 
                             Tile tileClicked = hit.collider.GetComponent<Tile>();
                             if (availableTiles.Contains(tileClicked))
                             {
                                 //Reseting the color of tiles before moving
-                                foreach (Tile t in availableTiles)
-                                {
-                                    t.highlight = false;
-                                    t.GetComponent<SpriteRenderer>().color = t.originalColor;
-                                }
-                                //Clearing the available tile list and setting the new tile
-                                availableTiles.Clear();
+                                ClearAvailableTileList(availableTiles);
 
                                 player.currentTile = tileClicked;
 
@@ -219,7 +219,6 @@ public class GameManager : MonoBehaviour
                                 currentGameState = GameState.WIN;
                                 return;
                             }
-
                             currentGameState = GameState.ENEMYTURN;
                         }
                         break;
@@ -231,9 +230,11 @@ public class GameManager : MonoBehaviour
                             {
                                 if (Input.GetMouseButtonDown(0))
                                 {
+                                    //Casting a ray for a tile 
                                     RaycastHit2D hit = MouseCollisionCheck();
 
                                     Tile tileClicked = hit.collider.GetComponent<Tile>();
+                                    //If the obstacle can move to the tile then we move it there
                                     if (obstacleAvailableTiles.Contains(tileClicked))
                                     {
                                         // Remove the obstacle's original position from the obstaclesPosition array
@@ -247,15 +248,10 @@ public class GameManager : MonoBehaviour
 
                                         Debug.Log("Obstacle Changed Position");
 
-                                        foreach (Tile t in obstacleAvailableTiles)
-                                        {
-                                            t.highlight = false;
-                                            t.GetComponent<SpriteRenderer>().color = t.originalColor;
-                                        }
+                                        //Clearing the obstacles available tiles and subtracting an action point
+                                        ClearAvailableTileList(obstacleAvailableTiles);
+                                        player.actionPoints -= 1;
 
-                                        FindAvailableTiles();
-
-                                        obstacleAvailableTiles.Clear();
                                         FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Place");
                                         objectSelected = false;
                                         usingAbility = false;
@@ -269,26 +265,20 @@ public class GameManager : MonoBehaviour
                                 //Checking for player LEFT click
                                 if (Input.GetMouseButtonDown(0))
                                 {
+                                    //Casting a ray on the terrain layer
                                     RaycastHit2D hit = MouseCollisionCheck(1 << 9);
 
                                     obstacleClicked = hit.collider.GetComponent<Obstacle>();
 
+                                    //If we hit then we reset our obstacle list and set the object selected
                                     if (obstacleClicked != null && availableObstacles.Contains(obstacleClicked))
-                                    {                                        
-                                        foreach(Obstacle o in availableObstacles)
-                                        {
-                                            o.highlight = false;
-                                            o.ResetColorValues();
-                                        }
-                                        availableObstacles.Clear();
+                                    {
+                                        ClearAvailableObstaclesList();
+                                        //Checking where the obstacle selected can be moved to
                                         FindAvailableSpotsObst(obstacleClicked);
                                         obstacleClicked.GetComponent<SpriteRenderer>().color = Color.blue;
                                         objectSelected = true;
                                         FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Lift");
-                                    }
-                                    else
-                                    {
-                                        Debug.Log("Object Was Not An Obstacle");
                                     }
                                 }
                             }
@@ -312,13 +302,9 @@ public class GameManager : MonoBehaviour
                         break;
                 }
 
+                //If the player has action points and nowhere to move then we should be looking for available tiles
+                
 
-                if (player.actionPoints >= 1 && !player.moving && availableTiles.Count == 0)
-                {
-                    FindAvailableTiles();
-                }
-
-                //When player isn't moving and their actionpoints is below 1 we go to the enemies turn
                 //If the player is no longer moving and does not have an action point then we cycle to the enemies turn
                 if (!player.moving && player.actionPoints < 1)
                 {
@@ -328,10 +314,12 @@ public class GameManager : MonoBehaviour
                     enemyManager.enemyTurn = true;
                 }
             }
+
             //Taking care of our enemy's turn
             //If it is the enemies turn we do this
             else if (currentGameState == GameState.ENEMYTURN)
             {
+                //Check that there are enemies otherwise we just go back to the players turn
                 if(enemyManager.Enemies.Count == 0)
                 {
                     currentGameState = GameState.PLAYERTURN;
@@ -366,47 +354,11 @@ public class GameManager : MonoBehaviour
 
     //Sets up our player in the game
     //For testing purposes I am setting it up in the title screen so I can test audio
-    public void InitializePlayerCam()
-    {
-        playerCam = Instantiate<PlayerCamera>(playerCameraPrefab);
-    }
-
-    public void OnLoad(Scene scene, LoadSceneMode mode)
-    {
-        //Using this to load in the player when we load into the specific scene
-        if (scene.name != "StartScene")
-        {
-            currentGameState = GameState.PLAYERTURN;
-            currentPlayerState = PlayerState.MOVEMENT;
-
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-            player.currentTile = tileBoard[(int)(player.transform.position.x + 9.5f), (int)(player.transform.position.y + 5.5f)];
-            player.transform.position = player.currentTile.transform.position;
 
 
-            winTile = GameObject.FindGameObjectWithTag("WinTile").GetComponent<Tile>();
-            winTile.destination = true;
-            winTile.GetComponent<SpriteRenderer>().color = Color.yellow;
 
 
-            LoadInEnemies();
-            LoadInObstacles();
-
-            // FMOD music playing
-            instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");
-            instance.start();
-
-            OnPlayersTurn();
-        }
-    }
-
-    public void OnPlayersTurn()
-    {
-        //Setting the GameState to playerturn state
-        currentGameState = GameState.PLAYERTURN;
-        player.actionPoints = 1f;
-    }
-
+    #region Searching Methods
     private void FindAvailableTiles()
     {
         //This is our openList
@@ -641,7 +593,9 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region Loading Methods
     private void LoadInEnemies()
     {
         // Instantiate the enemyManager Prefab
@@ -682,12 +636,48 @@ public class GameManager : MonoBehaviour
             obstManager.obstacles.Add(newObstacle);
         }
     }
+    public void InitializePlayerCam()
+    {
+        playerCam = Instantiate<PlayerCamera>(playerCameraPrefab);
+    }
+
+    public void OnLoad(Scene scene, LoadSceneMode mode)
+    {
+        //Using this to load in the player when we load into the specific scene
+        if (scene.name != "StartScene")
+        {
+            //Setting the player state and current game state
+            currentGameState = GameState.PLAYERTURN;
+            currentPlayerState = PlayerState.MOVEMENT;
+
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+            player.currentTile = tileBoard[(int)(player.transform.position.x + 9.5f), (int)(player.transform.position.y + 5.5f)];
+            player.transform.position = player.currentTile.transform.position;
+
+
+            winTile = GameObject.FindGameObjectWithTag("WinTile").GetComponent<Tile>();
+            winTile.destination = true;
+            winTile.GetComponent<SpriteRenderer>().color = Color.yellow;
+
+
+            LoadInEnemies();
+            LoadInObstacles();
+
+            // FMOD music playing
+            instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");
+            instance.start();
+
+            OnPlayersTurn();
+        }
+    }
+    #endregion
 
     #region ABILITY METHODS
     public void MoveAbility()
     {
         Debug.Log("Moving Object");
         usingAbility = true;
+        ClearAvailableTileList(availableTiles);
         FindAvailableObstacles();
         currentPlayerState = PlayerState.ABILITYMOVE;
     }
@@ -702,6 +692,7 @@ public class GameManager : MonoBehaviour
 
         return hit;
     }
+
     private RaycastHit2D MouseCollisionCheck(int layerMask)
     {
         //Projecting a ray at the mouse and checking if it hit a collider
@@ -710,13 +701,43 @@ public class GameManager : MonoBehaviour
 
         return hit;
     }
-    #endregion
 
+    private void ClearAvailableTileList(List<Tile> listToClear)
+    {
+        foreach (Tile t in listToClear)
+        {
+            t.highlight = false;
+            t.GetComponent<SpriteRenderer>().color = t.originalColor;
+        }
+
+        listToClear.Clear();
+    }
+
+    private void ClearAvailableObstaclesList()
+    {
+        foreach (Obstacle o in availableObstacles)
+        {
+            o.highlight = false;
+            o.GetComponent<SpriteRenderer>().color = o.originalColor;
+        }
+
+        availableObstacles.Clear();
+    } 
+    
     // Returns true if the currentTile is the win tile, false otherwise
     private bool OnWinTile(Tile currentTile)
- {
-     return (currentTile.Y == winTile.Y && currentTile.X == winTile.X);
- }
+    {
+        return (currentTile.Y == winTile.Y && currentTile.X == winTile.X);
+    }
+    public void OnPlayersTurn()
+    {
+        //Setting the GameState to playerturn state
+        currentGameState = GameState.PLAYERTURN;
+        player.actionPoints = 1f;
+    }
+    #endregion
+
+
 
     /*      
 
