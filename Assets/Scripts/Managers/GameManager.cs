@@ -25,9 +25,6 @@ public enum PlayerState
 
 public class GameManager : MonoBehaviour
 {
-    public const int GRID_WIDTH = 21;
-    public const int GRID_HEIGHT = 13;
-    public Color tileColor = new Color(.79f, .83f, .79f);
 
     #region Properties OLD
     ////Get and set properties for the volume levels to make it easier to read and code
@@ -130,6 +127,8 @@ public class GameManager : MonoBehaviour
 
     #region TileBoard
     private Tile winTile;
+    public static int GRID_WIDTH = 21;
+    public static int GRID_HEIGHT = 13;
 
     public static Tile[,] tileBoard = new Tile[GRID_WIDTH, GRID_HEIGHT];
     public static Obstacle[,] obstaclePositions = new Obstacle[GRID_WIDTH, GRID_HEIGHT];
@@ -243,7 +242,8 @@ public class GameManager : MonoBehaviour
                                         // Remove the obstacle's original position from the obstaclesPosition array
                                         obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
 
-                                        obstacleClicked.transform.position = tileClicked.transform.position;
+                                        //obstacleClicked.transform.position = tileClicked.transform.position;
+                                        obstacleClicked.MoveToCell(new Vector3Int((int)tileClicked.transform.position.x, (int)tileClicked.transform.position.y, (int)tileClicked.transform.position.z));
                                         obstacleClicked.GetComponent<SpriteRenderer>().color = Color.white;
 
                                         // Put the obstacleClicked into the obstclePositions array with its new coordinates
@@ -722,7 +722,7 @@ public class GameManager : MonoBehaviour
             currentPlayerState = PlayerState.MOVEMENT;
 
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-            player.currentTile = tileBoard[(int)(player.transform.position.x + 9.5f), (int)(player.transform.position.y + 5.5f)];
+            player.currentTile = tileBoard[(int)(player.transform.position.x + (float)(GRID_WIDTH/2)), (int)(player.transform.position.y + (float)(GRID_HEIGHT/2))];
             player.transform.position = player.currentTile.transform.position;
 
 
