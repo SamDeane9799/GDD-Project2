@@ -141,7 +141,6 @@ public class GameManager : MonoBehaviour
 
     private FMOD.Studio.EventInstance instance;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -152,6 +151,7 @@ public class GameManager : MonoBehaviour
             OnLoad(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 
         availableObstacles = new List<Obstacle>();
+        availableBushes = new List<Bush>();
 
         availableTiles = new List<Tile>();
 
@@ -194,7 +194,7 @@ public class GameManager : MonoBehaviour
                         {
                             FindAvailableTiles();
                         }
-                        if (Input.GetMouseButtonDown(1))
+                        if (Input.GetMouseButtonDown(0))
                         {
                             //Casting a ray where the player clicked
                             RaycastHit2D hit = MouseCollisionCheck();
@@ -299,32 +299,44 @@ public class GameManager : MonoBehaviour
                         break;
 
                     case PlayerState.ABILITYBURN:
-                        if (usingAbility)
+
+                        if (obstManager.bushes.Count > 0)
                         {
-                            Debug.Log("Select a bush");
-
-                            RaycastHit2D hit = MouseCollisionCheck();
-
-                            Bush bushClicked = hit.collider.GetComponent<Bush>();
-
-                            if (bushClicked != null)
+                            if (usingAbility)
                             {
-                                bushClicked.burned = true;
+                                if (Input.GetMouseButtonDown(0))
+                                {
+                                    RaycastHit2D hit = MouseCollisionCheck();
+
+                                    Bush bushClicked = hit.collider.GetComponent<Bush>();
+
+                                    if (obstManager.bushes.Contains(bushClicked))
+                                    {
+                                        FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Burn");
+
+                                        bushClicked.burned = true;
+                                        Destroy(bushClicked);
+
+                                        bushPositions[bushClicked.X, bushClicked.Y] = null;
+
+                                        usingAbility = false;
+                                    }
+                                    else
+                                    {
+                                        Debug.Log("Bush not clicked");
+                                    }
+                                }
+
+                                if (Input.GetKeyDown(KeyCode.Escape))
+                                {
+                                    usingAbility = false;
+                                    Debug.Log("Cancelled Burn Object Ability");
+                                }
                             }
                             else
                             {
-                                Debug.Log("Bush not clicked");
+                                currentPlayerState = PlayerState.MOVEMENT;
                             }
-
-                            if (Input.GetKeyDown(KeyCode.Escape))
-                            {
-                                usingAbility = false;
-                                Debug.Log("Cancelled Move Object Ability");
-                            }
-                        }
-                        else
-                        {
-                            currentPlayerState = PlayerState.MOVEMENT;
                         }
 
                         break;
@@ -623,22 +635,27 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    #endregion
 
     private void FindAvailableBushes()
     {
         float distance;
 
-        foreach (Bush o in obstManager.bushes)
+        if (obstManager.bushes.Count > 0)
         {
-            distance = Vector2.Distance(o.transform.position, player.currentTile.transform.position);
-            if (distance <= player.moveDist)
+            foreach (Bush b in obstManager.bushes)
             {
-                availableObstacles.Add(o);
-                o.highlight = true;
+                distance = Vector2.Distance(b.transform.position, player.currentTile.transform.position);
+
+                if (distance <= player.moveDist)
+                {
+                    availableBushes.Add(b);
+                    b.highlight = true;
+                }
             }
         }
     }
+
+    #endregion
 
     private void LoadInEnemies()
     {
@@ -670,6 +687,7 @@ public class GameManager : MonoBehaviour
 
         //Finding our obstacles
         GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
+
         GameObject[] bushes = GameObject.FindGameObjectsWithTag("Bush");
 
         //Looping through our obstacles
@@ -723,7 +741,6 @@ public class GameManager : MonoBehaviour
             OnPlayersTurn();
         }
     }
-    #endregion
 
     #region ABILITY METHODS
     public void MoveAbility()
@@ -739,6 +756,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Burning Object");
         usingAbility = true;
+        ClearAvailableTileList(availableTiles);
         FindAvailableBushes();
         currentPlayerState = PlayerState.ABILITYBURN;
     }

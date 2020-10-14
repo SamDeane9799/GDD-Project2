@@ -25,7 +25,6 @@ public abstract class LevelObject : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        testInstance = FMODUnity.RuntimeManager.CreateInstance("event:/Test/Shwing");
         originalColor = GetComponent<SpriteRenderer>().color;
         colorValue = 0;
         targetValue = .2f;
@@ -42,20 +41,20 @@ public abstract class LevelObject : MonoBehaviour
     }
 
     // Changes color of the prefab when mouse buttons are pressed and plays a test sfx
-    protected void TestFMOD()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            testInstance.start();
-            testInstance.release();
-        }
+    //protected void TestFMOD()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        testInstance.start();
+    //        testInstance.release();
+    //    }
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            testInstance.start();
-            testInstance.release();
-        }
-    }
+    //    if (Input.GetMouseButtonDown(1))
+    //    {
+    //        testInstance.start();
+    //        testInstance.release();
+    //    }
+    //}
 
     private void Highlight()
     {
