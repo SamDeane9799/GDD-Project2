@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Enemy : Character
 {
-    private const float visionLength = 3.0f;
+    private const float visionLength = 1.5f;
     private const int visionConeDegrees = 70;
+    private bool foundEnemy;
 
     private Vector3 rayDir;
     void Start()
     {
-        
+        foundEnemy = false;
     }
 
     // Update is called once per frame
@@ -62,11 +63,11 @@ public class Enemy : Character
         for (int i = 0; i < numOfRays; i++)
         {
             //Calculating the quaternion that our ray will be rotated
-            Quaternion rayRot = Quaternion.Euler(0, 0, (((float)i / numOfRays) * visionConeDegrees - (visionConeDegrees/2)) + transform.rotation.eulerAngles.z);
+            //Quaternion rayRot = Quaternion.Euler(0, 0, (((float)i / numOfRays) * visionConeDegrees - (visionConeDegrees/2)) + transform.rotation.eulerAngles.z);
             //Rotating the direction of our ray
-            rayDir = rayRot * Vector3.right;
+            //rayDir = rayRot * Vector3.right;
             //Casting the ray
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, rayDir.normalized, visionLength, layerMask);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.forward, visionLength, layerMask);
             //Checking if we hit something
             if (hit)
             {
@@ -88,7 +89,5 @@ public class Enemy : Character
         Vector3 dir = playerPos - transform.position;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        transform.position = Vector2.Lerp(transform.position, playerPos, .01f);
     }
-
 }

@@ -15,7 +15,7 @@ public class EnemyManager : MonoBehaviour
     }
     #endregion
     #region Enemy Search Variables
-    private const int RAYSPROJECTED = 8;
+    private const int RAYSPROJECTED = 1;
     public bool enemiesSearch;
     #endregion
     #region Enemy List Variables

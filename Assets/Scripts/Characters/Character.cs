@@ -23,12 +23,15 @@ public class Character : LevelObject
     // Update is called once per frame
     public virtual void Update()
     {
-        //If we are not at our currentTile set moving to true so MoveToTile() is called
-        if (Mathf.Abs(Vector2.Distance(transform.position, currentTile.gameObject.transform.position)) >= .1f)
-            moving = true;
-        //If we are moving we call the method to lerp to the current tile
-        if (moving)
-            MoveToTile();
+        if (GameManager.currentGameState != GameState.LOSE)
+        {
+            //If we are not at our currentTile set moving to true so MoveToTile() is called
+            if (Mathf.Abs(Vector2.Distance(transform.position, currentTile.gameObject.transform.position)) >= .1f)
+                moving = true;
+            //If we are moving we call the method to lerp to the current tile
+            if (moving)
+                MoveToTile();
+        }
     }
 
     private void MoveToTile()
