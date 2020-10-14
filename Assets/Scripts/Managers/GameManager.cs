@@ -175,7 +175,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (SceneManager.GetActiveScene().name == "SamTestScene" || SceneManager.GetActiveScene().name == "WillTestScene")
+        if (SceneManager.GetActiveScene().name != "StartScene")
         {
             if (currentGameState == GameState.PLAYERTURN)
             {
@@ -234,7 +234,6 @@ public class GameManager : MonoBehaviour
                                     RaycastHit2D hit = MouseCollisionCheck();
 
                                     Tile tileClicked = hit.collider.GetComponent<Tile>();
-
                                     if (obstacleAvailableTiles.Contains(tileClicked))
                                     {
                                         // Remove the obstacle's original position from the obstaclesPosition array
@@ -248,13 +247,14 @@ public class GameManager : MonoBehaviour
 
                                         Debug.Log("Obstacle Changed Position");
 
-                                        FindAvailableTiles();
-
                                         foreach (Tile t in obstacleAvailableTiles)
                                         {
                                             t.highlight = false;
                                             t.GetComponent<SpriteRenderer>().color = t.originalColor;
                                         }
+
+                                        FindAvailableTiles();
+
                                         obstacleAvailableTiles.Clear();
                                         FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Place");
                                         objectSelected = false;
@@ -269,12 +269,12 @@ public class GameManager : MonoBehaviour
                                 //Checking for player LEFT click
                                 if (Input.GetMouseButtonDown(0))
                                 {
-                                    RaycastHit2D hit = MouseCollisionCheck();
+                                    RaycastHit2D hit = MouseCollisionCheck(1 << 9);
 
                                     obstacleClicked = hit.collider.GetComponent<Obstacle>();
 
                                     if (obstacleClicked != null && availableObstacles.Contains(obstacleClicked))
-                                    {
+                                    {                                        
                                         foreach(Obstacle o in availableObstacles)
                                         {
                                             o.highlight = false;
@@ -282,8 +282,6 @@ public class GameManager : MonoBehaviour
                                         }
                                         availableObstacles.Clear();
                                         FindAvailableSpotsObst(obstacleClicked);
-                                        Debug.Log("ObstacleClicked Position: " + obstacleClicked.X + ", " + obstacleClicked.Y);
-                                        Debug.Log("Select a tile to move the obstacle");
                                         obstacleClicked.GetComponent<SpriteRenderer>().color = Color.blue;
                                         objectSelected = true;
                                         FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Lift");
@@ -325,7 +323,6 @@ public class GameManager : MonoBehaviour
                 if (!player.moving && player.actionPoints < 1)
                 {
                     //The current gamestate is switched to the enemyturn. We call the OnEnemyTurn to reset their values for their turn
-                    Debug.Log("Switching to enemy turn");
                     currentGameState = GameState.ENEMYTURN;
                     enemyManager.OnEnemyTurn();
                     enemyManager.enemyTurn = true;
@@ -335,6 +332,12 @@ public class GameManager : MonoBehaviour
             //If it is the enemies turn we do this
             else if (currentGameState == GameState.ENEMYTURN)
             {
+                if(enemyManager.Enemies.Count == 0)
+                {
+                    currentGameState = GameState.PLAYERTURN;
+                    OnPlayersTurn();
+                    return;
+                }
                 //Moving our camera to the average position of the enemies
                 playerCam.transform.position = Vector2.Lerp(playerCam.transform.position, enemyManager.AverageEnemyPosition, .04f);
                 playerCam.transform.position = new Vector3(playerCam.transform.position.x, playerCam.transform.position.y, -10);
@@ -628,11 +631,10 @@ public class GameManager : MonoBehaviour
     private void FindAvailableObstacles()
     {
         float distance;
-        Debug.Log(obstManager.obstacles.Count);
         foreach (Obstacle o in obstManager.obstacles)
         {
             distance = Vector2.Distance(o.transform.position, player.currentTile.transform.position);
-            if (distance < player.moveDist)
+            if (distance <= player.moveDist)
             {
                 availableObstacles.Add(o);
                 o.highlight = true;
@@ -700,11 +702,18 @@ public class GameManager : MonoBehaviour
 
         return hit;
     }
+    private RaycastHit2D MouseCollisionCheck(int layerMask)
+    {
+        //Projecting a ray at the mouse and checking if it hit a collider
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+        RaycastHit2D hit = Physics2D.Raycast(mousePosition, new Vector2(0, 0), 1.0f, layerMask);
 
+        return hit;
+    }
     #endregion
 
-// Returns true if the currentTile is the win tile, false otherwise
-private bool OnWinTile(Tile currentTile)
+    // Returns true if the currentTile is the win tile, false otherwise
+    private bool OnWinTile(Tile currentTile)
  {
      return (currentTile.Y == winTile.Y && currentTile.X == winTile.X);
  }

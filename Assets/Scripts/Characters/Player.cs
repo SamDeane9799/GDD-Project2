@@ -9,6 +9,7 @@ public class Player : Character
     {
         base.Start();
         DontDestroyOnLoad(this);
+        moveDist = 5;
     }
 
     // Update is called once per frame

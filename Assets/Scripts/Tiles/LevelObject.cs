@@ -77,5 +77,6 @@ public abstract class LevelObject : MonoBehaviour
     {
         colorValue = 0f;
         targetValue = .2f;
+        GetComponent<SpriteRenderer>().color = new Color(originalColor.r, originalColor.g, originalColor.b, 1);
     }
 }
