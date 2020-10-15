@@ -12,7 +12,7 @@ public class Bush : Obstacle
         //Adding the obstacle to the obstacle position
         //GameManager.bushPositions[(int)(9.5f + transform.position.x), (int)(5.5f + transform.position.y)] = this;
     }
-
+/*
     // Update is called once per frame
     void Update()
     {
@@ -24,5 +24,5 @@ public class Bush : Obstacle
 
         //    GetComponent<SpriteRenderer>().color = Color.red;
         //}
-    }
+    }*/
 }

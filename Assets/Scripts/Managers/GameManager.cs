@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.IO;
 
@@ -138,6 +139,13 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    public Button moveButton;
+    public Button burnButton;
+    public Button freezeButton;
+
+    private List<Button> abilityButtons;
+
+
     private FMOD.Studio.EventInstance instance;
 
     // Start is called before the first frame update
@@ -157,6 +165,12 @@ public class GameManager : MonoBehaviour
 
         obstacleAvailableTiles = new List<Tile>();
         usingAbility = false;
+
+        abilityButtons = new List<Button>();
+        abilityButtons.Add(moveButton);
+        abilityButtons.Add(burnButton);
+        abilityButtons.Add(freezeButton);
+
 
 
         //musicSources = new List<AudioSource>();
@@ -197,17 +211,20 @@ public class GameManager : MonoBehaviour
                             //Casting a ray where the player clicked
                             RaycastHit2D hit = MouseCollisionCheck();
 
-                            Tile tileClicked = hit.collider.GetComponent<Tile>();
-
-                            if (availableTiles.Contains(tileClicked))
+                            if (hit)
                             {
-                                //Reseting the color of tiles before moving
-                                ClearAvailableTileList(availableTiles);
+                                Tile tileClicked = hit.collider.GetComponent<Tile>();
 
-                                player.currentTile = tileClicked;
+                                if (availableTiles.Contains(tileClicked))
+                                {
+                                    //Reseting the color of tiles before moving
+                                    ClearAvailableTileList(availableTiles);
 
-                                player.moving = true;
-                                player.actionPoints -= tileClicked.dist;
+                                    player.currentTile = tileClicked;
+
+                                    player.moving = true;
+                                    player.actionPoints -= tileClicked.dist;
+                                }
                             }
                         }
 
@@ -243,7 +260,8 @@ public class GameManager : MonoBehaviour
                                         obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
 
                                         //obstacleClicked.transform.position = tileClicked.transform.position;
-                                        obstacleClicked.MoveToCell(new Vector3Int((int)tileClicked.transform.position.x, (int)tileClicked.transform.position.y, (int)tileClicked.transform.position.z));
+                                        Debug.Log(tileClicked.transform.position);
+                                        obstacleClicked.MoveToCell(new Vector3Int((int)Mathf.Round(tileClicked.transform.position.x), (int)Mathf.Round(tileClicked.transform.position.y), (int)tileClicked.transform.position.z));
                                         obstacleClicked.GetComponent<SpriteRenderer>().color = Color.white;
 
                                         // Put the obstacleClicked into the obstclePositions array with its new coordinates
@@ -271,17 +289,20 @@ public class GameManager : MonoBehaviour
                                     //Casting a ray on the terrain layer
                                     RaycastHit2D hit = MouseCollisionCheck(1 << 9);
 
-                                    obstacleClicked = hit.collider.GetComponent<Obstacle>();
-
-                                    //If we hit then we reset our obstacle list and set the object selected
-                                    if (obstacleClicked != null && availableObstacles.Contains(obstacleClicked))
+                                    if (hit)
                                     {
-                                        ClearAvailableObstaclesList();
-                                        //Checking where the obstacle selected can be moved to
-                                        FindAvailableSpotsObst(obstacleClicked);
-                                        obstacleClicked.GetComponent<SpriteRenderer>().color = Color.blue;
-                                        objectSelected = true;
-                                        FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Lift");
+                                        obstacleClicked = hit.collider.GetComponent<Obstacle>();
+
+                                        //If we hit then we reset our obstacle list and set the object selected
+                                        if (obstacleClicked != null && availableObstacles.Contains(obstacleClicked))
+                                        {
+                                            ClearAvailableObstaclesList();
+                                            //Checking where the obstacle selected can be moved to
+                                            FindAvailableSpotsObst(obstacleClicked);
+                                            obstacleClicked.GetComponent<SpriteRenderer>().color = Color.blue;
+                                            objectSelected = true;
+                                            FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Lift");
+                                        }
                                     }
                                 }
                             }
@@ -290,11 +311,14 @@ public class GameManager : MonoBehaviour
                             {
                                 usingAbility = false;
                                 Debug.Log("Cancelled Move Object Ability");
+                                moveButton.interactable = true;
+                                ClearAvailableObstaclesList();
                             }
                         }
                         else
                         {
                             currentPlayerState = PlayerState.MOVEMENT;
+                            ClearAvailableObstaclesList();
                         }
                         break;
 
@@ -307,28 +331,30 @@ public class GameManager : MonoBehaviour
                                 if (Input.GetMouseButtonDown(0))
                                 {
                                     RaycastHit2D hit = MouseCollisionCheck();
-
-                                    Bush bushClicked = hit.collider.GetComponent<Bush>();
-
-                                    if (obstManager.bushes.Contains(bushClicked))
+                                    if (hit)
                                     {
-                                        Debug.Log("Bush at: " + bushClicked.X + ", " + bushClicked.Y + " got burned.");
+                                        Bush bushClicked = hit.collider.GetComponent<Bush>();
 
-                                        FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Burn");
+                                        if (obstManager.bushes.Contains(bushClicked))
+                                        {
+                                            Debug.Log("Bush at: " + bushClicked.X + ", " + bushClicked.Y + " got burned.");
 
-                                        //bushClicked.burned = true;
+                                            FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Burn");
 
-                                        obstaclePositions[bushClicked.X, bushClicked.Y] = null;
+                                            //bushClicked.burned = true;
 
-                                        Destroy(bushClicked.gameObject);
+                                            obstaclePositions[bushClicked.X, bushClicked.Y] = null;
 
-                                        FindAvailableTiles();
+                                            Destroy(bushClicked.gameObject);
 
-                                        usingAbility = false;
-                                    }
-                                    else
-                                    {
-                                        Debug.Log("Bush not clicked");
+                                            FindAvailableTiles();
+
+                                            usingAbility = false;
+                                        }
+                                        else
+                                        {
+                                            Debug.Log("Bush not clicked");
+                                        }
                                     }
                                 }
 
@@ -336,6 +362,8 @@ public class GameManager : MonoBehaviour
                                 {
                                     usingAbility = false;
                                     Debug.Log("Cancelled Burn Object Ability");
+                                    burnButton.interactable = true;
+                                    ClearAvailableBushesList();
                                 }
                             }
                             else
@@ -355,26 +383,29 @@ public class GameManager : MonoBehaviour
                                 {
                                     RaycastHit2D hit = MouseCollisionCheck();
 
-                                    WaterTile waterClicked = hit.collider.GetComponent<WaterTile>();
-
-                                    if (obstManager.waterTiles.Contains(waterClicked))
+                                    if (hit)
                                     {
-                                        Debug.Log("Water at: " + waterClicked.X + ", " + waterClicked.Y + " got frozen.");
+                                        WaterTile waterClicked = hit.collider.GetComponent<WaterTile>();
 
-                                        FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Freeze");
+                                        if (obstManager.waterTiles.Contains(waterClicked))
+                                        {
+                                            Debug.Log("Water at: " + waterClicked.X + ", " + waterClicked.Y + " got frozen.");
 
-                                        waterClicked.GetComponent<SpriteRenderer>().color = Color.cyan;
-                                        waterClicked.walkable = true;
+                                            FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Freeze");
 
-                                        //bushClicked.burned = true;
+                                            waterClicked.GetComponent<SpriteRenderer>().color = Color.cyan;
+                                            waterClicked.walkable = true;
 
-                                        FindAvailableTiles();
+                                            //bushClicked.burned = true;
 
-                                        usingAbility = false;
-                                    }
-                                    else
-                                    {
-                                        Debug.Log("Water not clicked");
+                                            FindAvailableTiles();
+
+                                            usingAbility = false;
+                                        }
+                                        else
+                                        {
+                                            Debug.Log("Water not clicked");
+                                        }
                                     }
                                 }
                             }
@@ -386,13 +417,14 @@ public class GameManager : MonoBehaviour
                         else
                         {
                             Debug.Log("This level is dehydrated");
-
                         }
 
                         if (Input.GetKeyDown(KeyCode.Q))
                         {
                             usingAbility = false;
                             Debug.Log("Cancelled Freeze Object Ability");
+                            freezeButton.interactable = true;
+                            ClearAvailableWaterList();
                         }
 
                         break;
@@ -422,7 +454,6 @@ public class GameManager : MonoBehaviour
                 //If it is no longer the enemies turn we switch to the players turn and reset their values
                 if (!enemyManager.enemyTurn)
                 {
-                    currentGameState = GameState.PLAYERTURN;
                     OnPlayersTurn();
                 }
             }
@@ -819,8 +850,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("Moving Object");
         usingAbility = true;
         ClearAvailableTileList(availableTiles);
+        ClearAvailableBushesList();
+        ClearAvailableWaterList();
         FindAvailableObstacles();
         currentPlayerState = PlayerState.ABILITYMOVE;
+        Debug.Log("here");
+        SetButtonOff(moveButton);
     }
 
     public void BurnAbility()
@@ -828,8 +863,11 @@ public class GameManager : MonoBehaviour
         Debug.Log("Burning Object");
         usingAbility = true;
         ClearAvailableTileList(availableTiles);
+        ClearAvailableWaterList();
+        ClearAvailableObstaclesList();
         FindAvailableBushes();
         currentPlayerState = PlayerState.ABILITYBURN;
+        SetButtonOff(burnButton);
     }
 
     public void FreezeAbility()
@@ -837,7 +875,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("Freezing Object");
         usingAbility = true;
         FindAvailableWater();
+        ClearAvailableTileList(availableTiles);
+        ClearAvailableBushesList();
+        ClearAvailableObstaclesList();
         currentPlayerState = PlayerState.ABILITYFREEZE;
+        SetButtonOff(freezeButton);
+
     }
     #endregion
 
@@ -881,6 +924,24 @@ public class GameManager : MonoBehaviour
 
         availableObstacles.Clear();
     } 
+
+    private void ClearAvailableBushesList()
+    {
+        foreach(Bush b in availableBushes)
+        {
+            b.highlight = false;
+            b.ResetColorValues();
+        }
+    }
+
+    private void ClearAvailableWaterList()
+    {
+        foreach(WaterTile w in availableWater)
+        {
+            w.highlight = false;
+            w.ResetColorValues();
+        }
+    }
     
     // Returns true if the currentTile is the win tile, false otherwise
     private bool OnWinTile(Tile currentTile)
@@ -891,7 +952,25 @@ public class GameManager : MonoBehaviour
     {
         //Setting the GameState to playerturn state
         currentGameState = GameState.PLAYERTURN;
+        if (abilityButtons != null)
+        {
+            foreach (Button b in abilityButtons)
+            {
+                b.interactable = true;
+            }
+        }
         player.actionPoints = 1f;
+    }
+
+    private void SetButtonOff(Button buttonToSetOff)
+    {
+        foreach(Button b in abilityButtons)
+        {
+            if (b == buttonToSetOff)
+                b.interactable = false;
+            else
+                b.interactable = true;
+        }
     }
     #endregion
 

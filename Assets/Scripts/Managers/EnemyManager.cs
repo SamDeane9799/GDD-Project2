@@ -8,11 +8,6 @@ public class EnemyManager : MonoBehaviour
     #region Turn Management Variables
     public bool enemyTurn;
     private int index = 0;
-    private Vector2 averageEnemyPosition;
-    public Vector2 AverageEnemyPosition
-    {
-        get { return averageEnemyPosition; }
-    }
     #endregion
     #region Enemy Search Variables
     private const int RAYSPROJECTED = 1;
@@ -69,20 +64,5 @@ public class EnemyManager : MonoBehaviour
         {
             e.actionPoints = 1;
         }
-
-        CalculateAvgPosition();
-    }
-
-    private void CalculateAvgPosition()
-    {
-        //Adding all the enemies position to this average position vector
-        averageEnemyPosition = new Vector2(0, 0);
-        foreach(Enemy e in enemies)
-        {
-            averageEnemyPosition += new Vector2(e.transform.position.x, e.transform.position.y);
-        }
-
-        //Divide by the amount to enemies to get the average
-        averageEnemyPosition /= enemies.Count;
     }
 }

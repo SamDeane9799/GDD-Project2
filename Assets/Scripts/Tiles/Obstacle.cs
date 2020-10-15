@@ -61,6 +61,7 @@ public class Obstacle : LevelObject
         Vector3 cellPosDesCenter = gridRef.GetCellCenterLocal(cellPosDestination);
         Vector3 posDifference = cellPosDesCenter - transform.position;
         Vector3 direction = posDifference.normalized;
+        Debug.Log(cellPosDesCenter);
 
         //Movement would be performed here if we were calling MoveToCell from another class's update
         //Vector3 movement = direction * speed * Time.deltaTime;
@@ -73,6 +74,7 @@ public class Obstacle : LevelObject
         speed = movSpeed;
         moving = true;
     }
+
     //You can also call it using a speed value attached to the object idk which we prefer
     public void MoveToCell(Vector3Int cellPosDestination)
     {

@@ -58,6 +58,7 @@ public abstract class LevelObject : MonoBehaviour
 
     private void Highlight()
     {
+        Debug.Log("Setting current color");
         if (Mathf.Abs(targetValue - colorValue) <= .01f)
         {
             if (targetValue == .2f)

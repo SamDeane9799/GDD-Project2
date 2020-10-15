@@ -10,9 +10,4 @@ public class WaterTile : Tile
         base.Start();
         walkable = false;
     }
-
-    private void Update()
-    {
-        
-    }
 }

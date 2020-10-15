@@ -4909,7 +4909,7 @@ MonoBehaviour:
   colorValue: 0
   targetValue: 0
   originalColor: {r: 0, g: 0, b: 0, a: 0}
-  gridRef: {fileID: 0}
+  gridRef: {fileID: 1271988768}
   speed: 1
 --- !u!212 &398752435
 SpriteRenderer:
@@ -11750,7 +11750,7 @@ MonoBehaviour:
   colorValue: 0
   targetValue: 0
   originalColor: {r: 0, g: 0, b: 0, a: 0}
-  gridRef: {fileID: 0}
+  gridRef: {fileID: 1271988768}
   speed: 1
 --- !u!212 &1184194553
 SpriteRenderer:
@@ -12596,6 +12596,9 @@ MonoBehaviour:
     type: 3}
   obstManagerPrefab: {fileID: 4833668360979105037, guid: 41a99958d703b834e8a72558365cd11e,
     type: 3}
+  moveButton: {fileID: 875842844}
+  burnButton: {fileID: 946860413}
+  freezeButton: {fileID: 50831814}
 --- !u!4 &1304632658
 Transform:
   m_ObjectHideFlags: 0
@@ -13058,7 +13061,7 @@ MonoBehaviour:
   colorValue: 0
   targetValue: 0
   originalColor: {r: 0, g: 0, b: 0, a: 0}
-  gridRef: {fileID: 0}
+  gridRef: {fileID: 1271988768}
   speed: 1
 --- !u!212 &1321777213
 SpriteRenderer:
