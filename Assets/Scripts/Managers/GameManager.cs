@@ -139,12 +139,14 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    #region Button Vars
     public Button moveButton;
     public Button burnButton;
     public Button freezeButton;
+    public Button passButton;
 
     private List<Button> abilityButtons;
-
+    #endregion
 
     private FMOD.Studio.EventInstance instance;
 
@@ -440,10 +442,7 @@ public class GameManager : MonoBehaviour
                 }
                 else if (!player.moving && player.actionPoints < 1)
                 {
-                    //The current gamestate is switched to the enemyturn. We call the OnEnemyTurn to reset their values for their turn
-                    currentGameState = GameState.ENEMYTURN;
-                    enemyManager.OnEnemyTurn();
-                    enemyManager.enemyTurn = true;
+                    OnEnemyTurn();
                 }
             }
 
@@ -825,6 +824,7 @@ public class GameManager : MonoBehaviour
 
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
             player.currentTile = tileBoard[(int)(player.transform.position.x + (float)(GRID_WIDTH/2)), (int)(player.transform.position.y + (float)(GRID_HEIGHT/2))];
+            Debug.Log(tileBoard[(int)(player.transform.position.x + (float)(GRID_WIDTH / 2)), (int)(player.transform.position.y + (float)(GRID_HEIGHT / 2))]);
             player.transform.position = player.currentTile.transform.position;
 
 
@@ -844,23 +844,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    #region ABILITY METHODS
+    #region BUTTON METHODS
     public void MoveAbility()
     {
-        Debug.Log("Moving Object");
         usingAbility = true;
         ClearAvailableTileList(availableTiles);
         ClearAvailableBushesList();
         ClearAvailableWaterList();
         FindAvailableObstacles();
         currentPlayerState = PlayerState.ABILITYMOVE;
-        Debug.Log("here");
         SetButtonOff(moveButton);
     }
 
     public void BurnAbility()
     {
-        Debug.Log("Burning Object");
         usingAbility = true;
         ClearAvailableTileList(availableTiles);
         ClearAvailableWaterList();
@@ -872,7 +869,6 @@ public class GameManager : MonoBehaviour
 
     public void FreezeAbility()
     {
-        Debug.Log("Freezing Object");
         usingAbility = true;
         FindAvailableWater();
         ClearAvailableTileList(availableTiles);
@@ -880,7 +876,22 @@ public class GameManager : MonoBehaviour
         ClearAvailableObstaclesList();
         currentPlayerState = PlayerState.ABILITYFREEZE;
         SetButtonOff(freezeButton);
+    }
 
+    public void PassButton()
+    {
+        currentGameState = GameState.ENEMYTURN;
+        enemyManager.enemyTurn = true;
+        enemyManager.OnEnemyTurn();
+        player.actionPoints = 0;
+        ClearAvailableTileList(availableTiles);
+    }
+
+    public void ResetButton()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Destroy(playerCam.gameObject);
+        Destroy(gameObject);
     }
     #endregion
 
@@ -956,12 +967,30 @@ public class GameManager : MonoBehaviour
         {
             foreach (Button b in abilityButtons)
             {
+                b.gameObject.SetActive(true);
                 b.interactable = true;
             }
         }
+        passButton.gameObject.SetActive(true);
+        passButton.interactable = true;
         player.actionPoints = 1f;
     }
 
+    public void OnEnemyTurn()
+    {
+        //The current gamestate is switched to the enemyturn. We call the OnEnemyTurn to reset their values for their turn
+        currentGameState = GameState.ENEMYTURN;
+        enemyManager.OnEnemyTurn();
+        enemyManager.enemyTurn = true;
+        foreach(Button b in abilityButtons)
+        {
+            b.gameObject.SetActive(false);
+        }
+        passButton.gameObject.SetActive(false);
+    }
+
+    //Disables a button 
+    //Mainly used when the button itself is clicked
     private void SetButtonOff(Button buttonToSetOff)
     {
         foreach(Button b in abilityButtons)

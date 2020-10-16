@@ -10,9 +10,8 @@ public class Tile : LevelObject
     public bool destination;
     public bool walkable;
 
-    protected override void Start()
+    void Awake()
     {
-        base.Start();
         //Adding the tiles to the tile board
         GameManager.tileBoard[(int)((float)(GameManager.GRID_WIDTH/2) + transform.position.x),(int)((float)(GameManager.GRID_HEIGHT/2) + transform.position.y)] = this;
     }
