@@ -179,7 +179,8 @@ public class GameManager : MonoBehaviour
 
         reader.Close();*/
         //Initializing player
-        InitializePlayerCam();
+        if(playerCam == null)
+            InitializePlayerCam();
 
         abilityButtons = new List<Button>();
         abilityButtons.Add(playerCam.moveButton);
@@ -192,10 +193,12 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(currentGameState);
         if (SceneManager.GetActiveScene().name != "StartScene")
         {
             if (currentGameState == GameState.PLAYERTURN)
             {
+                Debug.Log(currentPlayerState);
                 switch (currentPlayerState)
                 {
                     case PlayerState.MOVEMENT:
@@ -230,13 +233,6 @@ public class GameManager : MonoBehaviour
                         //When player isn't moving and their actionpoints is below 1 we go to the enemies turn
                         if (!player.moving && player.actionPoints < 1)
                         {
-                            if (OnWinTile(player.currentTile))
-                            {
-                                player.GetComponent<SpriteRenderer>().color = Color.magenta;
-                                Debug.Log("YOU WIN");
-                                currentGameState = GameState.WIN;
-                                return;
-                            }
                             currentGameState = GameState.ENEMYTURN;
                         }
                         break;
@@ -256,14 +252,15 @@ public class GameManager : MonoBehaviour
                                     if (obstacleAvailableTiles.Contains(tileClicked))
                                     {
                                         // Remove the obstacle's original position from the obstaclesPosition array
-                                        obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
 
+                                        obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
+                                        Debug.Log(obstaclePositions[obstacleClicked.X, obstacleClicked.Y]);
                                         //obstacleClicked.transform.position = tileClicked.transform.position;
                                         obstacleClicked.MoveToCell(new Vector3Int((int)Mathf.Round(tileClicked.transform.position.x), (int)Mathf.Round(tileClicked.transform.position.y), (int)tileClicked.transform.position.z));
                                         obstacleClicked.GetComponent<SpriteRenderer>().color = Color.white;
 
                                         // Put the obstacleClicked into the obstclePositions array with its new coordinates
-                                        obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = obstacleClicked;
+                                        obstaclePositions[tileClicked.X, tileClicked.Y] = obstacleClicked;
 
 
                                         //Clearing the obstacles available tiles and subtracting an action point
@@ -423,6 +420,15 @@ public class GameManager : MonoBehaviour
 
 
                 //If the player is no longer moving and does not have an action point then we cycle to the enemies turn
+                if(!player.moving && player.currentTile.destination)
+                {
+                    player.GetComponent<SpriteRenderer>().color = Color.magenta;
+                    Debug.Log("YOU WIN");
+                    currentGameState = GameState.WIN;
+                    playerCam.Level += 1;
+                    LoadNextScene();
+                    return;
+                }
                 if (enemyManager.Enemies.Count == 0)
                 {
                     OnPlayersTurn();
@@ -801,6 +807,7 @@ public class GameManager : MonoBehaviour
         //Using this to load in the player when we load into the specific scene
         if (scene.name != "StartScene")
         {
+            Debug.Log("Called");
             //Setting the player state and current game state
             currentGameState = GameState.PLAYERTURN;
             currentPlayerState = PlayerState.MOVEMENT;
@@ -992,6 +999,12 @@ public class GameManager : MonoBehaviour
             else
                 b.interactable = true;
         }
+    }
+    
+    private void LoadNextScene()
+    {
+        SceneManager.LoadScene(playerCam.Level);
+        playerCam.UpdateLevels();
     }
     #endregion
 

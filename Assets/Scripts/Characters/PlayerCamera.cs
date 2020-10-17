@@ -8,6 +8,12 @@ using System.IO;
 
 public class PlayerCamera : MonoBehaviour
 {
+    public int Level
+    {
+        get { return level; }
+        set { level = value; }
+    }
+
     #region UI Variables
     [Header("UI Variables")]
     public Canvas titleCanvas;
@@ -24,18 +30,24 @@ public class PlayerCamera : MonoBehaviour
     public Slider soundfxVolumeSlider;
     public Slider masterSoundVolumeSlider;
     public Button applyButton;
+
+    public List<Button> levelSelectButtons;
     #endregion
 
     #region File IO
     private const string settingsPath = "Assets/txt/settings.txt";
     private StreamWriter writer;
+    private StreamReader reader;
     #endregion
+
+    private int level;
 
     Vector2 position = new Vector2(0, 0);
     public GameState previousGameState;
 
     void Awake()
     {
+        Debug.Log("AWAKE");
         DontDestroyOnLoad(this);
         canvasTracker.Push(titleCanvas);
 
@@ -49,6 +61,18 @@ public class PlayerCamera : MonoBehaviour
         //masterSoundVolumeSlider.value = GameManager.masterVolume;
         //GameManager.musicSources.Add(GetComponent<AudioSource>());
         applyButton.interactable = false;
+
+        reader = new StreamReader("Assets/txt/levels.txt");
+        bool loop = true;
+        int line = int.Parse(reader.ReadLine());
+        level = 0;
+        while (line != 0)
+        {
+            levelSelectButtons[level].interactable = true;
+            level++;
+            loop = int.TryParse(reader.ReadLine(), out line);
+        }
+        reader.Close();
 
         ApplySoundChanges();
     }
@@ -91,8 +115,10 @@ public class PlayerCamera : MonoBehaviour
     //Loads to the next scene
     public void StartButton()
     {
-        SceneManager.LoadScene(1);
+        level++;
+        SceneManager.LoadScene(level);
         titleCanvas.gameObject.SetActive(false);
+        abilityCanvas.gameObject.SetActive(true);
         canvasTracker.Clear();
     }
 
@@ -174,6 +200,21 @@ public class PlayerCamera : MonoBehaviour
     {
         SceneManager.LoadScene(0);
         Destroy(gameObject);
+    }
+
+    public void LevelSelectButton(int index)
+    {
+        SceneManager.LoadScene(index);
+    }
+
+    public void UpdateLevels()
+    {
+        StreamWriter levelWriter = new StreamWriter("Assets/txt/levels.txt");
+        for(int i = 0; i < level; i++)
+        {
+            levelWriter.WriteLine("1");
+        }
+        levelWriter.Close();
     }
 
     //Loops through our lists of audiosources and adjusts their volumes

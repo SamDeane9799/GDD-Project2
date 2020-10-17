@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : Character
 {
     public float moveDist;
-    public override void Start()
+    void Start()
     {
         base.Start();
         DontDestroyOnLoad(this);
