@@ -137,6 +137,8 @@ public class GameManager : MonoBehaviour
     public ObstacleManager obstManagerPrefab;
     private ObstacleManager obstManager;
 
+    [SerializeField]
+    private GameObject RockPrefab;
     #endregion
 
     #region Button Vars
@@ -258,8 +260,8 @@ public class GameManager : MonoBehaviour
 
                                         obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
                                         Debug.Log(obstaclePositions[obstacleClicked.X, obstacleClicked.Y]);
-                                        //obstacleClicked.transform.position = tileClicked.transform.position;
-                                        obstacleClicked.MoveToCell(new Vector3Int((int)Mathf.Round(tileClicked.transform.position.x), (int)Mathf.Round(tileClicked.transform.position.y), (int)tileClicked.transform.position.z));
+                                        //obstacleClicked.MoveToCell(new Vector3Int((int)(tileClicked.transform.position.x), (int)(tileClicked.transform.position.y), (int)tileClicked.transform.position.z));
+                                        obstacleClicked.transform.position = tileClicked.transform.position;
                                         obstacleClicked.GetComponent<SpriteRenderer>().color = Color.white;
 
                                         // Put the obstacleClicked into the obstclePositions array with its new coordinates
@@ -387,6 +389,10 @@ public class GameManager : MonoBehaviour
 
                                             waterClicked.GetComponent<SpriteRenderer>().color = Color.cyan;
                                             waterClicked.walkable = true;
+
+                                            GameObject newObstacle = Instantiate(RockPrefab);
+                                            newObstacle.transform.position = waterClicked.transform.position;
+                                            obstManager.obstacles.Add(newObstacle.GetComponent<Obstacle>());
 
                                             //bushClicked.burned = true;
 
