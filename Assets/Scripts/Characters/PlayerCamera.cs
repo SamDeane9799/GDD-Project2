@@ -12,6 +12,12 @@ public class PlayerCamera : MonoBehaviour
     [Header("UI Variables")]
     public Canvas titleCanvas;
     public Canvas pauseCanvas;
+    public Canvas abilityCanvas;
+    public Button moveButton;
+    public Button freezeButton;
+    public Button burnButton;
+    public Button resetButton;
+    public Button passButton;
     public Stack<Canvas> canvasTracker = new Stack<Canvas>();
 
     public Slider musicSoundVolumeSlider;
@@ -28,10 +34,15 @@ public class PlayerCamera : MonoBehaviour
     Vector2 position = new Vector2(0, 0);
     public GameState previousGameState;
 
-    void Start()
+    void Awake()
     {
         DontDestroyOnLoad(this);
         canvasTracker.Push(titleCanvas);
+
+        if(SceneManager.GetActiveScene().name != "StartScene")
+        {
+            abilityCanvas.gameObject.SetActive(true);
+        }
 
         //soundfxVolumeSlider.value = GameManager.soundFXVolume;
         //musicSoundVolumeSlider.value = GameManager.musicVolume;

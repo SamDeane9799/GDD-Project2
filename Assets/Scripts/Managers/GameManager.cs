@@ -140,10 +140,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Button Vars
-    public Button moveButton;
-    public Button burnButton;
-    public Button freezeButton;
-    public Button passButton;
 
     private List<Button> abilityButtons;
     #endregion
@@ -168,12 +164,6 @@ public class GameManager : MonoBehaviour
         obstacleAvailableTiles = new List<Tile>();
         usingAbility = false;
 
-        abilityButtons = new List<Button>();
-        abilityButtons.Add(moveButton);
-        abilityButtons.Add(burnButton);
-        abilityButtons.Add(freezeButton);
-
-
 
         //musicSources = new List<AudioSource>();
         //soundFXSources = new List<AudioSource>();
@@ -190,6 +180,13 @@ public class GameManager : MonoBehaviour
         reader.Close();*/
         //Initializing player
         InitializePlayerCam();
+
+        abilityButtons = new List<Button>();
+        abilityButtons.Add(playerCam.moveButton);
+        abilityButtons.Add(playerCam.burnButton);
+        abilityButtons.Add(playerCam.freezeButton);
+
+        SetUpAbilityButtons();
     }
 
     // Update is called once per frame
@@ -262,14 +259,12 @@ public class GameManager : MonoBehaviour
                                         obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
 
                                         //obstacleClicked.transform.position = tileClicked.transform.position;
-                                        Debug.Log(tileClicked.transform.position);
                                         obstacleClicked.MoveToCell(new Vector3Int((int)Mathf.Round(tileClicked.transform.position.x), (int)Mathf.Round(tileClicked.transform.position.y), (int)tileClicked.transform.position.z));
                                         obstacleClicked.GetComponent<SpriteRenderer>().color = Color.white;
 
                                         // Put the obstacleClicked into the obstclePositions array with its new coordinates
                                         obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = obstacleClicked;
 
-                                        Debug.Log("Obstacle Changed Position");
 
                                         //Clearing the obstacles available tiles and subtracting an action point
                                         ClearAvailableTileList(obstacleAvailableTiles);
@@ -312,8 +307,7 @@ public class GameManager : MonoBehaviour
                             if (Input.GetKeyDown(KeyCode.Q))
                             {
                                 usingAbility = false;
-                                Debug.Log("Cancelled Move Object Ability");
-                                moveButton.interactable = true;
+                                playerCam.moveButton.interactable = true;
                                 ClearAvailableObstaclesList();
                             }
                         }
@@ -339,7 +333,6 @@ public class GameManager : MonoBehaviour
 
                                         if (obstManager.bushes.Contains(bushClicked))
                                         {
-                                            Debug.Log("Bush at: " + bushClicked.X + ", " + bushClicked.Y + " got burned.");
 
                                             FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Burn");
 
@@ -355,7 +348,6 @@ public class GameManager : MonoBehaviour
                                         }
                                         else
                                         {
-                                            Debug.Log("Bush not clicked");
                                         }
                                     }
                                 }
@@ -363,8 +355,7 @@ public class GameManager : MonoBehaviour
                                 if (Input.GetKeyDown(KeyCode.Q))
                                 {
                                     usingAbility = false;
-                                    Debug.Log("Cancelled Burn Object Ability");
-                                    burnButton.interactable = true;
+                                    playerCam.burnButton.interactable = true;
                                     ClearAvailableBushesList();
                                 }
                             }
@@ -391,7 +382,6 @@ public class GameManager : MonoBehaviour
 
                                         if (obstManager.waterTiles.Contains(waterClicked))
                                         {
-                                            Debug.Log("Water at: " + waterClicked.X + ", " + waterClicked.Y + " got frozen.");
 
                                             FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Freeze");
 
@@ -406,7 +396,6 @@ public class GameManager : MonoBehaviour
                                         }
                                         else
                                         {
-                                            Debug.Log("Water not clicked");
                                         }
                                     }
                                 }
@@ -418,14 +407,12 @@ public class GameManager : MonoBehaviour
                         }
                         else
                         {
-                            Debug.Log("This level is dehydrated");
                         }
 
                         if (Input.GetKeyDown(KeyCode.Q))
                         {
                             usingAbility = false;
-                            Debug.Log("Cancelled Freeze Object Ability");
-                            freezeButton.interactable = true;
+                            playerCam.freezeButton.interactable = true;
                             ClearAvailableWaterList();
                         }
 
@@ -612,8 +599,6 @@ public class GameManager : MonoBehaviour
         {
             currentTile = openList[0];
 
-            //Debug.Log(currentTile.X + " | " + currentTile.Y);
-
             //Handling our X positive neighbor
             //Checking to make sure the X doesn't go under 0, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
             //that the player is contained in the availabletiles and that the tile is not the one we started on
@@ -795,7 +780,6 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < bushes.Length; i++)
         {
             //Adding the obstacles to the list
-            Debug.Log("Found bush");
             Bush newBush = bushes[i].GetComponent<Bush>();
             obstManager.bushes.Add(newBush);
         }
@@ -803,7 +787,6 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < waters.Length; i++)
         {
             //Adding the obstacles to the list
-            Debug.Log("Found water");
             WaterTile newWater = waters[i].GetComponent<WaterTile>();
             obstManager.waterTiles.Add(newWater);
         }
@@ -824,7 +807,6 @@ public class GameManager : MonoBehaviour
 
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
             player.currentTile = tileBoard[(int)(player.transform.position.x + (float)(GRID_WIDTH/2)), (int)(player.transform.position.y + (float)(GRID_HEIGHT/2))];
-            Debug.Log(tileBoard[(int)(player.transform.position.x + (float)(GRID_WIDTH / 2)), (int)(player.transform.position.y + (float)(GRID_HEIGHT / 2))]);
             player.transform.position = player.currentTile.transform.position;
 
 
@@ -840,7 +822,8 @@ public class GameManager : MonoBehaviour
             instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");
             instance.start();
 
-            OnPlayersTurn();
+            currentGameState = GameState.PLAYERTURN;
+            player.actionPoints = 1f;
         }
     }
 
@@ -853,7 +836,7 @@ public class GameManager : MonoBehaviour
         ClearAvailableWaterList();
         FindAvailableObstacles();
         currentPlayerState = PlayerState.ABILITYMOVE;
-        SetButtonOff(moveButton);
+        SetButtonOff(playerCam.moveButton);
     }
 
     public void BurnAbility()
@@ -864,7 +847,7 @@ public class GameManager : MonoBehaviour
         ClearAvailableObstaclesList();
         FindAvailableBushes();
         currentPlayerState = PlayerState.ABILITYBURN;
-        SetButtonOff(burnButton);
+        SetButtonOff(playerCam.burnButton);
     }
 
     public void FreezeAbility()
@@ -875,7 +858,7 @@ public class GameManager : MonoBehaviour
         ClearAvailableBushesList();
         ClearAvailableObstaclesList();
         currentPlayerState = PlayerState.ABILITYFREEZE;
-        SetButtonOff(freezeButton);
+        SetButtonOff(playerCam.freezeButton);
     }
 
     public void PassButton()
@@ -892,6 +875,15 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Destroy(playerCam.gameObject);
         Destroy(gameObject);
+    }
+
+    private void SetUpAbilityButtons()
+    {
+        playerCam.moveButton.onClick.AddListener(MoveAbility);
+        playerCam.freezeButton.onClick.AddListener(FreezeAbility);
+        playerCam.burnButton.onClick.AddListener(BurnAbility);
+        playerCam.passButton.onClick.AddListener(PassButton);
+        playerCam.resetButton.onClick.AddListener(ResetButton);
     }
     #endregion
 
@@ -971,8 +963,8 @@ public class GameManager : MonoBehaviour
                 b.interactable = true;
             }
         }
-        passButton.gameObject.SetActive(true);
-        passButton.interactable = true;
+        playerCam.passButton.gameObject.SetActive(true);
+        playerCam.passButton.interactable = true;
         player.actionPoints = 1f;
     }
 
@@ -986,7 +978,7 @@ public class GameManager : MonoBehaviour
         {
             b.gameObject.SetActive(false);
         }
-        passButton.gameObject.SetActive(false);
+        playerCam.passButton.gameObject.SetActive(false);
     }
 
     //Disables a button 
