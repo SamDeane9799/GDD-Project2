@@ -164,6 +164,9 @@ public class GameManager : MonoBehaviour
         obstacleAvailableTiles = new List<Tile>();
         usingAbility = false;
 
+        // FMOD music playing
+        instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");
+        instance.start();
 
         //musicSources = new List<AudioSource>();
         //soundFXSources = new List<AudioSource>();
@@ -825,10 +828,6 @@ public class GameManager : MonoBehaviour
             LoadInEnemies();
             LoadInObstacles();
 
-            // FMOD music playing
-            instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");
-            instance.start();
-
             currentGameState = GameState.PLAYERTURN;
             player.actionPoints = 1f;
         }
@@ -880,6 +879,7 @@ public class GameManager : MonoBehaviour
     public void ResetButton()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         Destroy(playerCam.gameObject);
         Destroy(gameObject);
     }
