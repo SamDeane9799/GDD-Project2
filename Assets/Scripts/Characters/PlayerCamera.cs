@@ -71,7 +71,8 @@ public class PlayerCamera : MonoBehaviour
         level = 0;
         while (line != 0)
         {
-            levelSelectButtons[level].interactable = true;
+            if (level < levelSelectButtons.Count)
+                levelSelectButtons[level].interactable = true;
             level++;
             loop = int.TryParse(reader.ReadLine(), out line);
         }
@@ -120,12 +121,12 @@ public class PlayerCamera : MonoBehaviour
     public void StartButton()
     {
         //level++;
-        Debug.Log("Loading Level " + level);
-        if (MAX_LEVEL == level + 1)
+        Debug.Log("Level value: " + level);
+        if (level > MAX_LEVEL)
         {
+            Debug.Log("MAX_LEVEL in PlayerCamera has been exceeded, so we're loading level 1");
             level = 1;
         }
-
 
         if (SceneManager.GetActiveScene().name == "StartScene")
         {
@@ -235,6 +236,11 @@ public class PlayerCamera : MonoBehaviour
         {
             levelWriter.WriteLine("1");
         }
+
+        // With the other code involved, this essentially adds a "completion mode" where the start button loads the first level but all of the levels are accessible in "level select"
+        if (level == MAX_LEVEL)
+            levelWriter.WriteLine("1");
+
         levelWriter.Close();
     }
 
