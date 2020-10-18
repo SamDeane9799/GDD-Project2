@@ -14,15 +14,10 @@ public class Character : LevelObject
     //Our range that we can move at
     public float actionPoints;
 
-
-    public virtual void Start()
-    {
-        
-    }
-
     // Update is called once per frame
-    public virtual void Update()
+    protected override void Update()
     {
+        base.Update();
         if (GameManager.currentGameState != GameState.LOSE)
         {
             //If we are not at our currentTile set moving to true so MoveToTile() is called

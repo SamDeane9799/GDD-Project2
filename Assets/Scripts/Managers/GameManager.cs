@@ -198,19 +198,19 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(currentGameState);
         if (SceneManager.GetActiveScene().name != "StartScene")
         {
             if (currentGameState == GameState.PLAYERTURN)
             {
-                Debug.Log(currentPlayerState);
                 switch (currentPlayerState)
                 {
                     case PlayerState.MOVEMENT:
                         //Checking for player right click
+                        Debug.Log(!player.moving);
                         if (!player.moving && availableTiles.Count == 0)
                         {
                             FindAvailableTiles();
+                            Debug.Log("Finding tiles");
                         }
 
                         if (Input.GetMouseButtonDown(0))
@@ -410,9 +410,6 @@ public class GameManager : MonoBehaviour
                             {
                                 currentPlayerState = PlayerState.MOVEMENT;
                             }
-                        }
-                        else
-                        {
                         }
 
                         if (Input.GetKeyDown(KeyCode.Q))
@@ -1011,6 +1008,7 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(playerCam.Level);
         playerCam.UpdateLevels();
+        availableTiles.Clear();
     }
     #endregion
 
