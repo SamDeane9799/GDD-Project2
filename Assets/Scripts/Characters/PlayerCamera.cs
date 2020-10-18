@@ -114,17 +114,21 @@ public class PlayerCamera : MonoBehaviour
             }
         }
     }
+
     //Loads to the next scene
     public void StartButton()
     {
         level++;
+
         if(MAX_LEVEL == level)
         {
             level = 1;
         }
+
         SceneManager.LoadScene(level);
         titleCanvas.gameObject.SetActive(false);
         abilityCanvas.gameObject.SetActive(true);
+        GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().StopInstance();
         canvasTracker.Clear();
     }
 

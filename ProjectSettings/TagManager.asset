@@ -9,6 +9,7 @@ TagManager:
   - Obstacle
   - Bush
   - Water
+  - Manager
   layers:
   - Default
   - TransparentFX

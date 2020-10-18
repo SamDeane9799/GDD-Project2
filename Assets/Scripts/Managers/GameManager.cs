@@ -167,7 +167,11 @@ public class GameManager : MonoBehaviour
         usingAbility = false;
 
         // FMOD music playing
-        instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");
+        if (SceneManager.GetActiveScene().name != "StartScene")
+            instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");
+        else
+            instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/MainMenu");
+
         instance.start();
 
         //musicSources = new List<AudioSource>();
@@ -1009,6 +1013,11 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(playerCam.Level);
         playerCam.UpdateLevels();
         availableTiles.Clear();
+    }
+
+    public void StopInstance()
+    {
+        instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
     }
     #endregion
 
