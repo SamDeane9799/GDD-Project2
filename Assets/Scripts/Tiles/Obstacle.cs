@@ -56,27 +56,31 @@ public class Obstacle : LevelObject
     }
 
     //I don't know from where exactly we will be calling these methods (probably player abilities?). They can also be used with the properties that signify the nearby cells
-    public void MoveToCell(Vector3Int cellPosDestination, float movSpeed)
+    public void MoveToCell(/*Vector3Int cellPosDestination*/ Vector3 cellPosDestination, float movSpeed)
     {
-        Vector3 cellPosDesCenter = gridRef.GetCellCenterLocal(cellPosDestination);
-        Vector3 posDifference = cellPosDesCenter - transform.position;
+        // From back when the grid squares were centered at whole numbers
+        //Vector3 cellPosDesCenter = gridRef.GetCellCenterLocal(cellPosDestination);
+        //Vector3 posDifference = cellPosDesCenter - transform.position;
+
+        Vector3 posDifference = cellPosDestination - transform.position;
         Vector3 direction = posDifference.normalized;
         Debug.Log(cellPosDestination);
 
-        //Movement would be performed here if we were calling MoveToCell from another class's update
+        ////Movement would be performed here if we were calling MoveToCell from another class's update
         //Vector3 movement = direction * speed * Time.deltaTime;
         //if (Vector3.Distance(destination, transform.position) >= movement.magnitude)
         //    transform.Translate(direction * speed * Time.deltaTime);
 
         //Otherwise we just update variables for use by AnimateMovement()
-        destination = cellPosDesCenter;
+        //destination = cellPosDesCenter;
+        destination = cellPosDestination;
         this.direction = direction;
         speed = movSpeed;
         moving = true;
     }
 
     //You can also call it using a speed value attached to the object idk which we prefer
-    public void MoveToCell(Vector3Int cellPosDestination)
+    public void MoveToCell(/*Vector3Int cellPosDestination*/ Vector3 cellPosDestination)
     {
         MoveToCell(cellPosDestination, speed);
     }

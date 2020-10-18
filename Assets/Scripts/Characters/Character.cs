@@ -7,7 +7,7 @@ public class Character : LevelObject
     public override int X => currentTile.X;
 
     public override int Y => currentTile.Y;
-
+    //comment
     // Start is called before the first frame update
     public bool moving;
     public Tile currentTile;
