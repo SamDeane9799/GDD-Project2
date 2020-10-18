@@ -55,10 +55,10 @@ public class PlayerCamera : MonoBehaviour
         DontDestroyOnLoad(this);
         canvasTracker.Push(titleCanvas);
 
-        if(SceneManager.GetActiveScene().name != "StartScene")
-        {
-            abilityCanvas.gameObject.SetActive(true);
-        }
+        //if(SceneManager.GetActiveScene().name != "StartScene")
+        //{
+        //    abilityCanvas.gameObject.SetActive(true);
+        //}
 
         //soundfxVolumeSlider.value = GameManager.soundFXVolume;
         //musicSoundVolumeSlider.value = GameManager.musicVolume;
@@ -89,6 +89,7 @@ public class PlayerCamera : MonoBehaviour
         //Code that runs in the title screen goes here
         if (SceneManager.GetActiveScene().name == "StartScene")
         {
+            //titleCanvas.gameObject.SetActive(true);
             if (Input.GetKeyDown(KeyCode.Escape) && canvasTracker.Count > 1)
                 BackButton();
         }
@@ -98,7 +99,7 @@ public class PlayerCamera : MonoBehaviour
         if (SceneManager.GetActiveScene().name != "StartScene")
         {
             //REMOVE LATER THIS IS ONLY TEMPORARY SO WE CAN TEST IN THE REGULAR SCENES WITHOUT ERROR
-            titleCanvas.gameObject.SetActive(false);
+            //titleCanvas.gameObject.SetActive(false);
             if (Input.GetKeyDown(KeyCode.Escape) && (GameManager.currentGameState == GameState.PLAYERTURN || GameManager.currentGameState == GameState.ENEMYTURN))
             {
                 previousGameState = GameManager.currentGameState;
@@ -138,7 +139,7 @@ public class PlayerCamera : MonoBehaviour
         }
 
         Debug.Log("Loading Level " + level);
-        SceneManager.LoadScene(level);
+        GameManager.gameManagerObject.LoadNextScene();
         titleCanvas.gameObject.SetActive(false);
         abilityCanvas.gameObject.SetActive(true);
         canvasTracker.Clear();
@@ -189,7 +190,11 @@ public class PlayerCamera : MonoBehaviour
         if (SceneManager.GetActiveScene().name != "StartScene")
         {
             ResumeButton();
+            canvasTracker.Pop();
+            abilityCanvas.gameObject.SetActive(false);
+            titleCanvas.gameObject.SetActive(true);
             SceneManager.LoadScene(0);
+            Awake();
         }
         else
             Application.Quit();
@@ -226,8 +231,9 @@ public class PlayerCamera : MonoBehaviour
 
     public void LevelSelectButton(int index)
     {
-        SceneManager.LoadScene(index);
+        //SceneManager.LoadScene(index);
         level = index;
+        GameManager.gameManagerObject.LoadNextScene();
         abilityCanvas.gameObject.SetActive(true);
         canvasTracker.Peek().gameObject.SetActive(false);
         canvasTracker.Clear();

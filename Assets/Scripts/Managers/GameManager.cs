@@ -148,11 +148,25 @@ public class GameManager : MonoBehaviour
 
     private FMOD.Studio.EventInstance instance;
 
+    //GameManager should be a singleton
+    public static GameManager gameManagerObject = null;
+
+    void Awake()
+    {
+        if (gameManagerObject == null)
+        {
+            DontDestroyOnLoad(this);
+            gameManagerObject = this;
+        }
+        else if (gameManagerObject != this)
+            Destroy(gameObject);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Game Manager Start called");
         //Sets the game state and tell the game to not destroy this
-        DontDestroyOnLoad(this);
         SceneManager.sceneLoaded += OnLoad;
         if(SceneManager.GetActiveScene().name != "StartScene")
             OnLoad(SceneManager.GetActiveScene(), LoadSceneMode.Single);
@@ -814,10 +828,10 @@ public class GameManager : MonoBehaviour
 
     public void OnLoad(Scene scene, LoadSceneMode mode)
     {
+        Debug.Log("OnLoad Called");
         //Using this to load in the player when we load into the specific scene
         if (scene.name != "StartScene")
         {
-            Debug.Log("Called");
             //Setting the player state and current game state
             currentGameState = GameState.PLAYERTURN;
             currentPlayerState = PlayerState.MOVEMENT;
@@ -839,6 +853,12 @@ public class GameManager : MonoBehaviour
 
             instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");
+            instance.start();
+        }
+        else
+        {
+            instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/MainMenu");
             instance.start();
         }
     }
@@ -888,10 +908,11 @@ public class GameManager : MonoBehaviour
 
     public void ResetButton()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        Destroy(playerCam.gameObject);
-        Destroy(gameObject);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        LoadNextScene();
+        //instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        //Destroy(playerCam.gameObject);
+        //Destroy(gameObject);
     }
 
     private void SetUpAbilityButtons()
@@ -1011,7 +1032,7 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    private void LoadNextScene()
+    public void LoadNextScene()
     {
         SceneManager.LoadScene(playerCam.Level);
         playerCam.UpdateLevels();
