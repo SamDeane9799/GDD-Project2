@@ -210,7 +210,7 @@ public class GameManager : MonoBehaviour
                 {
                     case PlayerState.MOVEMENT:
                         //Checking for player right click
-                        Debug.Log(!player.moving);
+                        //Debug.Log(!player.moving);
                         if (!player.moving && availableTiles.Count == 0)
                         {
                             FindAvailableTiles();
