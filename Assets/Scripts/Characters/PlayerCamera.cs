@@ -44,6 +44,7 @@ public class PlayerCamera : MonoBehaviour
     #endregion
 
     private int level;
+    private int highestLevelAcheived;
 
     Vector2 position = new Vector2(0, 0);
     public GameState previousGameState;
@@ -77,6 +78,7 @@ public class PlayerCamera : MonoBehaviour
             loop = int.TryParse(reader.ReadLine(), out line);
         }
         reader.Close();
+        highestLevelAcheived = level;
 
         ApplySoundChanges();
     }
@@ -122,6 +124,8 @@ public class PlayerCamera : MonoBehaviour
     {
         //level++;
         Debug.Log("Level value: " + level);
+
+        // This if statement facilitates "Completion Mode"
         if (level > MAX_LEVEL)
         {
             Debug.Log("MAX_LEVEL in PlayerCamera has been exceeded, so we're loading level 1");
@@ -231,17 +235,22 @@ public class PlayerCamera : MonoBehaviour
 
     public void UpdateLevels()
     {
-        StreamWriter levelWriter = new StreamWriter(Application.dataPath + "/StreamingAssets/txt/levels.txt");
-        for(int i = 0; i < level; i++)
+        if (level >= highestLevelAcheived) // Ensures that the player can't "re-lock" levels by completing earlier levels acesssed via the level selector
         {
-            levelWriter.WriteLine("1");
+            StreamWriter levelWriter = new StreamWriter(Application.dataPath + "/StreamingAssets/txt/levels.txt");
+            for (int i = 0; i < level; i++)
+            {
+                levelWriter.WriteLine("1");
+            }
+
+            // With the other code involved, this essentially adds a "completion mode" where the start button loads the first level but all of the levels are accessible in "level select"
+            if (level == MAX_LEVEL)
+                levelWriter.WriteLine("1");
+
+            levelWriter.Close();
+
+            highestLevelAcheived = level;
         }
-
-        // With the other code involved, this essentially adds a "completion mode" where the start button loads the first level but all of the levels are accessible in "level select"
-        if (level == MAX_LEVEL)
-            levelWriter.WriteLine("1");
-
-        levelWriter.Close();
     }
 
     //Loops through our lists of audiosources and adjusts their volumes
