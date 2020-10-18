@@ -3016,6 +3016,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
+    - target: {fileID: 5981622050123870110, guid: ea4a1b67e98f41d4abbf1c98e405ccbc,
+        type: 3}
+      propertyPath: gridRef
+      value: 
+      objectReference: {fileID: 1890166479}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea4a1b67e98f41d4abbf1c98e405ccbc, type: 3}
 --- !u!4 &283209818 stripped
@@ -5123,6 +5128,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
+    - target: {fileID: 5981622050123870110, guid: ea4a1b67e98f41d4abbf1c98e405ccbc,
+        type: 3}
+      propertyPath: gridRef
+      value: 
+      objectReference: {fileID: 1890166479}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea4a1b67e98f41d4abbf1c98e405ccbc, type: 3}
 --- !u!4 &458799624 stripped
@@ -6015,6 +6025,7 @@ Transform:
   - {fileID: 1877199833}
   - {fileID: 140312610}
   - {fileID: 153652075}
+  - {fileID: 314608766}
   - {fileID: 124393460}
   - {fileID: 1370628814}
   - {fileID: 498206718}
@@ -6035,20 +6046,15 @@ Transform:
   - {fileID: 961050197}
   - {fileID: 2075484734}
   - {fileID: 250523861}
-  - {fileID: 1488358709}
-  - {fileID: 1331549195}
+  - {fileID: 365076475}
+  - {fileID: 133294941}
+  - {fileID: 1056668013}
   - {fileID: 46748374}
   - {fileID: 110971609}
   - {fileID: 31912546}
   - {fileID: 348697203}
-  - {fileID: 314608766}
-  - {fileID: 365076475}
-  - {fileID: 133294941}
-  - {fileID: 1261781780}
-  - {fileID: 1935978765}
-  - {fileID: 1375851672}
-  - {fileID: 1056668013}
   - {fileID: 2057908591}
+  - {fileID: 1331549195}
   - {fileID: 750534558}
   - {fileID: 1865673220}
   - {fileID: 1406079286}
@@ -6056,6 +6062,7 @@ Transform:
   - {fileID: 1752027251}
   - {fileID: 1061321629}
   - {fileID: 1862636894}
+  - {fileID: 1261781780}
   - {fileID: 423914334}
   - {fileID: 742035176}
   - {fileID: 1673944300}
@@ -6068,12 +6075,14 @@ Transform:
   - {fileID: 2021717505}
   - {fileID: 1597541427}
   - {fileID: 2001217481}
+  - {fileID: 1375851672}
   - {fileID: 259490825}
   - {fileID: 1625055065}
   - {fileID: 1661391261}
   - {fileID: 1231719782}
   - {fileID: 1142247266}
   - {fileID: 1427228221}
+  - {fileID: 1488358709}
   - {fileID: 26496211}
   - {fileID: 238364399}
   - {fileID: 1141625350}
@@ -6088,6 +6097,7 @@ Transform:
   - {fileID: 1408853788}
   - {fileID: 1041164578}
   - {fileID: 1009179532}
+  - {fileID: 1935978765}
   - {fileID: 289601977}
   - {fileID: 1260969763}
   - {fileID: 245276995}
@@ -6114,8 +6124,8 @@ Transform:
   - {fileID: 2132125030}
   - {fileID: 1662726007}
   - {fileID: 1042978722}
-  - {fileID: 1357361307}
   - {fileID: 2146968663}
+  - {fileID: 1357361307}
   - {fileID: 283209818}
   - {fileID: 458799624}
   - {fileID: 1372090286}
@@ -11175,6 +11185,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
+    - target: {fileID: 5981622050123870110, guid: ea4a1b67e98f41d4abbf1c98e405ccbc,
+        type: 3}
+      propertyPath: gridRef
+      value: 
+      objectReference: {fileID: 1890166479}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea4a1b67e98f41d4abbf1c98e405ccbc, type: 3}
 --- !u!4 &1003235332 stripped
@@ -14173,6 +14188,7 @@ MonoBehaviour:
     type: 3}
   obstManagerPrefab: {fileID: 4833668360979105037, guid: 41a99958d703b834e8a72558365cd11e,
     type: 3}
+  RockPrefab: {fileID: 0}
 --- !u!4 &1304632658
 Transform:
   m_ObjectHideFlags: 0
@@ -14941,6 +14957,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
+    - target: {fileID: 5981622050123870110, guid: ea4a1b67e98f41d4abbf1c98e405ccbc,
+        type: 3}
+      propertyPath: gridRef
+      value: 
+      objectReference: {fileID: 1890166479}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea4a1b67e98f41d4abbf1c98e405ccbc, type: 3}
 --- !u!4 &1372090286 stripped
@@ -23247,6 +23268,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
+    - target: {fileID: 5981622050123870110, guid: ea4a1b67e98f41d4abbf1c98e405ccbc,
+        type: 3}
+      propertyPath: gridRef
+      value: 
+      objectReference: {fileID: 1890166479}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea4a1b67e98f41d4abbf1c98e405ccbc, type: 3}
 --- !u!4 &2146968663 stripped
