@@ -14,6 +14,8 @@ public class PlayerCamera : MonoBehaviour
         set { level = value; }
     }
 
+    private const int MAX_LEVEL = 5;
+
     #region UI Variables
     [Header("UI Variables")]
     public Canvas titleCanvas;
@@ -116,6 +118,10 @@ public class PlayerCamera : MonoBehaviour
     public void StartButton()
     {
         level++;
+        if(MAX_LEVEL == level)
+        {
+            level = 1;
+        }
         SceneManager.LoadScene(level);
         titleCanvas.gameObject.SetActive(false);
         abilityCanvas.gameObject.SetActive(true);
@@ -205,6 +211,10 @@ public class PlayerCamera : MonoBehaviour
     public void LevelSelectButton(int index)
     {
         SceneManager.LoadScene(index);
+        level = index;
+        abilityCanvas.gameObject.SetActive(true);
+        canvasTracker.Peek().gameObject.SetActive(false);
+        canvasTracker.Clear();
     }
 
     public void UpdateLevels()
