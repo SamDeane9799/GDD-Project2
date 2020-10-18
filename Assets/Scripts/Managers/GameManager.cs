@@ -260,8 +260,8 @@ public class GameManager : MonoBehaviour
 
                                         obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
                                         Debug.Log(obstaclePositions[obstacleClicked.X, obstacleClicked.Y]);
-                                        //obstacleClicked.MoveToCell(new Vector3Int((int)(tileClicked.transform.position.x), (int)(tileClicked.transform.position.y), (int)tileClicked.transform.position.z));
-                                        obstacleClicked.transform.position = tileClicked.transform.position;
+                                        obstacleClicked.MoveToCell(new Vector3((tileClicked.transform.position.x), (tileClicked.transform.position.y), tileClicked.transform.position.z));
+                                        //obstacleClicked.transform.position = tileClicked.transform.position;
                                         obstacleClicked.GetComponent<SpriteRenderer>().color = Color.white;
 
                                         // Put the obstacleClicked into the obstclePositions array with its new coordinates
