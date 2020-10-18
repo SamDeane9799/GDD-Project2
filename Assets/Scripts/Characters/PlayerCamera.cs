@@ -119,9 +119,9 @@ public class PlayerCamera : MonoBehaviour
     //Loads to the next scene
     public void StartButton()
     {
-        level++;
-
-        if(MAX_LEVEL == level)
+        //level++;
+        Debug.Log("Loading Level " + level);
+        if (MAX_LEVEL == level + 1)
         {
             level = 1;
         }
@@ -132,6 +132,7 @@ public class PlayerCamera : MonoBehaviour
             GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().StopInstance();
         }
 
+        Debug.Log("Loading Level " + level);
         SceneManager.LoadScene(level);
         titleCanvas.gameObject.SetActive(false);
         abilityCanvas.gameObject.SetActive(true);
@@ -183,7 +184,7 @@ public class PlayerCamera : MonoBehaviour
         if (SceneManager.GetActiveScene().name != "StartScene")
         {
             ResumeButton();
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(0);
         }
         else
             Application.Quit();
