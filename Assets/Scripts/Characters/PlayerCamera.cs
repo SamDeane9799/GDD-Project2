@@ -68,7 +68,7 @@ public class PlayerCamera : MonoBehaviour
         bool loop = true;
         int line = int.Parse(reader.ReadLine());
         level = 0;
-        while (line != 0)
+        while (line == 1)
         {
             levelSelectButtons[level].interactable = true;
             level++;
@@ -119,7 +119,7 @@ public class PlayerCamera : MonoBehaviour
     public void StartButton()
     {
         //level++;
-        if(MAX_LEVEL == level++)
+        if(MAX_LEVEL == level)
         {
             level = 1;
         }
