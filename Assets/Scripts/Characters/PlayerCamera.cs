@@ -14,6 +14,7 @@ public class PlayerCamera : MonoBehaviour
         set { level = value; }
     }
 
+    [SerializeField]
     private const int MAX_LEVEL = 5;
 
     #region UI Variables
@@ -37,7 +38,7 @@ public class PlayerCamera : MonoBehaviour
     #endregion
 
     #region File IO
-    private const string settingsPath = "Assets/txt/settings.txt";
+    private const string settingsPath = "Assets/StreamingAssets/txt/settings.txt";
     private StreamWriter writer;
     private StreamReader reader;
     #endregion
@@ -64,7 +65,7 @@ public class PlayerCamera : MonoBehaviour
         //GameManager.musicSources.Add(GetComponent<AudioSource>());
         applyButton.interactable = false;
 
-        reader = new StreamReader("Assets/txt/levels.txt");
+        reader = new StreamReader(Application.dataPath + "/StreamingAssets/txt/levels.txt");
         bool loop = true;
         int line = int.Parse(reader.ReadLine());
         level = 0;
@@ -125,10 +126,15 @@ public class PlayerCamera : MonoBehaviour
             level = 1;
         }
 
+
+        if (SceneManager.GetActiveScene().name == "StartScene")
+        {
+            GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().StopInstance();
+        }
+
         SceneManager.LoadScene(level);
         titleCanvas.gameObject.SetActive(false);
         abilityCanvas.gameObject.SetActive(true);
-        GameObject.FindGameObjectWithTag("Manager").GetComponent<GameManager>().StopInstance();
         canvasTracker.Clear();
     }
 
@@ -223,7 +229,7 @@ public class PlayerCamera : MonoBehaviour
 
     public void UpdateLevels()
     {
-        StreamWriter levelWriter = new StreamWriter("Assets/txt/levels.txt");
+        StreamWriter levelWriter = new StreamWriter(Application.dataPath + "/StreamingAssets/txt/levels.txt");
         for(int i = 0; i < level; i++)
         {
             levelWriter.WriteLine("1");

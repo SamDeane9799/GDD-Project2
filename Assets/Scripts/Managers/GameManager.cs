@@ -826,7 +826,6 @@ public class GameManager : MonoBehaviour
             player.currentTile = tileBoard[(int)(player.transform.position.x + (float)(GRID_WIDTH/2)), (int)(player.transform.position.y + (float)(GRID_HEIGHT/2))];
             player.transform.position = player.currentTile.transform.position;
 
-
             winTile = GameObject.FindGameObjectWithTag("WinTile").GetComponent<Tile>();
             winTile.destination = true;
             winTile.GetComponent<SpriteRenderer>().color = Color.yellow;
@@ -837,6 +836,10 @@ public class GameManager : MonoBehaviour
 
             currentGameState = GameState.PLAYERTURN;
             player.actionPoints = 1f;
+
+            instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");
+            instance.start();
         }
     }
 
@@ -1013,6 +1016,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(playerCam.Level);
         playerCam.UpdateLevels();
         availableTiles.Clear();
+        instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
     }
 
     public void StopInstance()
@@ -1020,8 +1024,6 @@ public class GameManager : MonoBehaviour
         instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
     }
     #endregion
-
-
 
     /*      
 
