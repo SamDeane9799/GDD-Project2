@@ -13,7 +13,6 @@ public class Tile : LevelObject
     void Awake()
     {
         //Adding the tiles to the tile board
-        GameManager.tileBoard[(int)((float)(GameManager.GRID_WIDTH/2) + transform.position.x),(int)((float)(GameManager.GRID_HEIGHT/2) + transform.position.y)] = this;
     }
 
     // Update is called once per frame

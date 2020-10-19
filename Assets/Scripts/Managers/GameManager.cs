@@ -165,7 +165,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Game Manager Start called");
         //Sets the game state and tell the game to not destroy this
         SceneManager.sceneLoaded += OnLoad;
         if(SceneManager.GetActiveScene().name != "StartScene")
@@ -221,14 +220,12 @@ public class GameManager : MonoBehaviour
             if (currentGameState == GameState.PLAYERTURN)
             {
                 switch (currentPlayerState)
-                {
+                {                    
                     case PlayerState.MOVEMENT:
                         //Checking for player right click
-                        //Debug.Log(!player.moving);
                         if (!player.moving && availableTiles.Count == 0)
                         {
                             FindAvailableTiles();
-                            Debug.Log("Finding tiles");
                         }
 
                         if (Input.GetMouseButtonDown(0))
@@ -277,7 +274,6 @@ public class GameManager : MonoBehaviour
                                         // Remove the obstacle's original position from the obstaclesPosition array
 
                                         obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
-                                        Debug.Log(obstaclePositions[obstacleClicked.X, obstacleClicked.Y]);
                                         obstacleClicked.MoveToCell(new Vector3((tileClicked.transform.position.x), (tileClicked.transform.position.y), tileClicked.transform.position.z));
                                         //obstacleClicked.transform.position = tileClicked.transform.position;
                                         obstacleClicked.GetComponent<SpriteRenderer>().color = Color.white;
@@ -511,6 +507,7 @@ public class GameManager : MonoBehaviour
         }
 
         Vector2 posToBeChecked = new Vector2();
+
 
         //We iterate through till we have nothing viable anymore
         while (openList.Count > 0)
@@ -821,6 +818,20 @@ public class GameManager : MonoBehaviour
             obstManager.waterTiles.Add(newWater);
         }
     }
+
+    private void LoadInTiles()
+    {
+        GameObject[] tiles = GameObject.FindGameObjectsWithTag("Tile");
+
+        for(int i = 0; i < tiles.Length; i++)
+        {
+            GameManager.tileBoard[(int)((float)(GameManager.GRID_WIDTH / 2) + tiles[i].transform.position.x), (int)((float)(GameManager.GRID_HEIGHT / 2) + tiles[i].transform.position.y)] = tiles[i].GetComponent<Tile>();
+        }
+        GameObject winTile = GameObject.FindGameObjectWithTag("WinTile");
+        GameManager.tileBoard[(int)((float)(GameManager.GRID_WIDTH / 2) + winTile.transform.position.x), (int)((float)(GameManager.GRID_HEIGHT / 2) + winTile.transform.position.y)] = winTile.GetComponent<Tile>();
+
+
+    }
     public void InitializePlayerCam()
     {
         playerCam = Instantiate<PlayerCamera>(playerCameraPrefab);
@@ -828,14 +839,13 @@ public class GameManager : MonoBehaviour
 
     public void OnLoad(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("OnLoad Called");
         //Using this to load in the player when we load into the specific scene
         if (scene.name != "StartScene")
         {
             //Setting the player state and current game state
             currentGameState = GameState.PLAYERTURN;
             currentPlayerState = PlayerState.MOVEMENT;
-
+            LoadInTiles();
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
             player.currentTile = tileBoard[(int)(player.transform.position.x + (float)(GRID_WIDTH/2)), (int)(player.transform.position.y + (float)(GRID_HEIGHT/2))];
             player.transform.position = player.currentTile.transform.position;
@@ -854,6 +864,8 @@ public class GameManager : MonoBehaviour
             instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             instance = FMODUnity.RuntimeManager.CreateInstance("event:/Music/Gameplay");
             instance.start();
+
+            availableTiles.Clear();
         }
         else
         {
@@ -908,11 +920,8 @@ public class GameManager : MonoBehaviour
 
     public void ResetButton()
     {
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        LoadNextScene();
-        //instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        //Destroy(playerCam.gameObject);
-        //Destroy(gameObject);
+        SceneManager.LoadScene(playerCam.Level);
+        instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
     }
 
     private void SetUpAbilityButtons()

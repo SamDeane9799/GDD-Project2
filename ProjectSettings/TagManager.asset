@@ -10,6 +10,7 @@ TagManager:
   - Bush
   - Water
   - Manager
+  - Tile
   layers:
   - Default
   - TransparentFX

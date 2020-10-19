@@ -51,7 +51,6 @@ public class PlayerCamera : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("AWAKE");
         DontDestroyOnLoad(this);
         canvasTracker.Push(titleCanvas);
 

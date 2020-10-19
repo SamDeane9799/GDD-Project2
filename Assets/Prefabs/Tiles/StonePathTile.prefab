@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 3946175098657922157}
   - component: {fileID: 5003882788447745423}
   m_Layer: 0
-  m_Name: TestTile
-  m_TagString: Untagged
+  m_Name: StonePathTile
+  m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -95,8 +95,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight: 0
-  blueValue: 0
-  targetBlue: 0
+  colorValue: 0
+  targetValue: 0
   originalColor: {r: 0, g: 0, b: 0, a: 0}
   dist: 0
   destination: 0
