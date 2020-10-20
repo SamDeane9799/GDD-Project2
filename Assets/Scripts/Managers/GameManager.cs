@@ -113,13 +113,16 @@ public class GameManager : MonoBehaviour
     #region Obstacles
     private static bool objectSelected = false;
     private static Obstacle obstacleClicked = null;
+    private static Enemy enemyClicked = null;
 
     private List<Tile> obstacleAvailableTiles;
+    private List<Tile> enemyAvailableTiles;
     private const int obstacleMovementRange = 1;
 
     private List<Obstacle> availableObstacles;
     private List<Bush> availableBushes;
     private List<WaterTile> availableWater;
+    private List<Enemy> availableEnemies;
     #endregion
 
     #region File IO
@@ -171,12 +174,14 @@ public class GameManager : MonoBehaviour
             OnLoad(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 
         availableObstacles = new List<Obstacle>();
+        availableEnemies = new List<Enemy>();
         availableBushes = new List<Bush>();
         availableWater = new List<WaterTile>();
 
         availableTiles = new List<Tile>();
 
         obstacleAvailableTiles = new List<Tile>();
+        enemyAvailableTiles = new List<Tile>();
         usingAbility = false;
 
         // FMOD music playing
@@ -269,32 +274,56 @@ public class GameManager : MonoBehaviour
 
                                     Tile tileClicked = hit.collider.GetComponent<Tile>();
                                     //If the obstacle can move to the tile then we move it there
-                                    if (obstacleAvailableTiles.Contains(tileClicked))
+
+                                    if (obstacleClicked != null)
                                     {
-                                        // Remove the obstacle's original position from the obstaclesPosition array
+                                        if (obstacleAvailableTiles.Contains(tileClicked))
+                                        {
+                                            // Remove the obstacle's original position from the obstaclesPosition array
+                                            obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
+                                            obstacleClicked.MoveToCell(new Vector3((tileClicked.transform.position.x), (tileClicked.transform.position.y), tileClicked.transform.position.z));
 
-                                        obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
-                                        obstacleClicked.MoveToCell(new Vector3((tileClicked.transform.position.x), (tileClicked.transform.position.y), tileClicked.transform.position.z));
-                                        //obstacleClicked.transform.position = tileClicked.transform.position;
-                                        obstacleClicked.GetComponent<SpriteRenderer>().color = Color.white;
+                                            //obstacleClicked.transform.position = tileClicked.transform.position;
+                                            obstacleClicked.GetComponent<SpriteRenderer>().color = Color.white;
 
-                                        // Put the obstacleClicked into the obstclePositions array with its new coordinates
-                                        obstaclePositions[tileClicked.X, tileClicked.Y] = obstacleClicked;
+                                            // Put the obstacleClicked into the obstclePositions array with its new coordinates
+                                            obstaclePositions[tileClicked.X, tileClicked.Y] = obstacleClicked;
 
+                                            //Clearing the obstacles available tiles and subtracting an action point
+                                            ClearAvailableTileList(obstacleAvailableTiles);
+                                            player.actionPoints -= 1;
 
-                                        //Clearing the obstacles available tiles and subtracting an action point
-                                        ClearAvailableTileList(obstacleAvailableTiles);
-                                        player.actionPoints -= 1;
-
-                                        FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Place");
-                                        objectSelected = false;
-                                        usingAbility = false;
+                                            FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Place");
+                                            objectSelected = false;
+                                            usingAbility = false;
+                                        }
                                     }
+
+                                    if (enemyClicked != null)
+                                    {
+                                        if (enemyAvailableTiles.Contains(tileClicked))
+                                        {
+                                            Debug.Log("Tile Clicked");
+
+                                            enemyClicked.GetComponent<SpriteRenderer>().color = Color.white;
+
+                                            enemyClicked.transform.position = tileClicked.transform.position;
+                                            enemyClicked.currentTile = tileClicked;
+
+                                            ClearAvailableTileList(enemyAvailableTiles);
+                                            player.actionPoints -= 1;
+
+                                            FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Place");
+                                            objectSelected = false;
+                                            usingAbility = false;
+                                        }
+                                    }                                           
                                 }
                             }
                             else
                             {
                                 obstacleClicked = null;
+                                enemyClicked = null;
 
                                 //Checking for player LEFT click
                                 if (Input.GetMouseButtonDown(0))
@@ -304,6 +333,17 @@ public class GameManager : MonoBehaviour
 
                                     if (hit)
                                     {
+                                        enemyClicked = hit.collider.GetComponent<Enemy>();
+
+                                        if (enemyClicked != null && availableEnemies.Contains(enemyClicked))
+                                        {
+                                            ClearAvailableEnemyList();
+                                            FindAvailableSpotsEnemy(enemyClicked);
+                                            enemyClicked.GetComponent<SpriteRenderer>().color = Color.blue;
+                                            objectSelected = true;
+                                            FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Lift");
+                                        }
+
                                         obstacleClicked = hit.collider.GetComponent<Obstacle>();
 
                                         //If we hit then we reset our obstacle list and set the object selected
@@ -323,14 +363,17 @@ public class GameManager : MonoBehaviour
                             if (Input.GetKeyDown(KeyCode.Q))
                             {
                                 usingAbility = false;
+                                objectSelected = false;
                                 playerCam.moveButton.interactable = true;
                                 ClearAvailableObstaclesList();
+                                ClearAvailableEnemyList();
                             }
                         }
                         else
                         {
                             currentPlayerState = PlayerState.MOVEMENT;
                             ClearAvailableObstaclesList();
+                            ClearAvailableEnemyList();
                         }
                         break;
 
@@ -707,6 +750,116 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void FindAvailableSpotsEnemy(Enemy enemyToMove)
+    {
+        //This is our openList
+        List<Tile> openList = new List<Tile>();
+
+        //We want to start our search for available tiles with the player's tile since all of them will be near the player
+        openList.Add(tileBoard[enemyToMove.X, enemyToMove.Y]);
+
+        Tile currentTile;
+
+        //Distance of our player to the point
+        float distance;
+
+        List<Vector2> positions = new List<Vector2>();
+
+        foreach (Obstacle e in obstManager.obstacles)
+        {
+            positions.Add(new Vector2(e.X, e.Y));
+        }
+
+        positions.Add(new Vector2(player.X, player.Y));
+
+        Vector2 posToBeChecked = new Vector2();
+
+        //We iterate through till we have nothing viable anymore
+        while (openList.Count > 0)
+        {
+            currentTile = openList[0];
+
+            //Handling our X positive neighbor
+            //Checking to make sure the X doesn't go under 0, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
+            //that the player is contained in the availabletiles and that the tile is not the one we started on
+            posToBeChecked = new Vector2(currentTile.X + 1, currentTile.Y);
+            distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(enemyToMove.X, enemyToMove.Y)));
+
+            if (currentTile.X != GRID_WIDTH - 1 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
+            distance <= obstacleMovementRange && !enemyAvailableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
+            && !positions.Contains(posToBeChecked))
+            {
+                if (tileBoard[currentTile.X + 1, currentTile.Y].walkable == true)
+                {
+                    tileBoard[currentTile.X + 1, currentTile.Y].dist = distance;
+                    openList.Add(tileBoard[currentTile.X + 1, currentTile.Y]);
+                    enemyAvailableTiles.Add(tileBoard[currentTile.X + 1, currentTile.Y]);
+                }
+            }
+
+            //Handling our X negative neighbor
+            //Checking to make sure the X doesn't go over our limit, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
+            //that the player is contained in the availabletiles and that the tile is not the one we started on
+            posToBeChecked = new Vector2(currentTile.X - 1, currentTile.Y);
+            distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(enemyToMove.X, enemyToMove.Y)));
+            if (currentTile.X != 0 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
+            distance <= obstacleMovementRange && !enemyAvailableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
+            && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
+            {
+                if (tileBoard[currentTile.X - 1, currentTile.Y].walkable == true)
+                {
+                    tileBoard[currentTile.X - 1, currentTile.Y].dist = distance;
+                    openList.Add(tileBoard[currentTile.X - 1, currentTile.Y]);
+                    enemyAvailableTiles.Add(tileBoard[currentTile.X - 1, currentTile.Y]);
+                }
+            }
+
+            //Handling our Y Positve neighbor
+            //Checking to make sure the Y doesn't go over our limit, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
+            //that the player is contained in the availabletiles and that the tile is not the one we started on
+            posToBeChecked = new Vector2(currentTile.X, currentTile.Y + 1);
+            distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(enemyToMove.X, enemyToMove.Y)));
+            if (currentTile.Y != GRID_HEIGHT - 1 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
+            distance <= obstacleMovementRange && !enemyAvailableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
+            && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
+            {
+                if (tileBoard[currentTile.X, currentTile.Y + 1].walkable == true)
+                {
+                    tileBoard[currentTile.X, currentTile.Y + 1].dist = distance;
+                    openList.Add(tileBoard[currentTile.X, currentTile.Y + 1]);
+                    enemyAvailableTiles.Add(tileBoard[currentTile.X, currentTile.Y + 1]);
+                }
+            }
+
+            //Handling our y negative neighbor
+            //Checking to make sure the Y doesn't go under 0, To make sure there is an actual tile there, that there is not an obstacle there, The tile is in range of the player,
+            //that the player is contained in the availabletiles and that the tile is not the one we started on
+            posToBeChecked = new Vector2(currentTile.X, currentTile.Y - 1);
+            distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(enemyToMove.X, enemyToMove.Y)));
+            if (currentTile.Y != 0 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
+            distance <= obstacleMovementRange && !enemyAvailableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
+            && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
+            {
+                if (tileBoard[currentTile.X, currentTile.Y - 1].walkable == true)
+                {
+                    tileBoard[currentTile.X, currentTile.Y - 1].dist = distance;
+                    openList.Add(tileBoard[currentTile.X, currentTile.Y - 1]);
+                    enemyAvailableTiles.Add(tileBoard[currentTile.X, currentTile.Y - 1]);
+                }
+            }
+
+            //After checking all neighbors we remove the tile we just checked and then go to the next one to check it's neighbors(If there is another tile on the openlist)
+            openList.RemoveAt(0);
+        }
+
+        //Changing all the tiles to a yellow color
+        foreach (Tile t in enemyAvailableTiles)
+        {
+            t.ResetColorValues();
+            t.highlight = true;
+        }
+    }
+
     private void FindAvailableObstacles()
     {
         float distance;
@@ -717,6 +870,20 @@ public class GameManager : MonoBehaviour
             {
                 availableObstacles.Add(o);
                 o.highlight = true;
+            }
+        }
+    }
+
+    private void FindAvailableEnemies()
+    {
+        float distance;
+        foreach (Enemy e in enemyManager.Enemies)
+        {
+            distance = Vector2.Distance(e.transform.position, player.currentTile.transform.position);
+            if (distance <= player.moveDist)
+            {
+                availableEnemies.Add(e);
+                e.highlight = true;
             }
         }
     }
@@ -883,6 +1050,7 @@ public class GameManager : MonoBehaviour
         ClearAvailableBushesList();
         ClearAvailableWaterList();
         FindAvailableObstacles();
+        FindAvailableEnemies();
         currentPlayerState = PlayerState.ABILITYMOVE;
         SetButtonOff(playerCam.moveButton);
     }
@@ -893,6 +1061,7 @@ public class GameManager : MonoBehaviour
         ClearAvailableTileList(availableTiles);
         ClearAvailableWaterList();
         ClearAvailableObstaclesList();
+        ClearAvailableEnemyList();
         FindAvailableBushes();
         currentPlayerState = PlayerState.ABILITYBURN;
         SetButtonOff(playerCam.burnButton);
@@ -905,6 +1074,7 @@ public class GameManager : MonoBehaviour
         ClearAvailableTileList(availableTiles);
         ClearAvailableBushesList();
         ClearAvailableObstaclesList();
+        ClearAvailableEnemyList();
         currentPlayerState = PlayerState.ABILITYFREEZE;
         SetButtonOff(playerCam.freezeButton);
     }
@@ -992,7 +1162,16 @@ public class GameManager : MonoBehaviour
             w.ResetColorValues();
         }
     }
-    
+
+    private void ClearAvailableEnemyList()
+    {
+        foreach (Enemy e in availableEnemies)
+        {
+            e.highlight = false;
+            e.ResetColorValues();
+        }
+    }
+
     // Returns true if the currentTile is the win tile, false otherwise
     private bool OnWinTile(Tile currentTile)
     {

@@ -15,7 +15,7 @@ MonoBehaviour:
   SwitchSettingsMigration: 1
   HasSourceProject: 0
   HasPlatforms: 0
-  sourceProjectPath: ../../TheCallFMODProject/TheCallFMOD/TheCallFMOD.fspro
+  sourceProjectPath: 
   sourceBankPath: FMODAssets/Desktop
   SourceBankPathUnformatted: 
   AutomaticEventLoading: 1
