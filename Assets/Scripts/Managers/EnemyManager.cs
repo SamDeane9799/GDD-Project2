@@ -33,10 +33,8 @@ public class EnemyManager : MonoBehaviour
         foreach (Enemy e in enemies)
         {
             //If our enemy has its search variable on then it should be searching for the player
-            if (enemiesSearch)
-            {
-                e.DetectPlayer(RAYSPROJECTED);
-            }
+            e.DetectPlayer(RAYSPROJECTED);
+
         }
         //If it is the enemies turn we do this
         if (enemyTurn)
