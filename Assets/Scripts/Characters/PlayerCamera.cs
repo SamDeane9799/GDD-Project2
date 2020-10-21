@@ -119,11 +119,10 @@ public class PlayerCamera : MonoBehaviour
                     canvasTracker.Pop();
                 }
             }
-            if (levelText.color.a <= 0.05f)
+            if (levelText.color.a <= 0.01f && levelCanvas.gameObject.activeSelf)
             {
                 Debug.Log("Disabling");
                 levelCanvas.gameObject.SetActive(false);
-                abilityCanvas.gameObject.SetActive(true);
             }
         }
     }
@@ -149,6 +148,7 @@ public class PlayerCamera : MonoBehaviour
         Debug.Log("Loading Level " + level);
         GameManager.gameManagerObject.LoadNextScene();
         titleCanvas.gameObject.SetActive(false);
+        abilityCanvas.gameObject.SetActive(true);
         levelCanvas.gameObject.SetActive(true);
         canvasTracker.Clear();
     }
@@ -275,6 +275,7 @@ public class PlayerCamera : MonoBehaviour
             Debug.Log("Starting level canvas");
             levelCanvas.gameObject.SetActive(true);
             levelText.text = "Level " + level;
+            levelText.color = new Color(levelText.color.r, levelText.color.g, levelText.color.b, 1.0f);
         }
     }
 
