@@ -15,7 +15,7 @@ public class PlayerCamera : MonoBehaviour
     }
 
     [SerializeField]
-    private const int MAX_LEVEL = 5;
+    private const int MAX_LEVEL = 15;
 
     #region UI Variables
     [Header("UI Variables")]

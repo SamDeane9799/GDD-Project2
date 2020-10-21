@@ -40,6 +40,7 @@ public class EnemyManager : MonoBehaviour
         if (enemyTurn)
         {
             //If the enemy has an action point then they should take their turn
+            Debug.Log(enemies[index].actionPoints);
             if (enemies[index].actionPoints > 0)
                 enemies[index].EnemyTurn();
             //If they don't have an action point and they arent moving then we should go to the next enemy
