@@ -200,16 +200,16 @@ public class GameManager : MonoBehaviour
 
         //Reading in the values for the settings
         float masterVolume = float.Parse(reader.ReadLine());
-        FMODUnity.RuntimeManager.GetBus("bus:/").setVolume(masterVolume);
-        //SetBusVolume("bus:/", masterVolume * 5);
+        //FMODUnity.RuntimeManager.GetBus("bus:/").setVolume(masterVolume);
+        SetBusVolume("bus:/", masterVolume);
 
         float soundFXVolume = float.Parse(reader.ReadLine());
-        FMODUnity.RuntimeManager.GetBus("bus:/SFX").setVolume(soundFXVolume);
-        //SetBusVolume("bus:/SFX", soundFXVolume * 5);
+        //FMODUnity.RuntimeManager.GetBus("bus:/SFX").setVolume(soundFXVolume);
+        SetBusVolume("bus:/SFX", soundFXVolume);
 
         float musicVolume = float.Parse(reader.ReadLine());
-        FMODUnity.RuntimeManager.GetBus("bus:/Music").setVolume(musicVolume);
-        //SetBusVolume("bus:/Music", musicVolume * 5);
+        //FMODUnity.RuntimeManager.GetBus("bus:/Music").setVolume(musicVolume);
+        SetBusVolume("bus:/Music", musicVolume);
 
         reader.Close();
         //Initializing player
