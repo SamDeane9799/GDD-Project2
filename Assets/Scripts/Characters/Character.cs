@@ -29,7 +29,7 @@ public class Character : LevelObject
         }
     }
 
-    private void MoveToTile()
+    public virtual void MoveToTile()
     {
         //Checking if we reached our destination
         if (Mathf.Abs(Vector2.Distance(transform.position, currentTile.gameObject.transform.position)) <= .01f)
