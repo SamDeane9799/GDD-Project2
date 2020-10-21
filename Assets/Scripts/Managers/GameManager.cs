@@ -218,8 +218,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Checking if we're in a level scene
         if (SceneManager.GetActiveScene().name != "StartScene")
         {
+            //Checking if it's the players turn
             if (currentGameState == GameState.PLAYERTURN)
             {
                 switch (currentPlayerState)
@@ -1122,6 +1124,7 @@ public class GameManager : MonoBehaviour
         return hit;
     }
 
+    //Clears a list of tiles and sets their highlight to false
     private void ClearAvailableTileList(List<Tile> listToClear)
     {
         foreach (Tile t in listToClear)
@@ -1133,6 +1136,7 @@ public class GameManager : MonoBehaviour
         listToClear.Clear();
     }
 
+    //Clears a list of obstacles and sets their highlight to false
     private void ClearAvailableObstaclesList()
     {
         foreach (Obstacle o in availableObstacles)
@@ -1144,6 +1148,7 @@ public class GameManager : MonoBehaviour
         availableObstacles.Clear();
     } 
 
+    //Clears a list of bushes and sets their highlight to false
     private void ClearAvailableBushesList()
     {
         foreach(Bush b in availableBushes)
@@ -1153,6 +1158,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //Clears a list of water tiles
     private void ClearAvailableWaterList()
     {
         foreach(WaterTile w in availableWater)
@@ -1162,6 +1168,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //Clears a list of enemies
     private void ClearAvailableEnemyList()
     {
         foreach (Enemy e in availableEnemies)
@@ -1222,7 +1229,6 @@ public class GameManager : MonoBehaviour
     public void LoadNextScene()
     {
         SceneManager.LoadScene(playerCam.Level);
-        playerCam.UpdateLevels();
         availableTiles.Clear();
         instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
     }

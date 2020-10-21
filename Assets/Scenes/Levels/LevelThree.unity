@@ -712,6 +712,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
+    - target: {fileID: 5981622050123870110, guid: ea4a1b67e98f41d4abbf1c98e405ccbc,
+        type: 3}
+      propertyPath: gridRef
+      value: 
+      objectReference: {fileID: 102144129}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea4a1b67e98f41d4abbf1c98e405ccbc, type: 3}
 --- !u!4 &67998163 stripped
@@ -981,6 +986,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
+    - target: {fileID: 5981622050123870110, guid: ea4a1b67e98f41d4abbf1c98e405ccbc,
+        type: 3}
+      propertyPath: gridRef
+      value: 
+      objectReference: {fileID: 102144129}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea4a1b67e98f41d4abbf1c98e405ccbc, type: 3}
 --- !u!4 &120565347 stripped
@@ -11880,7 +11890,7 @@ PrefabInstance:
     - target: {fileID: 7685993849536090507, guid: 1fa61fd0e10b33c4096517e10df834e3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 7685993849536090507, guid: 1fa61fd0e10b33c4096517e10df834e3,
         type: 3}
@@ -13572,6 +13582,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
+    - target: {fileID: 5981622050123870110, guid: ea4a1b67e98f41d4abbf1c98e405ccbc,
+        type: 3}
+      propertyPath: gridRef
+      value: 
+      objectReference: {fileID: 102144129}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea4a1b67e98f41d4abbf1c98e405ccbc, type: 3}
 --- !u!4 &1323762227 stripped
@@ -17322,6 +17337,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
+    - target: {fileID: 5981622050123870110, guid: ea4a1b67e98f41d4abbf1c98e405ccbc,
+        type: 3}
+      propertyPath: gridRef
+      value: 
+      objectReference: {fileID: 102144129}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea4a1b67e98f41d4abbf1c98e405ccbc, type: 3}
 --- !u!4 &1674811480 stripped
@@ -20792,6 +20812,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
+    - target: {fileID: 5981622050123870110, guid: ea4a1b67e98f41d4abbf1c98e405ccbc,
+        type: 3}
+      propertyPath: gridRef
+      value: 
+      objectReference: {fileID: 102144129}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea4a1b67e98f41d4abbf1c98e405ccbc, type: 3}
 --- !u!4 &2051100319 stripped

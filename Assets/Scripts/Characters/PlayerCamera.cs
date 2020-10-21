@@ -54,20 +54,14 @@ public class PlayerCamera : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(this);
+        //Pushing the initial canvas onto our stack
         canvasTracker.Push(titleCanvas);
 
+        //Adding the onload method to the Scenemanager
         SceneManager.sceneLoaded += OnLoad;
-        //if(SceneManager.GetActiveScene().name != "StartScene")
-        //{
-        //    abilityCanvas.gameObject.SetActive(true);
-        //}
-
-        //soundfxVolumeSlider.value = GameManager.soundFXVolume;
-        //musicSoundVolumeSlider.value = GameManager.musicVolume;
-        //masterSoundVolumeSlider.value = GameManager.masterVolume;
-        //GameManager.musicSources.Add(GetComponent<AudioSource>());
         applyButton.interactable = false;
 
+        //Reading in the data on how far the user has gotten in the game
         reader = new StreamReader(Application.dataPath + "/StreamingAssets/txt/levels.txt");
         bool loop = true;
         int line = int.Parse(reader.ReadLine());
@@ -81,8 +75,6 @@ public class PlayerCamera : MonoBehaviour
         }
         reader.Close();
         highestLevelAcheived = level;
-
-        ApplySoundChanges();
     }
 
     // Update is called once per frame
@@ -126,10 +118,10 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
+    #region Button Methods
     //Loads to the next scene
     public void StartButton()
     {
-        //level++;
         Debug.Log("Level value: " + level);
 
         // This if statement facilitates "Completion Mode"
@@ -224,7 +216,7 @@ public class PlayerCamera : MonoBehaviour
 
         applyButton.interactable = false;
 
-        ApplySoundChanges();
+        //ApplySoundChanges();
     }
 
     //Button used to go back to the main menu
@@ -244,6 +236,14 @@ public class PlayerCamera : MonoBehaviour
         canvasTracker.Clear();
     }
 
+    //Button used to move the user to the next scene
+    public void ContinueButton()
+    {
+        GameManager.gameManagerObject.LoadNextScene();
+    }
+    #endregion
+
+    //When the player completes a level we update the txt file with which one is complete
     public void UpdateLevels()
     {
         if (level >= highestLevelAcheived) // Ensures that the player can't "re-lock" levels by completing earlier levels acesssed via the level selector
@@ -264,8 +264,12 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
+    //When the level is complete we want to set up the UI appropriately
     public void LevelComplete()
     {
+        //Updating our levels.txt as soon as we finish the level
+        UpdateLevels();
+
         levelCanvas.gameObject.SetActive(true);
         levelText.text = "Completed Level " + level;
         levelText.color = Color.white;
@@ -275,10 +279,6 @@ public class PlayerCamera : MonoBehaviour
         abilityCanvas.gameObject.SetActive(false);
     }
 
-    public void ContinueButton()
-    {
-        GameManager.gameManagerObject.LoadNextScene();
-    }
 
     public void OnLoad(Scene scene, LoadSceneMode mode)
     {
@@ -296,18 +296,5 @@ public class PlayerCamera : MonoBehaviour
             levelText.text = "Level " + level;
             levelText.color = new Color(levelText.color.r, levelText.color.g, levelText.color.b, 1.0f);
         }
-    }
-
-    //Loops through our lists of audiosources and adjusts their volumes
-    private void ApplySoundChanges()
-    {
-        //foreach (AudioSource a in GameManager.musicSources)
-        //{
-        //    a.volume = GameManager.musicVolume;
-        //}
-        //foreach (AudioSource a in GameManager.soundFXSources)
-        //{
-        //    a.volume = GameManager.soundFXVolume;
-        //}
     }
 }

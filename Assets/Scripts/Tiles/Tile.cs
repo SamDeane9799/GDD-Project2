@@ -12,7 +12,6 @@ public class Tile : LevelObject
 
     void Awake()
     {
-        //Adding the tiles to the tile board
     }
 
     // Update is called once per frame
