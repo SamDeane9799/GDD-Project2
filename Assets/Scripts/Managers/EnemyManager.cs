@@ -18,6 +18,7 @@ public class EnemyManager : MonoBehaviour
     {
         get { return enemies; }
     }
+    [SerializeField]
     private List<Enemy> enemies = new List<Enemy>();
     #endregion
 
