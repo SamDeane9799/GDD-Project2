@@ -267,6 +267,11 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
+    public void LevelComplete()
+    {
+
+    }
+
     public void OnLoad(Scene scene, LoadSceneMode mode)
     {
         //Using this to load in the player when we load into the specific scene

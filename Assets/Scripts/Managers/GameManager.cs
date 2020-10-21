@@ -358,7 +358,7 @@ public class GameManager : MonoBehaviour
                                 }
                             }
 
-                            if (Input.GetKeyDown(KeyCode.Q))
+                            if (Input.GetMouseButtonDown(1))
                             {
                                 usingAbility = false;
                                 objectSelected = false;
