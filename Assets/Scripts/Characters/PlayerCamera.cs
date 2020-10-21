@@ -167,6 +167,28 @@ public class PlayerCamera : MonoBehaviour
         if (!applyButton.interactable)
             applyButton.interactable = true;
 
+        if (index == 2)
+        {
+            FMOD.Studio.Bus musicBus;
+            musicBus = FMODUnity.RuntimeManager.GetBus("bus:/Music");
+
+            musicBus.setVolume(5 * musicSoundVolumeSlider.value);
+        }
+        else if (index == 1)
+        {
+            FMOD.Studio.Bus sfxBus;
+            sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/SFX");
+
+            sfxBus.setVolume(5 * soundfxVolumeSlider.value);
+        }
+        else if (index == 0)
+        {
+            FMOD.Studio.Bus masterBus;
+            masterBus = FMODUnity.RuntimeManager.GetBus("bus:/");
+
+            masterBus.setVolume(5 * masterSoundVolumeSlider.value);
+        }
+
         ////Used for all volume sliders to calculate what we should change the sound settings to
         //if (index == 0)
         //{

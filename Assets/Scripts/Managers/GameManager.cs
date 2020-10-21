@@ -942,8 +942,8 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < enemyArray.Length; i++) 
         {
             // Instantiate at correct positions
-            Enemy newEnemy = enemyArray[i].GetComponent<Enemy>();
-            newEnemy.currentTile = tileBoard[(int)(newEnemy.transform.position.x + 9.5f), (int)(newEnemy.transform.position.y + 5.5f)];
+            Enemy newEnemy = enemyArray[i].GetComponent<Enemy>();            
+            newEnemy.currentTile = tileBoard[(int)(newEnemy.transform.position.x + (float)(GameManager.GRID_WIDTH / 2)), (int)(newEnemy.transform.position.y + (float)(GameManager.GRID_HEIGHT / 2))];
 
             // Create unique name for enemy
             newEnemy.name = newEnemy.name + i;
@@ -994,10 +994,10 @@ public class GameManager : MonoBehaviour
 
         for(int i = 0; i < tiles.Length; i++)
         {
-            GameManager.tileBoard[(int)((float)(GameManager.GRID_WIDTH / 2) + tiles[i].transform.position.x), (int)((float)(GameManager.GRID_HEIGHT / 2) + tiles[i].transform.position.y)] = tiles[i].GetComponent<Tile>();
+            GameManager.tileBoard[(int)(9.5 + tiles[i].transform.position.x), (int)(5.5 + tiles[i].transform.position.y)] = tiles[i].GetComponent<Tile>();
         }
         GameObject winTile = GameObject.FindGameObjectWithTag("WinTile");
-        GameManager.tileBoard[(int)((float)(GameManager.GRID_WIDTH / 2) + winTile.transform.position.x), (int)((float)(GameManager.GRID_HEIGHT / 2) + winTile.transform.position.y)] = winTile.GetComponent<Tile>();
+        GameManager.tileBoard[(int)(9.5 + winTile.transform.position.x), (int)(5.5 + winTile.transform.position.y)] = winTile.GetComponent<Tile>();
 
         
     }
