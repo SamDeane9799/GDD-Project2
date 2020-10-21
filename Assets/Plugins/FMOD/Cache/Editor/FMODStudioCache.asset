@@ -15,7 +15,7 @@ MonoBehaviour:
   Path: event:/Music/Gameplay
   guid: c939797175bffe44959e44315cda7f2e
   Banks:
-  - {fileID: -6851273894809620073}
+  - {fileID: -3319998558358953915}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -56,7 +56,7 @@ MonoBehaviour:
   Path: event:/Test/Shwing
   guid: 3bebe7ec5bcc90489fee68ca6560f322
   Banks:
-  - {fileID: -6851273894809620073}
+  - {fileID: -3319998558358953915}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -79,7 +79,7 @@ MonoBehaviour:
   Path: event:/Abilities/Telekenesis/Place
   guid: 36a56845c8a1284fa1b87f3ab8dcd956
   Banks:
-  - {fileID: -6851273894809620073}
+  - {fileID: -3319998558358953915}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -102,7 +102,7 @@ MonoBehaviour:
   Path: event:/Abilities/Telekenesis/Lift
   guid: 9ec0dd9b93aed343a1bb744ddd43beb4
   Banks:
-  - {fileID: -6851273894809620073}
+  - {fileID: -3319998558358953915}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -124,11 +124,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: FMODAssets/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637382823168656296
+  lastModified: 637381093362708448
   LoadResult: 0
   FileSizes:
   - Name: 
     Value: 1302
+  Exists: 1
+--- !u!114 &-3319998558358953915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: FMODAssets/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637385301901363405
+  LoadResult: 0
+  FileSizes: []
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -144,7 +162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: -3736299215755533452}
-  - {fileID: -6851273894809620073}
+  - {fileID: -3319998558358953915}
   EditorEvents:
   - {fileID: -4592454545825622850}
   - {fileID: -5137481162414522355}
@@ -155,10 +173,10 @@ MonoBehaviour:
   - {fileID: -8800344978156383749}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -6851273894809620073}
+  - {fileID: -3319998558358953915}
   StringsBanks:
   - {fileID: -3736299215755533452}
-  stringsBankWriteTime: 637382823168656296
+  stringsBankWriteTime: 637381093362708448
   cacheVersion: 3
 --- !u!114 &3315855957356472457
 MonoBehaviour:
@@ -175,7 +193,7 @@ MonoBehaviour:
   Path: event:/Abilities/Burn
   guid: 5ee402967fe80a468e2eaeae268019af
   Banks:
-  - {fileID: -6851273894809620073}
+  - {fileID: -3319998558358953915}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -198,7 +216,7 @@ MonoBehaviour:
   Path: event:/Abilities/Freeze
   guid: 8d926743b68bc84c9b482e16dbaad678
   Banks:
-  - {fileID: -6851273894809620073}
+  - {fileID: -3319998558358953915}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -221,7 +239,7 @@ MonoBehaviour:
   Path: event:/Music/MainMenu
   guid: c0a6fb83eea2244fa4e3ca7ca1c33c00
   Banks:
-  - {fileID: -6851273894809620073}
+  - {fileID: -3319998558358953915}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
