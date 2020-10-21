@@ -47,6 +47,10 @@ public class Enemy : Character
             currentTile = GameManager.tileBoard[(int)Mathf.Round(nextPosition.x), (int)Mathf.Round(nextPosition.y)];
             actionPoints -= 1;
         }
+        else
+        {
+            actionPoints -= 1;
+        }
     }
 
     //This is our method that is used to detect players
