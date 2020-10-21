@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour
 
     #region File IO
     private StreamReader reader;
-    private const string settingsPath = "Assets/txt/settings.txt";
+    private string settingsPath;
     #endregion
 
     #region TileBoard
@@ -193,18 +193,24 @@ public class GameManager : MonoBehaviour
         //musicSources = new List<AudioSource>();
         //soundFXSources = new List<AudioSource>();
 
-        ////Reading in our settings from a text file
-        ////Here is one example using volume
-        /*soundSettings = new List<float>(3);
+        //Reading in our settings from a text file
+        //Here is one example using volume
+        settingsPath = Application.dataPath + "/StreamingAssets/txt/settings.txt";
         reader = new StreamReader(settingsPath);
 
-        soundSettings.Add(float.Parse(reader.ReadLine()));
-        soundSettings.Add(float.Parse(reader.ReadLine()));
-        soundSettings.Add(float.Parse(reader.ReadLine()));
+        //Reading in the values for the settings
+        float masterVolume = float.Parse(reader.ReadLine());
+        //SetBusVolume("bus:/", masterVolume * 5);
 
-        reader.Close();*/
+        float soundFXVolume = float.Parse(reader.ReadLine());
+        //SetBusVolume("bus:/SFX", soundFXVolume * 5);
+
+        float musicVolume = float.Parse(reader.ReadLine());
+        //SetBusVolume("bus:/Music", musicVolume * 5);
+
+        reader.Close();
         //Initializing player
-        if(playerCam == null)
+        if (playerCam == null)
             InitializePlayerCam();
 
         abilityButtons = new List<Button>();
@@ -213,6 +219,13 @@ public class GameManager : MonoBehaviour
         abilityButtons.Add(playerCam.freezeButton);
 
         SetUpAbilityButtons();
+
+        //Setting the sliders values to what was read in the settings
+        playerCam.masterSoundVolumeSlider.value = masterVolume;
+        playerCam.soundfxVolumeSlider.value = soundFXVolume;
+        playerCam.musicSoundVolumeSlider.value = musicVolume;
+
+        playerCam.lossReset.onClick.AddListener(ResetButton);
     }
 
     // Update is called once per frame
@@ -516,6 +529,10 @@ public class GameManager : MonoBehaviour
             }
             else if (currentGameState == GameState.LOSE)
             {
+                if(!playerCam.levelCanvas.isActiveAndEnabled)
+                {
+                    playerCam.LevelLost();
+                }
                 Debug.Log("LOSER LOL!!!!");
             }
             else if (currentGameState == GameState.WIN)
@@ -1241,7 +1258,7 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    /*      
+        
 
      #region Sound Methods
 
@@ -1260,7 +1277,4 @@ public class GameManager : MonoBehaviour
      }
 
      #endregion
-    }
-    */
-
 }
