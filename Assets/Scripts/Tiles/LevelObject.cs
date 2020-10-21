@@ -4,10 +4,6 @@ using UnityEngine;
 
 public abstract class LevelObject : MonoBehaviour
 {
-    // instance of the test sound effect
-    private FMOD.Studio.EventInstance testInstance;
-
-
     public bool highlight;
     public float colorValue;
     public float targetValue;
@@ -33,28 +29,11 @@ public abstract class LevelObject : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        //TestFMOD();
         if (highlight)
         {
             Highlight();
         }
     }
-
-    // Changes color of the prefab when mouse buttons are pressed and plays a test sfx
-    //protected void TestFMOD()
-    //{
-    //    if (Input.GetMouseButtonDown(0))
-    //    {
-    //        testInstance.start();
-    //        testInstance.release();
-    //    }
-
-    //    if (Input.GetMouseButtonDown(1))
-    //    {
-    //        testInstance.start();
-    //        testInstance.release();
-    //    }
-    //}
 
     private void Highlight()
     {
