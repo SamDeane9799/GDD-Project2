@@ -29,12 +29,12 @@ public class PlayerCamera : MonoBehaviour
     public Button burnButton;
     public Button resetButton;
     public Button passButton;
+    public Button lossReset;
     public Stack<Canvas> canvasTracker = new Stack<Canvas>();
 
     public Slider musicSoundVolumeSlider;
     public Slider soundfxVolumeSlider;
     public Slider masterSoundVolumeSlider;
-    public Button applyButton;
 
     public List<Button> levelSelectButtons;
     #endregion
@@ -59,7 +59,6 @@ public class PlayerCamera : MonoBehaviour
 
         //Adding the onload method to the Scenemanager
         SceneManager.sceneLoaded += OnLoad;
-        applyButton.interactable = false;
 
         //Reading in the data on how far the user has gotten in the game
         reader = new StreamReader(Application.dataPath + "/StreamingAssets/txt/levels.txt");
@@ -157,6 +156,8 @@ public class PlayerCamera : MonoBehaviour
     public void BackButton()
     {
         Debug.Log("Back Button Pressed");
+        if (canvasTracker.Peek().name == "SettingsCanvas")
+            ApplyButton();
         canvasTracker.Peek().gameObject.SetActive(false);
         canvasTracker.Pop();
         canvasTracker.Peek().gameObject.SetActive(true);
@@ -164,9 +165,6 @@ public class PlayerCamera : MonoBehaviour
 
     public void VolumeSlider(int index)
     {
-        if (!applyButton.interactable)
-            applyButton.interactable = true;
-
         if (index == 2)
         {
             FMOD.Studio.Bus musicBus;
@@ -188,19 +186,6 @@ public class PlayerCamera : MonoBehaviour
 
             masterBus.setVolume(5 * masterSoundVolumeSlider.value);
         }
-
-        ////Used for all volume sliders to calculate what we should change the sound settings to
-        //if (index == 0)
-        //{
-        //    GameManager.masterVolume = masterSoundVolumeSlider.value;
-        //    GameManager.musicVolume = musicSoundVolumeSlider.value * GameManager.masterVolume;
-        //    GameManager.soundFXVolume = soundfxVolumeSlider.value * GameManager.masterVolume;
-        //}
-        //else if (index == 1)
-        //    GameManager.soundFXVolume = soundfxVolumeSlider.value * GameManager.masterVolume;
-        //else if (index == 2)
-        //    GameManager.musicVolume = musicSoundVolumeSlider.value * GameManager.masterVolume;
-
     }
 
     //Exits application when clicked
@@ -209,8 +194,9 @@ public class PlayerCamera : MonoBehaviour
         if (SceneManager.GetActiveScene().name != "StartScene")
         {
             ResumeButton();
-            canvasTracker.Pop();
+            canvasTracker.Clear();
             abilityCanvas.gameObject.SetActive(false);
+            levelCanvas.gameObject.SetActive(false);
             titleCanvas.gameObject.SetActive(true);
             SceneManager.LoadScene(0);
             Awake();
@@ -229,16 +215,13 @@ public class PlayerCamera : MonoBehaviour
     //Button used to apply settings so user can test them in the settings screen
     public void ApplyButton()
     {
+        Debug.Log("Applying settings");
         //Writing the changes to the txt file
         writer = new StreamWriter(settingsPath);
         writer.Write(masterSoundVolumeSlider.value.ToString() + "\n");
         writer.Write(soundfxVolumeSlider.value.ToString() + "\n");
         writer.Write(musicSoundVolumeSlider.value.ToString() + "\n");
         writer.Close();
-
-        applyButton.interactable = false;
-
-        //ApplySoundChanges();
     }
 
     //Button used to go back to the main menu
@@ -301,6 +284,17 @@ public class PlayerCamera : MonoBehaviour
         abilityCanvas.gameObject.SetActive(false);
     }
 
+    public void LevelLost()
+    {
+
+        levelCanvas.gameObject.SetActive(true);
+        levelText.text = "You've been caught!";
+        levelText.color = Color.white;
+        levelText.GetComponent<FadingText>().enabled = false;
+        levelCanvas.transform.GetChild(2).gameObject.SetActive(true);
+        levelCanvas.transform.GetChild(3).gameObject.SetActive(true);
+    }
+
 
     public void OnLoad(Scene scene, LoadSceneMode mode)
     {
@@ -311,6 +305,8 @@ public class PlayerCamera : MonoBehaviour
             //Also enabling our ability canvas
             levelCanvas.gameObject.SetActive(true);
             abilityCanvas.gameObject.SetActive(true);
+            levelCanvas.transform.GetChild(2).gameObject.SetActive(false);
+            levelCanvas.transform.GetChild(3).gameObject.SetActive(false);
 
             levelCanvas.transform.GetChild(1).gameObject.SetActive(false);
             levelText.GetComponent<FadingText>().enabled = true;
