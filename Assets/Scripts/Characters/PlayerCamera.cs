@@ -119,11 +119,9 @@ public class PlayerCamera : MonoBehaviour
                     canvasTracker.Pop();
                 }
             }
-            if (levelText.color.a <= 0.05f)
+            if (levelText.color.a <= 0.01f && levelCanvas.gameObject.activeSelf)
             {
-                Debug.Log("Disabling");
                 levelCanvas.gameObject.SetActive(false);
-                abilityCanvas.gameObject.SetActive(true);
             }
         }
     }
@@ -149,7 +147,6 @@ public class PlayerCamera : MonoBehaviour
         Debug.Log("Loading Level " + level);
         GameManager.gameManagerObject.LoadNextScene();
         titleCanvas.gameObject.SetActive(false);
-        levelCanvas.gameObject.SetActive(true);
         canvasTracker.Clear();
     }
 
@@ -267,14 +264,37 @@ public class PlayerCamera : MonoBehaviour
         }
     }
 
+    public void LevelComplete()
+    {
+        levelCanvas.gameObject.SetActive(true);
+        levelText.text = "Completed Level " + level;
+        levelText.color = Color.white;
+        levelText.GetComponent<FadingText>().enabled = false;
+        levelCanvas.transform.GetChild(1).gameObject.SetActive(true);
+
+        abilityCanvas.gameObject.SetActive(false);
+    }
+
+    public void ContinueButton()
+    {
+        GameManager.gameManagerObject.LoadNextScene();
+    }
+
     public void OnLoad(Scene scene, LoadSceneMode mode)
     {
         //Using this to load in the player when we load into the specific scene
         if (scene.name != "StartScene")
         {
-            Debug.Log("Starting level canvas");
+            //Enabling our level Canvas with the fading text and no button
+            //Also enabling our ability canvas
             levelCanvas.gameObject.SetActive(true);
+            abilityCanvas.gameObject.SetActive(true);
+
+            levelCanvas.transform.GetChild(1).gameObject.SetActive(false);
+            levelText.GetComponent<FadingText>().enabled = true;
+
             levelText.text = "Level " + level;
+            levelText.color = new Color(levelText.color.r, levelText.color.g, levelText.color.b, 1.0f);
         }
     }
 

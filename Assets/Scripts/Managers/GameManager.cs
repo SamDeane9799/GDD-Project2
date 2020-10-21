@@ -358,7 +358,7 @@ public class GameManager : MonoBehaviour
                                 }
                             }
 
-                            if (Input.GetKeyDown(KeyCode.Q))
+                            if (Input.GetMouseButtonDown(1))
                             {
                                 usingAbility = false;
                                 objectSelected = false;
@@ -487,7 +487,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log("YOU WIN");
                     currentGameState = GameState.WIN;
                     playerCam.Level += 1;
-                    LoadNextScene();
+                    playerCam.LevelComplete();
+                    ClearAvailableTileList(availableTiles);
                     return;
                 }
                 if (enemyManager.Enemies.Count == 0)
