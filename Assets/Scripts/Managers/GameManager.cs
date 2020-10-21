@@ -218,6 +218,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(currentGameState);
         //Checking if we're in a level scene
         if (SceneManager.GetActiveScene().name != "StartScene")
         {
@@ -998,7 +999,7 @@ public class GameManager : MonoBehaviour
         GameObject winTile = GameObject.FindGameObjectWithTag("WinTile");
         GameManager.tileBoard[(int)((float)(GameManager.GRID_WIDTH / 2) + winTile.transform.position.x), (int)((float)(GameManager.GRID_HEIGHT / 2) + winTile.transform.position.y)] = winTile.GetComponent<Tile>();
 
-
+        
     }
     public void InitializePlayerCam()
     {
@@ -1203,6 +1204,7 @@ public class GameManager : MonoBehaviour
     public void OnEnemyTurn()
     {
         //The current gamestate is switched to the enemyturn. We call the OnEnemyTurn to reset their values for their turn
+        Debug.Log("Called enemy turn");
         currentGameState = GameState.ENEMYTURN;
         enemyManager.OnEnemyTurn();
         enemyManager.enemyTurn = true;

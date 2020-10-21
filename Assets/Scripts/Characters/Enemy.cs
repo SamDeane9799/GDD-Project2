@@ -39,7 +39,7 @@ public class Enemy : Character
     {
         //Checking if we can continue to move in our direction that we are already in
         Vector2 nextPosition = new Vector2(currentTile.X + Mathf.Cos(transform.rotation.eulerAngles.z * Mathf.Deg2Rad), currentTile.Y + Mathf.Sin(transform.rotation.eulerAngles.z * Mathf.Deg2Rad));
-
+        Debug.Log(GameManager.tileBoard[(int)nextPosition.x, (int)nextPosition.y].transform.position);
         if((nextPosition.x != -1 && nextPosition.x != GameManager.GRID_WIDTH) && (nextPosition.y != -1 && nextPosition.y != GameManager.GRID_HEIGHT) && 
             GameManager.obstaclePositions[(int)nextPosition.x, (int)nextPosition.y] == null && GameManager.tileBoard[(int)nextPosition.x, (int)nextPosition.y].walkable)
         {
