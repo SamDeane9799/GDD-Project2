@@ -22,6 +22,8 @@ public class PlayerCamera : MonoBehaviour
     public Canvas titleCanvas;
     public Canvas pauseCanvas;
     public Canvas abilityCanvas;
+    public Canvas levelCanvas;
+    public Text levelText;
     public Button moveButton;
     public Button freezeButton;
     public Button burnButton;
@@ -54,6 +56,7 @@ public class PlayerCamera : MonoBehaviour
         DontDestroyOnLoad(this);
         canvasTracker.Push(titleCanvas);
 
+        SceneManager.sceneLoaded += OnLoad;
         //if(SceneManager.GetActiveScene().name != "StartScene")
         //{
         //    abilityCanvas.gameObject.SetActive(true);
@@ -116,6 +119,12 @@ public class PlayerCamera : MonoBehaviour
                     canvasTracker.Pop();
                 }
             }
+            if (levelText.color.a <= 0.05f)
+            {
+                Debug.Log("Disabling");
+                levelCanvas.gameObject.SetActive(false);
+                abilityCanvas.gameObject.SetActive(true);
+            }
         }
     }
 
@@ -140,7 +149,7 @@ public class PlayerCamera : MonoBehaviour
         Debug.Log("Loading Level " + level);
         GameManager.gameManagerObject.LoadNextScene();
         titleCanvas.gameObject.SetActive(false);
-        abilityCanvas.gameObject.SetActive(true);
+        levelCanvas.gameObject.SetActive(true);
         canvasTracker.Clear();
     }
 
@@ -255,6 +264,17 @@ public class PlayerCamera : MonoBehaviour
             levelWriter.Close();
 
             highestLevelAcheived = level;
+        }
+    }
+
+    public void OnLoad(Scene scene, LoadSceneMode mode)
+    {
+        //Using this to load in the player when we load into the specific scene
+        if (scene.name != "StartScene")
+        {
+            Debug.Log("Starting level canvas");
+            levelCanvas.gameObject.SetActive(true);
+            levelText.text = "Level " + level;
         }
     }
 

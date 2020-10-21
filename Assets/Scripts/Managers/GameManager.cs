@@ -170,8 +170,6 @@ public class GameManager : MonoBehaviour
     {
         //Sets the game state and tell the game to not destroy this
         SceneManager.sceneLoaded += OnLoad;
-        if(SceneManager.GetActiveScene().name != "StartScene")
-            OnLoad(SceneManager.GetActiveScene(), LoadSceneMode.Single);
 
         availableObstacles = new List<Obstacle>();
         availableEnemies = new List<Enemy>();
