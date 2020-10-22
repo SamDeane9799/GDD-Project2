@@ -234,7 +234,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(currentGameState);
+        //Debug.Log(currentGameState);
         //Checking if we're in a level scene
         if (SceneManager.GetActiveScene().name != "StartScene")
         {
@@ -356,6 +356,7 @@ public class GameManager : MonoBehaviour
                                         {
                                             ClearAvailableEnemyList();
                                             FindAvailableSpotsEnemy(enemyClicked);
+                                            Debug.Log("Enemy Clicked");
                                             enemyClicked.GetComponent<SpriteRenderer>().color = Color.blue;
                                             objectSelected = true;
                                             FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Lift");
@@ -787,7 +788,7 @@ public class GameManager : MonoBehaviour
 
         List<Vector2> positions = new List<Vector2>();
 
-        foreach (Obstacle e in obstManager.obstacles)
+        foreach (Enemy e in enemyManager.Enemies)
         {
             positions.Add(new Vector2(e.X, e.Y));
         }
@@ -1204,6 +1205,7 @@ public class GameManager : MonoBehaviour
     {
         return (currentTile.Y == winTile.Y && currentTile.X == winTile.X);
     }
+
     public void OnPlayersTurn()
     {
         //Setting the GameState to playerturn state

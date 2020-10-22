@@ -7529,6 +7529,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestTile
       objectReference: {fileID: 0}
+    - target: {fileID: 3946175098657922156, guid: 9287a07b2e759504ba63f8456f39c99a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9287a07b2e759504ba63f8456f39c99a, type: 3}
 --- !u!4 &708983430 stripped
