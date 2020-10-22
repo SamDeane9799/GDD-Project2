@@ -303,6 +303,7 @@ public class PlayerCamera : MonoBehaviour
         {
             //Enabling our level Canvas with the fading text and no button
             //Also enabling our ability canvas
+
             levelCanvas.gameObject.SetActive(true);
             abilityCanvas.gameObject.SetActive(true);
             levelCanvas.transform.GetChild(2).gameObject.SetActive(false);
