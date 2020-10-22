@@ -2773,7 +2773,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b0c8bbf43804274cb00b001058b154b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAlpha: 0.3
+  maxAlpha: 0.8
   minAlpha: 0
 --- !u!1 &2134776669695115117
 GameObject:
@@ -3703,7 +3703,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b0c8bbf43804274cb00b001058b154b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAlpha: 0.3
+  maxAlpha: 0.6
   minAlpha: 0
 --- !u!1 &2925835602045771696
 GameObject:
@@ -4797,7 +4797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b0c8bbf43804274cb00b001058b154b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAlpha: 0.4
+  maxAlpha: 0.8
   minAlpha: 0
 --- !u!1 &3915568338640921205
 GameObject:
@@ -5020,7 +5020,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b0c8bbf43804274cb00b001058b154b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAlpha: 0.4
+  maxAlpha: 0.8
   minAlpha: 0
 --- !u!1 &4308181481395904177
 GameObject:
@@ -5746,7 +5746,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b0c8bbf43804274cb00b001058b154b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAlpha: 0.4
+  maxAlpha: 0.8
   minAlpha: 0
 --- !u!1 &4657715701089986427
 GameObject:
@@ -6456,7 +6456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b0c8bbf43804274cb00b001058b154b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAlpha: 0.4
+  maxAlpha: 0.8
   minAlpha: 0
 --- !u!1 &5582555668720265968
 GameObject:
@@ -6600,7 +6600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b0c8bbf43804274cb00b001058b154b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAlpha: 0.3
+  maxAlpha: 0.8
   minAlpha: 0
 --- !u!1 &6041457581053285829
 GameObject:
@@ -6744,7 +6744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b0c8bbf43804274cb00b001058b154b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAlpha: 0.3
+  maxAlpha: 0.8
   minAlpha: 0
 --- !u!1 &6067600820827174350
 GameObject:
@@ -7774,7 +7774,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b0c8bbf43804274cb00b001058b154b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAlpha: 0.4
+  maxAlpha: 0.8
   minAlpha: 0
 --- !u!1 &6628219643106376687
 GameObject:
@@ -8975,7 +8975,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b0c8bbf43804274cb00b001058b154b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAlpha: 0.4
+  maxAlpha: 0.7
   minAlpha: 0
 --- !u!1 &7507161559548912078
 GameObject:
