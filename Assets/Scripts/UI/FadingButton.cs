@@ -8,24 +8,30 @@ public class FadingButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 {
     // Start is called before the first frame update
     private float targetAlpha;
-    public Color currentColor = Color.white;
+    public float maxAlpha;
+    public float minAlpha;
+    private Color currentColor;
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("Here");
-        targetAlpha = 1.0f;
+        targetAlpha = maxAlpha;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        targetAlpha = 0.0f;
+        targetAlpha = minAlpha;
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         GetComponent<Image>().color = new Color(currentColor.r, currentColor.g, currentColor.b, 0.0f);
-        targetAlpha = 0.0f;
+        targetAlpha = minAlpha;
     }
 
+    void Start()
+    {
+        currentColor = GetComponent<Image>().color;
+        targetAlpha = minAlpha;
+    }
 
     void Update()
     {

@@ -1104,6 +1104,8 @@ public class GameManager : MonoBehaviour
 
     public void PassButton()
     {
+        if (enemyManager.Enemies.Count == 0)
+            return;
         currentGameState = GameState.ENEMYTURN;
         enemyManager.enemyTurn = true;
         enemyManager.OnEnemyTurn();
