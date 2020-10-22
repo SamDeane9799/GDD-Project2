@@ -276,7 +276,7 @@ public class PlayerCamera : MonoBehaviour
         UpdateLevels();
 
         levelCanvas.gameObject.SetActive(true);
-        levelText.text = "Completed Level " + level;
+        levelText.text = "Completed Level " + (level - 1);
         levelText.color = Color.white;
         levelText.GetComponent<FadingText>().enabled = false;
         levelCanvas.transform.GetChild(1).gameObject.SetActive(true);
