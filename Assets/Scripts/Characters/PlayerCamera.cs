@@ -40,7 +40,7 @@ public class PlayerCamera : MonoBehaviour
     #endregion
 
     #region File IO
-    private const string settingsPath = "Assets/StreamingAssets/txt/settings.txt";
+    private const string settingsPath = "/StreamingAssets/txt/settings.txt";
     private StreamWriter writer;
     private StreamReader reader;
     #endregion
@@ -217,7 +217,7 @@ public class PlayerCamera : MonoBehaviour
     {
         Debug.Log("Applying settings");
         //Writing the changes to the txt file
-        writer = new StreamWriter(settingsPath);
+        writer = new StreamWriter(Application.dataPath + settingsPath);
         writer.Write(masterSoundVolumeSlider.value.ToString() + "\n");
         writer.Write(soundfxVolumeSlider.value.ToString() + "\n");
         writer.Write(musicSoundVolumeSlider.value.ToString() + "\n");
