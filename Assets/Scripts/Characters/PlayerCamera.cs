@@ -286,7 +286,6 @@ public class PlayerCamera : MonoBehaviour
 
     public void LevelLost()
     {
-
         levelCanvas.gameObject.SetActive(true);
         levelText.text = "You've been caught!";
         levelText.color = Color.white;

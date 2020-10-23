@@ -4998,8 +4998,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 220, y: -104.42999}
-  m_SizeDelta: {x: 336.32, y: 208.86}
+  m_AnchoredPosition: {x: 217, y: -81.65002}
+  m_SizeDelta: {x: 336.3, y: 163.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &550218896
 MonoBehaviour:
@@ -5032,7 +5032,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: After activatinv the Burn ability, click on a bush to clear a path
+  m_Text: After activating the Burn ability, click on a bush to clear a path
 --- !u!222 &550218897
 CanvasRenderer:
   m_ObjectHideFlags: 0
