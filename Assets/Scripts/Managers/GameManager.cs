@@ -118,6 +118,7 @@ public class GameManager : MonoBehaviour
     private List<Tile> obstacleAvailableTiles;
     private List<Tile> enemyAvailableTiles;
     private const int obstacleMovementRange = 1;
+    private const int enemyMovementRange = 1;
 
     private List<Obstacle> availableObstacles;
     private List<Bush> availableBushes;
@@ -301,7 +302,7 @@ public class GameManager : MonoBehaviour
                                             obstacleClicked.MoveToCell(new Vector3((tileClicked.transform.position.x), (tileClicked.transform.position.y), tileClicked.transform.position.z));
 
                                             //obstacleClicked.transform.position = tileClicked.transform.position;
-                                            obstacleClicked.GetComponent<SpriteRenderer>().color = Color.white;
+                                            obstacleClicked.GetComponent<SpriteRenderer>().color = obstacleClicked.originalColor;
 
                                             // Put the obstacleClicked into the obstclePositions array with its new coordinates
                                             obstaclePositions[tileClicked.X, tileClicked.Y] = obstacleClicked;
@@ -322,7 +323,7 @@ public class GameManager : MonoBehaviour
                                         {
                                             Debug.Log("Tile Clicked");
 
-                                            enemyClicked.GetComponent<SpriteRenderer>().color = Color.white;
+                                            enemyClicked.GetComponent<SpriteRenderer>().color = enemyClicked.originalColor;
 
                                             enemyClicked.transform.position = tileClicked.transform.position;
                                             enemyClicked.currentTile = tileClicked;
@@ -385,6 +386,14 @@ public class GameManager : MonoBehaviour
                                 playerCam.moveButton.interactable = true;
                                 ClearAvailableObstaclesList();
                                 ClearAvailableEnemyList();
+                                ClearAvailableTileList(obstacleAvailableTiles);
+                                ClearAvailableTileList(enemyAvailableTiles);
+
+                                if (obstacleClicked != null)
+                                    obstacleClicked.GetComponent<SpriteRenderer>().color = obstacleClicked.originalColor;
+
+                                if (enemyClicked != null)
+                                    enemyClicked.GetComponent<SpriteRenderer>().color = enemyClicked.originalColor;
                             }
                         }
                         else
@@ -429,7 +438,7 @@ public class GameManager : MonoBehaviour
                                     }
                                 }
 
-                                if (Input.GetKeyDown(KeyCode.Q))
+                                if (Input.GetMouseButtonDown(1))
                                 {
                                     usingAbility = false;
                                     playerCam.burnButton.interactable = true;
@@ -487,7 +496,7 @@ public class GameManager : MonoBehaviour
                             }
                         }
 
-                        if (Input.GetKeyDown(KeyCode.Q))
+                        if (Input.GetMouseButtonDown(1))
                         {
                             usingAbility = false;
                             playerCam.freezeButton.interactable = true;
@@ -509,6 +518,7 @@ public class GameManager : MonoBehaviour
                     playerCam.Level += 1;
                     playerCam.LevelComplete();
                     ClearAvailableTileList(availableTiles);
+                    ClearAvailableEnemyList();
                     return;
                 }
                 if (enemyManager.Enemies.Count == 0)
@@ -541,6 +551,7 @@ public class GameManager : MonoBehaviour
             }
             else if (currentGameState == GameState.WIN)
             {
+                ClearAvailableEnemyList();
                 Debug.Log("WINNER");
             }
         }
@@ -809,7 +820,7 @@ public class GameManager : MonoBehaviour
             distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(enemyToMove.X, enemyToMove.Y)));
 
             if (currentTile.X != GRID_WIDTH - 1 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
-            distance <= obstacleMovementRange && !enemyAvailableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
+            distance <= enemyMovementRange && !enemyAvailableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && !positions.Contains(posToBeChecked))
             {
                 if (tileBoard[currentTile.X + 1, currentTile.Y].walkable == true)
@@ -825,8 +836,9 @@ public class GameManager : MonoBehaviour
             //that the player is contained in the availabletiles and that the tile is not the one we started on
             posToBeChecked = new Vector2(currentTile.X - 1, currentTile.Y);
             distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(enemyToMove.X, enemyToMove.Y)));
+
             if (currentTile.X != 0 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
-            distance <= obstacleMovementRange && !enemyAvailableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
+            distance <= enemyMovementRange && !enemyAvailableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
             {
                 if (tileBoard[currentTile.X - 1, currentTile.Y].walkable == true)
@@ -843,7 +855,7 @@ public class GameManager : MonoBehaviour
             posToBeChecked = new Vector2(currentTile.X, currentTile.Y + 1);
             distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(enemyToMove.X, enemyToMove.Y)));
             if (currentTile.Y != GRID_HEIGHT - 1 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
-            distance <= obstacleMovementRange && !enemyAvailableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
+            distance <= enemyMovementRange && !enemyAvailableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
             {
                 if (tileBoard[currentTile.X, currentTile.Y + 1].walkable == true)
@@ -860,7 +872,7 @@ public class GameManager : MonoBehaviour
             posToBeChecked = new Vector2(currentTile.X, currentTile.Y - 1);
             distance = Mathf.Abs(Vector2.Distance(posToBeChecked, new Vector2(enemyToMove.X, enemyToMove.Y)));
             if (currentTile.Y != 0 && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != null && obstaclePositions[(int)posToBeChecked.x, (int)posToBeChecked.y] == null &&
-            distance <= obstacleMovementRange && !enemyAvailableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
+            distance <= enemyMovementRange && !enemyAvailableTiles.Contains(tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y])
             && tileBoard[(int)posToBeChecked.x, (int)posToBeChecked.y] != player.currentTile && !positions.Contains(posToBeChecked))
             {
                 if (tileBoard[currentTile.X, currentTile.Y - 1].walkable == true)
@@ -1153,8 +1165,11 @@ public class GameManager : MonoBehaviour
     {
         foreach (Tile t in listToClear)
         {
-            t.highlight = false;
-            t.GetComponent<SpriteRenderer>().color = t.originalColor;
+            if (t != null)
+            {
+                t.highlight = false;
+                t.GetComponent<SpriteRenderer>().color = t.originalColor;
+            }
         }
 
         listToClear.Clear();
@@ -1180,6 +1195,8 @@ public class GameManager : MonoBehaviour
             b.highlight = false;
             b.ResetColorValues();
         }
+
+        availableBushes.Clear();
     }
 
     //Clears a list of water tiles
@@ -1190,6 +1207,8 @@ public class GameManager : MonoBehaviour
             w.highlight = false;
             w.ResetColorValues();
         }
+
+        availableWater.Clear();
     }
 
     //Clears a list of enemies
@@ -1197,9 +1216,14 @@ public class GameManager : MonoBehaviour
     {
         foreach (Enemy e in availableEnemies)
         {
-            e.highlight = false;
-            e.ResetColorValues();
+            if (e != null)
+            {
+                e.highlight = false;
+                e.ResetColorValues();
+            }
         }
+
+        availableEnemies.Clear();
     }
 
     // Returns true if the currentTile is the win tile, false otherwise
