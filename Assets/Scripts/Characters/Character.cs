@@ -14,6 +14,9 @@ public class Character : LevelObject
     //Our range that we can move at
     public float actionPoints;
 
+    public Sprite facingUp;
+    public Sprite facingRight;
+
     // Update is called once per frame
     protected override void Update()
     {
@@ -44,7 +47,14 @@ public class Character : LevelObject
         {
             Vector3 dir = currentTile.gameObject.transform.position - transform.position;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            Debug.Log(angle);
+            if (Mathf.Abs(angle - 90) <= 1f)
+            {
+                GetComponent<SpriteRenderer>().sprite = facingUp;
+                Debug.Log("Facingup");
+            }
+            else
+                GetComponent<SpriteRenderer>().sprite = facingRight;
         }
     }
 }
