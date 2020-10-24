@@ -92,7 +92,6 @@ public class GameManager : MonoBehaviour
     public PlayerCamera playerCameraPrefab;
     private PlayerCamera playerCam;
     private Player player;
-    private bool usingAbility;
     //Keeping track of which tiles our player can currently go to
     private List<Tile> availableTiles;
 
@@ -181,7 +180,6 @@ public class GameManager : MonoBehaviour
 
         obstacleAvailableTiles = new List<Tile>();
         enemyAvailableTiles = new List<Tile>();
-        usingAbility = false;
 
         // FMOD music playing
         if (SceneManager.GetActiveScene().name != "StartScene")
@@ -243,7 +241,7 @@ public class GameManager : MonoBehaviour
             if (currentGameState == GameState.PLAYERTURN)
             {
                 switch (currentPlayerState)
-                {                    
+                {                
                     case PlayerState.MOVEMENT:
                         //Checking for player right click
                         if (!player.moving && availableTiles.Count == 0)
@@ -258,7 +256,6 @@ public class GameManager : MonoBehaviour
 
                             if (hit)
                             {
-                                Debug.Log(hit.collider.gameObject.name);
                                 Tile tileClicked = hit.collider.GetComponent<Tile>();
 
                                 if (availableTiles.Contains(tileClicked))
@@ -282,228 +279,190 @@ public class GameManager : MonoBehaviour
                         break;
 
                     case PlayerState.ABILITYMOVE:
-                        if (usingAbility)
+                        if (objectSelected)
                         {
-                            if (objectSelected)
+                            if (Input.GetMouseButtonDown(0))
                             {
-                                if (Input.GetMouseButtonDown(0))
-                                {
-                                    //Casting a ray for a tile 
-                                    RaycastHit2D hit = MouseCollisionCheck();
+                                //Casting a ray for a tile 
+                                RaycastHit2D hit = MouseCollisionCheck();
 
-                                    Tile tileClicked = hit.collider.GetComponent<Tile>();
-                                    //If the obstacle can move to the tile then we move it there
-
-                                    if (obstacleClicked != null)
-                                    {
-                                        if (obstacleAvailableTiles.Contains(tileClicked))
-                                        {
-                                            // Remove the obstacle's original position from the obstaclesPosition array
-                                            obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
-                                            obstacleClicked.MoveToCell(new Vector3((tileClicked.transform.position.x), (tileClicked.transform.position.y), tileClicked.transform.position.z));
-
-                                            //obstacleClicked.transform.position = tileClicked.transform.position;
-                                            obstacleClicked.GetComponent<SpriteRenderer>().color = obstacleClicked.originalColor;
-
-                                            // Put the obstacleClicked into the obstclePositions array with its new coordinates
-                                            obstaclePositions[tileClicked.X, tileClicked.Y] = obstacleClicked;
-
-                                            //Clearing the obstacles available tiles and subtracting an action point
-                                            ClearAvailableTileList(obstacleAvailableTiles);
-                                            player.actionPoints -= 1;
-
-                                            FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Place");
-                                            objectSelected = false;
-                                            usingAbility = false;
-                                        }
-                                    }
-
-                                    if (enemyClicked != null)
-                                    {
-                                        if (enemyAvailableTiles.Contains(tileClicked))
-                                        {
-                                            Debug.Log("Tile Clicked");
-
-                                            enemyClicked.GetComponent<SpriteRenderer>().color = enemyClicked.originalColor;
-
-                                            enemyClicked.transform.position = tileClicked.transform.position;
-                                            enemyClicked.currentTile = tileClicked;
-
-                                            ClearAvailableTileList(enemyAvailableTiles);
-                                            player.actionPoints -= 1;
-
-                                            FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Place");
-                                            objectSelected = false;
-                                            usingAbility = false;
-                                        }
-                                    }                                           
-                                }
-                            }
-                            else if (!objectSelected)
-                            {
-                                obstacleClicked = null;
-                                enemyClicked = null;
-
-                                //Checking for player LEFT click
-                                if (Input.GetMouseButtonDown(0))
-                                {
-                                    //Casting a ray on the terrain layer
-                                    RaycastHit2D hit = MouseCollisionCheck(1 << 9);
-
-                                    if (hit)
-                                    {
-                                        enemyClicked = hit.collider.GetComponent<Enemy>();
-
-                                        if (enemyClicked != null && availableEnemies.Contains(enemyClicked))
-                                        {
-                                            ClearAvailableEnemyList();
-                                            FindAvailableSpotsEnemy(enemyClicked);
-                                            Debug.Log("Enemy Clicked");
-                                            enemyClicked.GetComponent<SpriteRenderer>().color = Color.blue;
-                                            objectSelected = true;
-                                            FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Lift");
-                                        }
-
-                                        obstacleClicked = hit.collider.GetComponent<Obstacle>();
-
-                                        //If we hit then we reset our obstacle list and set the object selected
-                                        if (obstacleClicked != null && availableObstacles.Contains(obstacleClicked))
-                                        {
-                                            ClearAvailableObstaclesList();
-                                            //Checking where the obstacle selected can be moved to
-                                            FindAvailableSpotsObst(obstacleClicked);
-                                            obstacleClicked.GetComponent<SpriteRenderer>().color = Color.blue;
-                                            objectSelected = true;
-                                            FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Lift");
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (Input.GetMouseButtonDown(1))
-                            {
-                                usingAbility = false;
-                                objectSelected = false;
-                                playerCam.moveButton.interactable = true;
-                                ClearAvailableObstaclesList();
-                                ClearAvailableEnemyList();
-                                ClearAvailableTileList(obstacleAvailableTiles);
-                                ClearAvailableTileList(enemyAvailableTiles);
+                                Tile tileClicked = hit.collider.GetComponent<Tile>();
+                                //If the obstacle can move to the tile then we move it there
 
                                 if (obstacleClicked != null)
-                                    obstacleClicked.GetComponent<SpriteRenderer>().color = obstacleClicked.originalColor;
+                                {
+                                    if (obstacleAvailableTiles.Contains(tileClicked))
+                                    {
+                                        // Remove the obstacle's original position from the obstaclesPosition array
+                                        obstaclePositions[obstacleClicked.X, obstacleClicked.Y] = null;
+                                        obstacleClicked.MoveToCell(new Vector3((tileClicked.transform.position.x), (tileClicked.transform.position.y), tileClicked.transform.position.z));
+
+                                        //obstacleClicked.transform.position = tileClicked.transform.position;
+                                        obstacleClicked.GetComponent<SpriteRenderer>().color = obstacleClicked.originalColor;
+
+                                        // Put the obstacleClicked into the obstclePositions array with its new coordinates
+                                        obstaclePositions[tileClicked.X, tileClicked.Y] = obstacleClicked;
+
+                                        //Clearing the obstacles available tiles and subtracting an action point
+                                        ClearAvailableTileList(obstacleAvailableTiles);
+                                        player.actionPoints -= 1;
+
+                                        FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Place");
+                                        objectSelected = false;
+
+                                        OnEnemyTurn();
+                                    }
+                                }
 
                                 if (enemyClicked != null)
-                                    enemyClicked.GetComponent<SpriteRenderer>().color = enemyClicked.originalColor;
+                                {
+                                    if (enemyAvailableTiles.Contains(tileClicked))
+                                    {
+                                        Debug.Log("Tile Clicked");
+
+                                        enemyClicked.GetComponent<SpriteRenderer>().color = enemyClicked.originalColor;
+
+                                        enemyClicked.transform.position = tileClicked.transform.position;
+                                        enemyClicked.currentTile = tileClicked;
+
+                                        ClearAvailableTileList(enemyAvailableTiles);
+                                        player.actionPoints -= 1;
+
+                                        FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Place");
+                                        objectSelected = false;
+                                        OnEnemyTurn();
+                                    }
+                                }                                           
                             }
                         }
                         else
                         {
-                            currentPlayerState = PlayerState.MOVEMENT;
-                            ClearAvailableObstaclesList();
-                            ClearAvailableEnemyList();
-                        }
-                        break;
+                            obstacleClicked = null;
+                            enemyClicked = null;
 
-                    case PlayerState.ABILITYBURN:
-
-                        if (obstManager.bushes.Count > 0)
-                        {
-                            if (usingAbility)
+                            if(availableEnemies.Count == 0 && availableObstacles.Count == 0)
                             {
-                                if (Input.GetMouseButtonDown(0))
+                                FindAvailableEnemies();
+                                FindAvailableObstacles();
+                            }
+                            //Checking for player LEFT click
+                            if (Input.GetMouseButtonDown(0))
+                            {
+                                //Casting a ray on the terrain layer
+                                RaycastHit2D hit = MouseCollisionCheck(1 << 9);
+
+                                if (hit)
                                 {
-                                    RaycastHit2D hit = MouseCollisionCheck();
-                                    if (hit)
+                                    enemyClicked = hit.collider.GetComponent<Enemy>();
+
+                                    if (enemyClicked != null && availableEnemies.Contains(enemyClicked))
                                     {
-                                        Bush bushClicked = hit.collider.GetComponent<Bush>();
+                                        ClearAvailableEnemyList();
+                                        FindAvailableSpotsEnemy(enemyClicked);
+                                        Debug.Log("Enemy Clicked");
+                                        enemyClicked.GetComponent<SpriteRenderer>().color = Color.blue;
+                                        objectSelected = true;
+                                        FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Lift");
+                                    }
 
-                                        if (obstManager.bushes.Contains(bushClicked))
-                                        {
+                                    obstacleClicked = hit.collider.GetComponent<Obstacle>();
 
-                                            FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Burn");
-
-                                            //bushClicked.burned = true;
-
-                                            obstaclePositions[bushClicked.X, bushClicked.Y] = null;
-
-                                            Destroy(bushClicked.gameObject);
-
-                                            FindAvailableTiles();
-
-                                            usingAbility = false;
-                                        }
-                                        else
-                                        {
-                                        }
+                                    //If we hit then we reset our obstacle list and set the object selected
+                                    if (obstacleClicked != null && availableObstacles.Contains(obstacleClicked))
+                                    {
+                                        ClearAvailableObstaclesList();
+                                        //Checking where the obstacle selected can be moved to
+                                        FindAvailableSpotsObst(obstacleClicked);
+                                        obstacleClicked.GetComponent<SpriteRenderer>().color = Color.blue;
+                                        objectSelected = true;
+                                        FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Lift");
                                     }
                                 }
-
-                                if (Input.GetMouseButtonDown(1))
-                                {
-                                    usingAbility = false;
-                                    playerCam.burnButton.interactable = true;
-                                    ClearAvailableBushesList();
-                                }
-                            }
-                            else
-                            {
-                                currentPlayerState = PlayerState.MOVEMENT;
-                            }
-                        }
-
-                        break;
-
-                    case PlayerState.ABILITYFREEZE:
-                        if (obstManager.waterTiles.Count > 0)
-                        {
-                            if (usingAbility)
-                            {
-                                if (Input.GetMouseButton(0))
-                                {
-                                    RaycastHit2D hit = MouseCollisionCheck();
-
-                                    if (hit)
-                                    {
-                                        WaterTile waterClicked = hit.collider.GetComponent<WaterTile>();
-
-                                        if (obstManager.waterTiles.Contains(waterClicked))
-                                        {
-
-                                            FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Freeze");
-
-                                            waterClicked.GetComponent<SpriteRenderer>().color = Color.cyan;
-                                            waterClicked.walkable = true;
-
-                                            GameObject newObstacle = Instantiate(RockPrefab);
-                                            newObstacle.transform.position = waterClicked.transform.position;
-                                            obstManager.obstacles.Add(newObstacle.GetComponent<Obstacle>());
-
-                                            //bushClicked.burned = true;
-
-                                            FindAvailableTiles();
-
-                                            usingAbility = false;
-                                        }
-                                        else
-                                        {
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                currentPlayerState = PlayerState.MOVEMENT;
                             }
                         }
 
                         if (Input.GetMouseButtonDown(1))
                         {
-                            usingAbility = false;
-                            playerCam.freezeButton.interactable = true;
-                            ClearAvailableWaterList();
-                        }
+                            currentPlayerState = PlayerState.MOVEMENT;
+                            objectSelected = false;
+                            playerCam.moveButton.interactable = true;
+                            if(availableObstacles.Count > 0)
+                                ClearAvailableObstaclesList();
+                            if (availableEnemies.Count > 0)
+                                ClearAvailableEnemyList();
+                            if (obstacleAvailableTiles.Count > 0)
+                                ClearAvailableTileList(obstacleAvailableTiles);
+                            if (enemyAvailableTiles.Count > 0)
+                                ClearAvailableTileList(enemyAvailableTiles);
 
+                            if (obstacleClicked != null)
+                                obstacleClicked.GetComponent<SpriteRenderer>().color = obstacleClicked.originalColor;
+
+                            if (enemyClicked != null)
+                                enemyClicked.GetComponent<SpriteRenderer>().color = enemyClicked.originalColor;
+                        }
+                        break;
+
+                    case PlayerState.ABILITYBURN:
+
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            RaycastHit2D hit = MouseCollisionCheck();
+                            if (hit)
+                            {
+                                Bush bushClicked = hit.collider.GetComponent<Bush>();
+
+                                if (obstManager.bushes.Contains(bushClicked))
+                                {
+                                    FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Burn");
+
+                                    obstaclePositions[bushClicked.X, bushClicked.Y] = null;
+
+                                    Destroy(bushClicked.gameObject);
+
+                                    currentPlayerState = PlayerState.MOVEMENT;
+                                }
+                            }
+                        }
+                        if (Input.GetMouseButtonDown(1))
+                        {
+                            playerCam.burnButton.interactable = true;
+                            if(availableBushes.Count > 0)
+                                ClearAvailableBushesList();
+                            currentPlayerState = PlayerState.MOVEMENT;
+                        }
+                        break;
+
+                    case PlayerState.ABILITYFREEZE:
+                        if (Input.GetMouseButton(0))
+                        {
+                            RaycastHit2D hit = MouseCollisionCheck();
+
+                            if (hit)
+                            {
+                                WaterTile waterClicked = hit.collider.GetComponent<WaterTile>();
+
+                                if (obstManager.waterTiles.Contains(waterClicked))
+                                {
+
+                                    FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Freeze");
+
+                                    waterClicked.GetComponent<SpriteRenderer>().color = Color.cyan;
+                                    waterClicked.walkable = true;
+
+                                    GameObject newObstacle = Instantiate(RockPrefab);
+                                    newObstacle.transform.position = waterClicked.transform.position;
+                                    obstManager.obstacles.Add(newObstacle.GetComponent<Obstacle>());
+                                }
+                            }
+                        }
+                        if (Input.GetMouseButtonDown(1))
+                        {
+                            playerCam.freezeButton.interactable = true;
+                            currentPlayerState = PlayerState.MOVEMENT;
+                            if(availableWater.Count > 0)
+                               ClearAvailableWaterList();
+                        }
                         break;
                 }
 
@@ -513,18 +472,12 @@ public class GameManager : MonoBehaviour
                 //If the player is no longer moving and does not have an action point then we cycle to the enemies turn
                 if(!player.moving && player.currentTile.destination)
                 {
-                    player.GetComponent<SpriteRenderer>().color = Color.magenta;
-                    Debug.Log("YOU WIN");
                     currentGameState = GameState.WIN;
                     playerCam.Level += 1;
                     playerCam.LevelComplete();
                     ClearAvailableTileList(availableTiles);
                     ClearAvailableEnemyList();
                     return;
-                }
-                if (enemyManager.Enemies.Count == 0)
-                {
-                    OnPlayersTurn();
                 }
                 else if (!player.moving && player.actionPoints < 1)
                 {
@@ -552,7 +505,6 @@ public class GameManager : MonoBehaviour
             else if (currentGameState == GameState.WIN)
             {
                 ClearAvailableEnemyList();
-                Debug.Log("WINNER");
             }
         }
     }
@@ -1080,36 +1032,45 @@ public class GameManager : MonoBehaviour
     #region BUTTON METHODS
     public void MoveAbility()
     {
-        usingAbility = true;
         ClearAvailableTileList(availableTiles);
-        ClearAvailableBushesList();
-        ClearAvailableWaterList();
-        FindAvailableObstacles();
-        FindAvailableEnemies();
+        if (availableTiles.Count > 0)
+            ClearAvailableTileList(availableTiles);
+        if (availableBushes.Count > 0)
+            ClearAvailableBushesList();
+        if (availableObstacles.Count > 0)
+            ClearAvailableObstaclesList();
+        if (availableEnemies.Count > 0)
+            ClearAvailableEnemyList();
         currentPlayerState = PlayerState.ABILITYMOVE;
         SetButtonOff(playerCam.moveButton);
     }
 
     public void BurnAbility()
     {
-        usingAbility = true;
         ClearAvailableTileList(availableTiles);
-        ClearAvailableWaterList();
-        ClearAvailableObstaclesList();
-        ClearAvailableEnemyList();
-        FindAvailableBushes();
+        if (availableTiles.Count > 0)
+            ClearAvailableTileList(availableTiles);
+        if (availableBushes.Count > 0)
+            ClearAvailableBushesList();
+        if (availableObstacles.Count > 0)
+            ClearAvailableObstaclesList();
+        if (availableEnemies.Count > 0)
+            ClearAvailableEnemyList();
         currentPlayerState = PlayerState.ABILITYBURN;
         SetButtonOff(playerCam.burnButton);
     }
 
     public void FreezeAbility()
     {
-        usingAbility = true;
         FindAvailableWater();
-        ClearAvailableTileList(availableTiles);
-        ClearAvailableBushesList();
-        ClearAvailableObstaclesList();
-        ClearAvailableEnemyList();
+        if(availableTiles.Count > 0)
+            ClearAvailableTileList(availableTiles);
+        if (availableBushes.Count > 0)
+            ClearAvailableBushesList();
+        if (availableObstacles.Count > 0)
+            ClearAvailableObstaclesList();
+        if (availableEnemies.Count > 0)
+            ClearAvailableEnemyList();
         currentPlayerState = PlayerState.ABILITYFREEZE;
         SetButtonOff(playerCam.freezeButton);
     }
@@ -1236,6 +1197,7 @@ public class GameManager : MonoBehaviour
     {
         //Setting the GameState to playerturn state
         currentGameState = GameState.PLAYERTURN;
+        currentPlayerState = PlayerState.MOVEMENT;
         if (abilityButtons != null)
         {
             foreach (Button b in abilityButtons)
@@ -1251,6 +1213,11 @@ public class GameManager : MonoBehaviour
 
     public void OnEnemyTurn()
     {
+        if(enemyManager.Enemies.Count == 0)
+        {
+            OnPlayersTurn();
+            return;
+        }
         //The current gamestate is switched to the enemyturn. We call the OnEnemyTurn to reset their values for their turn
         currentGameState = GameState.ENEMYTURN;
         enemyManager.OnEnemyTurn();

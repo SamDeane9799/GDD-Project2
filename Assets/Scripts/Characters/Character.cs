@@ -20,10 +20,6 @@ public class Character : LevelObject
 
     public Vector3 enemyRotation;
 
-    void Start()
-    {
-    }
-
     // Update is called once per frame
     protected override void Update()
     {
@@ -49,7 +45,7 @@ public class Character : LevelObject
         //Lerping our position
         transform.position = Vector2.Lerp(transform.position, currentTile.gameObject.transform.position, .075f);
         //transform.position = new Vector3(transform.position.x, transform.position.y, -1f);
-        //Setting our rotation
+        //Setting our rotation and sprite
         if (this is Player)
         {
             Vector3 dir = currentTile.gameObject.transform.position - transform.position;

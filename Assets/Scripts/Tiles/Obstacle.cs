@@ -64,7 +64,6 @@ public class Obstacle : LevelObject
 
         Vector3 posDifference = cellPosDestination - transform.position;
         Vector3 direction = posDifference.normalized;
-        Debug.Log(cellPosDestination);
 
         ////Movement would be performed here if we were calling MoveToCell from another class's update
         //Vector3 movement = direction * speed * Time.deltaTime;
