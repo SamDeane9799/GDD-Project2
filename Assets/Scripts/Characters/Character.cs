@@ -18,6 +18,12 @@ public class Character : LevelObject
     public Sprite facingRight;
     public Sprite facingDown;
 
+    public Vector3 enemyRotation;
+
+    void Start()
+    {
+    }
+
     // Update is called once per frame
     protected override void Update()
     {
@@ -48,13 +54,34 @@ public class Character : LevelObject
         {
             Vector3 dir = currentTile.gameObject.transform.position - transform.position;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            Debug.Log(angle);
             if (Mathf.Abs(angle - 90) <= 1f)
+            {
                 GetComponent<SpriteRenderer>().sprite = facingUp;
-            else if(Mathf.Abs(angle + 90) <= 1f)
+                GetComponent<SpriteRenderer>().flipX = false;
+                if (this is Enemy)
+                    enemyRotation = new Vector3(0, 1, 0);
+            }
+            else if (Mathf.Abs(angle + 90) <= 1f)
+            {
                 GetComponent<SpriteRenderer>().sprite = facingDown;
-            else
+                GetComponent<SpriteRenderer>().flipX = false;
+                if (this is Enemy)
+                    enemyRotation = new Vector3(0, -1, 0);
+            }
+            else if(Mathf.Abs(angle - 180) <= 1f)
+            {
                 GetComponent<SpriteRenderer>().sprite = facingRight;
+                GetComponent<SpriteRenderer>().flipX = true;
+                if (this is Enemy)
+                    enemyRotation = new Vector3(-1, 0, 0);
+            }
+            else if(angle <= 1)
+            {
+                GetComponent<SpriteRenderer>().sprite = facingRight;
+                GetComponent<SpriteRenderer>().flipX = false;
+                if (this is Enemy)
+                    enemyRotation = new Vector3(1, 0, 0);
+            }
         }
     }
 }
