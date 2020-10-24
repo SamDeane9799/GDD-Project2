@@ -547,7 +547,6 @@ public class GameManager : MonoBehaviour
                 {
                     playerCam.LevelLost();
                 }
-                Debug.Log("LOSER LOL!!!!");
             }
             else if (currentGameState == GameState.WIN)
             {
@@ -1252,7 +1251,6 @@ public class GameManager : MonoBehaviour
     public void OnEnemyTurn()
     {
         //The current gamestate is switched to the enemyturn. We call the OnEnemyTurn to reset their values for their turn
-        Debug.Log("Called enemy turn");
         currentGameState = GameState.ENEMYTURN;
         enemyManager.OnEnemyTurn();
         enemyManager.enemyTurn = true;

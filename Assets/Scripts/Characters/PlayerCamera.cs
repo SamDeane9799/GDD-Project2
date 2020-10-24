@@ -155,7 +155,6 @@ public class PlayerCamera : MonoBehaviour
     //After that sets the canvas at the top of the stack to on
     public void BackButton()
     {
-        Debug.Log("Back Button Pressed");
         if (canvasTracker.Peek().name == "SettingsCanvas")
             ApplyButton();
         canvasTracker.Peek().gameObject.SetActive(false);
