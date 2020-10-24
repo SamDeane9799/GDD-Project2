@@ -103,6 +103,7 @@ MonoBehaviour:
   actionPoints: 0
   facingUp: {fileID: 21300000, guid: 2ba32ffea7290d54d883118ae9383a3b, type: 3}
   facingRight: {fileID: 21300000, guid: d13b33b01d975644ea6fdc7f3c6ce78d, type: 3}
+  facingDown: {fileID: 21300000, guid: 4e4e804fb517c49499fb766f6f2aebab, type: 3}
   moveDist: 0
 --- !u!61 &-3237562158381879404
 BoxCollider2D:

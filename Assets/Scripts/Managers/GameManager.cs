@@ -258,6 +258,7 @@ public class GameManager : MonoBehaviour
 
                             if (hit)
                             {
+                                Debug.Log(hit.collider.gameObject.name);
                                 Tile tileClicked = hit.collider.GetComponent<Tile>();
 
                                 if (availableTiles.Contains(tileClicked))

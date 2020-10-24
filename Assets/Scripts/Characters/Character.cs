@@ -16,6 +16,7 @@ public class Character : LevelObject
 
     public Sprite facingUp;
     public Sprite facingRight;
+    public Sprite facingDown;
 
     // Update is called once per frame
     protected override void Update()
@@ -49,10 +50,9 @@ public class Character : LevelObject
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             Debug.Log(angle);
             if (Mathf.Abs(angle - 90) <= 1f)
-            {
                 GetComponent<SpriteRenderer>().sprite = facingUp;
-                Debug.Log("Facingup");
-            }
+            else if(Mathf.Abs(angle + 90) <= 1f)
+                GetComponent<SpriteRenderer>().sprite = facingDown;
             else
                 GetComponent<SpriteRenderer>().sprite = facingRight;
         }
