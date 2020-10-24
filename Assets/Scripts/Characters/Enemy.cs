@@ -38,8 +38,10 @@ public class Enemy : Character
     public void EnemyTurn()
     {
         //Checking if we can continue to move in our direction that we are already in
-        Vector2 nextPosition = new Vector2(currentTile.X + Mathf.Cos(transform.rotation.eulerAngles.z * Mathf.Deg2Rad), currentTile.Y + Mathf.Sin(transform.rotation.eulerAngles.z * Mathf.Deg2Rad));
-        if((nextPosition.x != -1 && nextPosition.x != GameManager.GRID_WIDTH) && (nextPosition.y != -1 && nextPosition.y != GameManager.GRID_HEIGHT) && 
+        Vector2 nextPosition = new Vector2(currentTile.X + enemyRotation.x, currentTile.Y + enemyRotation.y);
+
+        Debug.Log(currentTile.X);
+        if ((nextPosition.x != -1 && nextPosition.x != GameManager.GRID_WIDTH) && (nextPosition.y != -1 && nextPosition.y != GameManager.GRID_HEIGHT) && 
             GameManager.obstaclePositions[(int)nextPosition.x, (int)nextPosition.y] == null && GameManager.tileBoard[(int)Mathf.Round(nextPosition.x), (int)Mathf.Round(nextPosition.y)].walkable)
         {
             //If we can then we move the enemy
@@ -61,9 +63,9 @@ public class Enemy : Character
         int layerMask = terrainMask | characterMask;
 
         Player potentialPlayer = null;
-        rayDir = new Vector3(Mathf.Cos(transform.rotation.eulerAngles.z * Mathf.Deg2Rad), Mathf.Sin(transform.rotation.eulerAngles.z * Mathf.Deg2Rad), 0);
+        //rayDir = new Vector3(Mathf.Cos(transform.rotation.eulerAngles.z * Mathf.Deg2Rad), Mathf.Sin(transform.rotation.eulerAngles.z * Mathf.Deg2Rad), 0);
         //Casting the ray
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, rayDir, visionLength, layerMask);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, enemyRotation, visionLength, layerMask);
         //Checking if we hit a player
         if (hit)
         {
@@ -79,14 +81,19 @@ public class Enemy : Character
     public void CheckForTurn()
     {
         //If we cant then we want to turn around and move in that direction
-        Vector3 nextPosition = new Vector2(currentTile.X + Mathf.Round(Mathf.Cos(transform.rotation.eulerAngles.z * Mathf.Deg2Rad)), currentTile.Y + Mathf.Round(Mathf.Sin(transform.rotation.eulerAngles.z * Mathf.Deg2Rad)));
+        Vector3 nextPosition = new Vector2(currentTile.X + enemyRotation.x, currentTile.Y + enemyRotation.y);
+        Debug.Log(nextPosition);
         if (!((nextPosition.x != -1 && nextPosition.x != GameManager.GRID_WIDTH) && (nextPosition.y != -1 && nextPosition.y != GameManager.GRID_HEIGHT) &&
         GameManager.obstaclePositions[(int)nextPosition.x, (int)nextPosition.y] == null && GameManager.tileBoard[(int)nextPosition.x, (int)nextPosition.y].walkable))
         {
-            if(targetRotation.z > 180)
-                targetRotation = new Vector3(targetRotation.x, targetRotation.y, targetRotation.z - 180);
-            else
-                targetRotation = new Vector3(targetRotation.x, targetRotation.y, targetRotation.z + 180);
+            if (enemyRotation.y > 0)
+                enemyRotation.y = -1;
+            else if (enemyRotation.y < 0)
+                enemyRotation.y = 1;
+            else if (enemyRotation.x < 0)
+                enemyRotation.x = 1;
+            else if (enemyRotation.x > 0)
+                enemyRotation.x = -1;
         }
     }
 
