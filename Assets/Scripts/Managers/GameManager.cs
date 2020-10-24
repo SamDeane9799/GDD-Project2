@@ -339,7 +339,7 @@ public class GameManager : MonoBehaviour
                                     }                                           
                                 }
                             }
-                            else
+                            else if (!objectSelected)
                             {
                                 obstacleClicked = null;
                                 enemyClicked = null;
