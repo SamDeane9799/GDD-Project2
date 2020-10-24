@@ -101,9 +101,9 @@ MonoBehaviour:
   moving: 0
   currentTile: {fileID: 0}
   actionPoints: 0
-  facingUp: {fileID: 21300000, guid: 27ac19a8db8557744a4b19ddb3a22ac0, type: 3}
+  facingUp: {fileID: 21300000, guid: 7af8823f24ae1754bbe3c39e6279532c, type: 3}
   facingRight: {fileID: 21300000, guid: 1d2bbd04b72895a4d9d61bbda0c84e9b, type: 3}
-  facingDown: {fileID: 0}
+  facingDown: {fileID: 21300000, guid: 27ac19a8db8557744a4b19ddb3a22ac0, type: 3}
   enemyRotation: {x: 0, y: 0, z: 0}
   targetRotation: {x: 0, y: 0, z: 0}
 --- !u!61 &8196505596067900402

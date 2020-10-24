@@ -46,12 +46,12 @@ public class Character : LevelObject
         transform.position = Vector2.Lerp(transform.position, currentTile.gameObject.transform.position, .075f);
         //transform.position = new Vector3(transform.position.x, transform.position.y, -1f);
         //Setting our rotation and sprite
-        if (this is Player)
-        {
             Vector3 dir = currentTile.gameObject.transform.position - transform.position;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            Debug.Log(angle);
             if (Mathf.Abs(angle - 90) <= 1f)
             {
+                Debug.Log("here");
                 GetComponent<SpriteRenderer>().sprite = facingUp;
                 GetComponent<SpriteRenderer>().flipX = false;
                 if (this is Enemy)
@@ -79,5 +79,4 @@ public class Character : LevelObject
                     enemyRotation = new Vector3(1, 0, 0);
             }
         }
-    }
 }
