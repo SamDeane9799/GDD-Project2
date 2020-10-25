@@ -420,7 +420,9 @@ public class GameManager : MonoBehaviour
 
                                     Destroy(bushClicked.gameObject);
 
-                                    currentPlayerState = PlayerState.MOVEMENT;
+                                    player.actionPoints -= 1;
+                                    ClearAvailableBushesList();
+                                    OnEnemyTurn();
                                 }
                             }
                         }
@@ -453,6 +455,10 @@ public class GameManager : MonoBehaviour
                                     GameObject newObstacle = Instantiate(RockPrefab);
                                     newObstacle.transform.position = waterClicked.transform.position;
                                     obstManager.obstacles.Add(newObstacle.GetComponent<Obstacle>());
+
+                                    player.actionPoints -= 1;
+                                    ClearAvailableWaterList();
+                                    OnEnemyTurn();
                                 }
                             }
                         }
