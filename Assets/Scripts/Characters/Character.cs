@@ -48,10 +48,8 @@ public class Character : LevelObject
         //Setting our rotation and sprite
             Vector3 dir = currentTile.gameObject.transform.position - transform.position;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            Debug.Log(angle);
             if (Mathf.Abs(angle - 90) <= 1f)
             {
-                Debug.Log("here");
                 GetComponent<SpriteRenderer>().sprite = facingUp;
                 GetComponent<SpriteRenderer>().flipX = false;
                 if (this is Enemy)

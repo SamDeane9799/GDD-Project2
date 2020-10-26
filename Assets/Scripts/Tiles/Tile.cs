@@ -10,13 +10,4 @@ public class Tile : LevelObject
     public bool destination;
     public bool walkable;
 
-    void Awake()
-    {
-    }
-
-    // Update is called once per frame
-    protected override void Update()
-    {
-        base.Update();
-    }
 }

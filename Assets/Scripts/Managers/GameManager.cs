@@ -264,7 +264,10 @@ public class GameManager : MonoBehaviour
 
                             if (hit)
                             {
+
                                 Tile tileClicked = hit.collider.GetComponent<Tile>();
+                                if(tileClicked != null)
+                                    Debug.Log(tileClicked.destination + " | " + tileClicked.walkable);
 
                                 if (availableTiles.Contains(tileClicked))
                                 {
@@ -330,7 +333,6 @@ public class GameManager : MonoBehaviour
 
                                         enemyClicked.GetComponent<SpriteRenderer>().color = enemyClicked.originalColor;
 
-                                        enemyClicked.transform.position = tileClicked.transform.position;
                                         enemyClicked.currentTile = tileClicked;
 
                                         ClearAvailableTileList(enemyAvailableTiles);
@@ -357,14 +359,15 @@ public class GameManager : MonoBehaviour
                             if (Input.GetMouseButtonDown(0))
                             {
                                 //Casting a ray on the terrain layer
-                                RaycastHit2D hit = MouseCollisionCheck(1 << 9);
+                                RaycastHit2D hit = MouseCollisionCheck(1 << 9 | 1 << 11);
 
                                 if (hit)
                                 {
                                     enemyClicked = hit.collider.GetComponent<Enemy>();
-
+                                    Debug.Log(hit.collider.name);
                                     if (enemyClicked != null && availableEnemies.Contains(enemyClicked))
                                     {
+                                        Debug.Log("here");
                                         ClearAvailableEnemyList();
                                         FindAvailableSpotsEnemy(enemyClicked);
                                         Debug.Log("Enemy Clicked");
@@ -451,18 +454,12 @@ public class GameManager : MonoBehaviour
                             if (hit)
                             {
                                 WaterTile waterClicked = hit.collider.GetComponent<WaterTile>();
-
                                 if (obstManager.waterTiles.Contains(waterClicked))
                                 {
-
                                     FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Freeze");
 
-                                    waterClicked.GetComponent<SpriteRenderer>().color = Color.cyan;
-                                    waterClicked.walkable = true;
-
-                                    GameObject newObstacle = Instantiate(RockPrefab);
-                                    newObstacle.transform.position = waterClicked.transform.position;
-                                    obstManager.obstacles.Add(newObstacle.GetComponent<Obstacle>());
+                                    waterClicked.FreezeTile();
+                                    tileBoard[waterClicked.X, waterClicked.Y] = waterClicked;
 
                                     player.actionPoints -= 1;
                                     ClearAvailableWaterList();
@@ -1020,7 +1017,6 @@ public class GameManager : MonoBehaviour
 
             winTile = GameObject.FindGameObjectWithTag("WinTile").GetComponent<Tile>();
             winTile.destination = true;
-            winTile.GetComponent<SpriteRenderer>().color = Color.yellow;
 
 
             LoadInEnemies();

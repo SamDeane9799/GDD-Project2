@@ -47,7 +47,7 @@ public abstract class LevelObject : MonoBehaviour
         colorValue = Mathf.Lerp(colorValue, targetValue, .05f);
         for (int i = 0; i < 3; i++)
         {
-            GetComponent<SpriteRenderer>().color = new Color(originalColor.r - colorValue, originalColor.g - colorValue, originalColor.b, 1);
+            GetComponent<SpriteRenderer>().color = new Color(originalColor.r - colorValue, originalColor.g - colorValue, originalColor.b, originalColor.a);
         }
     }
 
@@ -55,6 +55,6 @@ public abstract class LevelObject : MonoBehaviour
     {
         colorValue = 0f;
         targetValue = .2f;
-        GetComponent<SpriteRenderer>().color = new Color(originalColor.r, originalColor.g, originalColor.b, 1);
+        GetComponent<SpriteRenderer>().color = new Color(originalColor.r, originalColor.g, originalColor.b, originalColor.a);
     }
 }
