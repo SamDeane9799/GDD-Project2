@@ -142,6 +142,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private GameObject RockPrefab;
+    public Tile TilePrefab;
     #endregion
 
     #region Button Vars
@@ -461,6 +462,10 @@ public class GameManager : MonoBehaviour
 
                                     player.actionPoints -= 1;
                                     ClearAvailableWaterList();
+                                    obstManager.obstacles.Add(waterClicked.GetComponent<Obstacle>());
+                                    Tile newTile = Instantiate<Tile>(TilePrefab);
+                                    tileBoard[waterClicked.X, waterClicked.Y] = newTile;
+                                    newTile.transform.position = waterClicked.transform.position;
                                     OnEnemyTurn();
                                 }
                             }

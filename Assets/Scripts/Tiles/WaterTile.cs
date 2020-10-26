@@ -15,6 +15,8 @@ public class WaterTile : Tile
     public void FreezeTile()
     {
         GetComponent<SpriteRenderer>().sprite = frozenSprite;
-        walkable = false;
+        Obstacle newObst = gameObject.AddComponent<Obstacle>();
+        GameManager.obstaclePositions[X, Y] = newObst;
+        newObst.gridRef = GameObject.Find("FloorTiles").GetComponent<Grid>();
     }
 }
