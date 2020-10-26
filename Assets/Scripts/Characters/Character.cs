@@ -64,7 +64,7 @@ public class Character : LevelObject
                 if (this is Enemy)
                     enemyRotation = new Vector3(0, -1, 0);
             }
-            else if(Mathf.Abs(angle - 180) <= 1f)
+            else if(Mathf.Abs(Mathf.Abs(angle) - 180) <= 1f)
             {
                 GetComponent<SpriteRenderer>().sprite = facingRight;
                 GetComponent<SpriteRenderer>().flipX = true;

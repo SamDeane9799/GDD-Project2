@@ -237,6 +237,14 @@ public class GameManager : MonoBehaviour
         //Checking if we're in a level scene
         if (SceneManager.GetActiveScene().name != "StartScene")
         {
+            if (Input.GetKeyDown(KeyCode.R))
+                ResetButton();
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+                MoveAbility();
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+                BurnAbility();
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+                FreezeAbility();
             //Checking if it's the players turn
             if (currentGameState == GameState.PLAYERTURN)
             {
