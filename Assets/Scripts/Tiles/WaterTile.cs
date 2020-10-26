@@ -9,12 +9,12 @@ public class WaterTile : Tile
     void Start()
     {
         base.Start();
-        walkable = false;
+        walkable = true;
     }
 
     public void FreezeTile()
     {
         GetComponent<SpriteRenderer>().sprite = frozenSprite;
-        walkable = true;
+        walkable = false;
     }
 }

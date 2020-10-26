@@ -367,10 +367,8 @@ public class GameManager : MonoBehaviour
                                     Debug.Log(hit.collider.name);
                                     if (enemyClicked != null && availableEnemies.Contains(enemyClicked))
                                     {
-                                        Debug.Log("here");
                                         ClearAvailableEnemyList();
                                         FindAvailableSpotsEnemy(enemyClicked);
-                                        Debug.Log("Enemy Clicked");
                                         enemyClicked.GetComponent<SpriteRenderer>().color = Color.blue;
                                         objectSelected = true;
                                         FMODUnity.RuntimeManager.PlayOneShot("event:/Abilities/Telekenesis/Lift");
@@ -981,6 +979,7 @@ public class GameManager : MonoBehaviour
             //Adding the obstacles to the list
             WaterTile newWater = waters[i].GetComponent<WaterTile>();
             obstManager.waterTiles.Add(newWater);
+            GameManager.tileBoard[(int)(9.5 + waters[i].transform.position.x), (int)(5.5 + waters[i].transform.position.y)] = waters[i].GetComponent<Tile>();
         }
     }
 
