@@ -17,7 +17,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 1438398768654207826}
   - {fileID: 1893197673859549526}
-  - {fileID: -7098978023948177731}
+  - {fileID: 6052212735043098151}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -78,7 +78,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 1438398768654207826}
   - {fileID: 1893197673859549526}
-  - {fileID: -7098978023948177731}
+  - {fileID: 6052212735043098151}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -121,7 +121,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 1438398768654207826}
   - {fileID: 1893197673859549526}
-  - {fileID: -7098978023948177731}
+  - {fileID: 6052212735043098151}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -146,7 +146,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 1438398768654207826}
   - {fileID: 1893197673859549526}
-  - {fileID: -7098978023948177731}
+  - {fileID: 6052212735043098151}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: FMODAssets/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637388867500486289
+  lastModified: 637389902417124219
   LoadResult: 0
   FileSizes:
   - Name: 
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: -3736299215755533452}
-  - {fileID: -7098978023948177731}
+  - {fileID: 6052212735043098151}
   EditorEvents:
   - {fileID: -4592454545825622850}
   - {fileID: -5137481162414522355}
@@ -253,10 +253,10 @@ MonoBehaviour:
   - {fileID: -8800344978156383749}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -7098978023948177731}
+  - {fileID: 6052212735043098151}
   StringsBanks:
   - {fileID: -3736299215755533452}
-  stringsBankWriteTime: 637388867500486289
+  stringsBankWriteTime: 637389902417124219
   cacheVersion: 3
 --- !u!114 &1438398768654207826
 MonoBehaviour:
@@ -365,7 +365,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 1438398768654207826}
   - {fileID: 1893197673859549526}
-  - {fileID: -7098978023948177731}
+  - {fileID: 6052212735043098151}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -444,7 +444,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 1438398768654207826}
   - {fileID: 1893197673859549526}
-  - {fileID: -7098978023948177731}
+  - {fileID: 6052212735043098151}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -488,6 +488,24 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &6052212735043098151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: FMODAssets/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637389902416874756
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &7214864846157806914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -505,7 +523,7 @@ MonoBehaviour:
   Banks:
   - {fileID: 1438398768654207826}
   - {fileID: 1893197673859549526}
-  - {fileID: -7098978023948177731}
+  - {fileID: 6052212735043098151}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0

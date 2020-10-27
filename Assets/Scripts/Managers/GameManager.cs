@@ -246,6 +246,7 @@ public class GameManager : MonoBehaviour
                 BurnAbility();
             if (Input.GetKeyDown(KeyCode.Alpha3))
                 FreezeAbility();
+
             //Checking if it's the players turn
             if (currentGameState == GameState.PLAYERTURN)
             {
@@ -1097,6 +1098,13 @@ public class GameManager : MonoBehaviour
         enemyManager.enemyTurn = true;
         enemyManager.OnEnemyTurn();
         player.actionPoints = 0;
+
+        foreach (Button b in abilityButtons)
+        {
+            b.gameObject.SetActive(false);
+        }
+        playerCam.passButton.gameObject.SetActive(false);
+
         ClearAvailableTileList(availableTiles);
     }
 
@@ -1236,6 +1244,7 @@ public class GameManager : MonoBehaviour
         currentGameState = GameState.ENEMYTURN;
         enemyManager.OnEnemyTurn();
         enemyManager.enemyTurn = true;
+
         foreach(Button b in abilityButtons)
         {
             b.gameObject.SetActive(false);

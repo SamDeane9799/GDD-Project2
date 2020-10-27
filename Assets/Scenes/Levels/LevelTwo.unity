@@ -2113,7 +2113,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Click on the arrow button to activate the move object ability
+  m_Text: Click on the rock button to activate the move object ability
 --- !u!222 &89748249
 CanvasRenderer:
   m_ObjectHideFlags: 0
